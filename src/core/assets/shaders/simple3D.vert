@@ -6,6 +6,7 @@ const int numberOfLights = 6;
 
 attribute vec3 a_position;
 attribute vec3 a_normal;
+attribute vec2 a_uv;
 
 uniform mat4 u_modelMatrix;
 uniform mat4 u_viewMatrix;
@@ -14,6 +15,7 @@ uniform mat4 u_projectionMatrix;
 uniform vec4 u_lightPosition[numberOfLights];
 uniform vec4 u_eyePosition;
 
+varying vec2 v_uv;
 varying vec4 v_n;
 varying vec4 v_s[numberOfLights];
 varying vec4 v_h[numberOfLights];
@@ -29,11 +31,11 @@ void main()
 	// Global coordinates
 
 	v_n = normal;
-	vec4 v = u_eyePosition - position;
+	vec4 v = normalize(u_eyePosition - position);
 
 	for (int i = 0; i < numberOfLights; i++)
 	{
-	    v_s[i] = u_lightPosition[i] - position;
+	    v_s[i] = normalize(u_lightPosition[i] - position);
 	    v_h[i] = v_s[i] + v;
 	}
 
@@ -45,6 +47,7 @@ void main()
 	// v_color = (dot(normal, vec4(0,0,1,0)) / length(normal)) * u_color;
 	// v_color = (dot(normal, normalize(vec4(-position.x,-position.y,-position.z,0))) / length(normal)) * u_color;
 
+    v_uv = a_uv;
 	gl_Position = u_projectionMatrix * position;
 
 	// Clip coordinates

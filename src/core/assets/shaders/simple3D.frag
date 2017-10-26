@@ -22,6 +22,9 @@ uniform vec4 u_globalAmbience;
 
 uniform light u_lights[numberOfLights];
 
+uniform sampler2D u_diffuseTexture;
+uniform float u_usesDiffuseTexture;
+
 uniform vec4 u_materialDiffuse;
 uniform vec4 u_materialSpecular;
 uniform vec4 u_materialAmbience;
@@ -30,12 +33,24 @@ uniform float u_materialTransparency;
 
 uniform float u_brightness;
 
+varying vec2 v_uv;
 varying vec4 v_n;
 varying vec4 v_s[numberOfLights];
 varying vec4 v_h[numberOfLights];
 
 void main()
 {
+    vec4 materialDiffuse;
+	if(u_usesDiffuseTexture == 1.0)
+	{
+		materialDiffuse = texture2D(u_diffuseTexture, v_uv);  //also * u_materialDiffuse ??? up to you.
+		materialDiffuse *= u_materialDiffuse;
+	}
+	else
+	{
+		materialDiffuse = u_materialDiffuse;
+	}
+
     // Lighting
 
     vec4 color;
@@ -70,7 +85,7 @@ void main()
         phong = (phong < 0.0 ? 0.0 : pow(phong, u_shininessFactor));
 
 
-        lightColor += u_lights[i].color * u_materialDiffuse * lampert;
+        lightColor += u_lights[i].color * materialDiffuse * lampert;
         lightColor += u_lights[i].color * u_materialSpecular * phong;
 
         lightColor *= attinuation;

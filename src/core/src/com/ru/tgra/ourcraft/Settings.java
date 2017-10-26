@@ -16,10 +16,10 @@ public class Settings
     public static final float aspectRatio = (float)virtualWidth / (float)virtualHeight;
 
     /* === World settings === */
-    public static final int worldWidth = 32;
-    public static final int worldHeight = 32;
+    public static final int worldWidth = 64;
+    public static final int worldHeight = 64;
     public static final int worldFeatureSize = 4;
-    public static final int worldScale = 10;
+    public static final int worldScale = 20;
 
     /* === Player settings === */
     public static final float playerFOV = 60f;
@@ -28,23 +28,19 @@ public class Settings
     public static final float playerMouseLookSensitivity = 30f;
     public static final float fadeTime = 3f;
 
-    /* === End point settings === */
-    public static final float bobbingSpeed = 4f;
-    public static final float bobbingFactor = 0.4f;
-
-    /* === Spear settings === */
-    public static final float spearPauseTime = 1.5f;
-    public static final float spearRetractSpeed = 0.5f;
-    public static final float spearFallSpeed = 10f;
-    public static final float spearGroundY = 0.5f;
-    public static final float spearUpY = 2f;
-    public static final float spearVolumeRadius = 8f;
-
-    /* === Watchtower settings === */
-    public static final Vector3D watchtowerScale = new Vector3D(1f, 4f, 1f);
-    public static final Vector3D watchtowerOrbScale = new Vector3D(0.5f, 0.5f, 0.5f);
-
     /* === Materials === */
+
+    // Grass
+    public static final Material grassMaterial = new Material
+    (
+            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
+            new Color(0.408f, 0.624f, 0.22f, 1.0f), // Diffuse
+            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Specular
+            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
+            128f,
+            1f
+    );
+
     // Walls
     public static final Material wallMaterial = new Material
     (

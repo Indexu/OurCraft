@@ -31,7 +31,7 @@ public class CubeMask
 
     public boolean isInvisible()
     {
-        return (north || south || east || west || top || bottom);
+        return !(north || south || east || west || top || bottom);
     }
 
     public boolean isNorth()

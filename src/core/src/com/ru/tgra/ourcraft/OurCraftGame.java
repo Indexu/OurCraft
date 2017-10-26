@@ -154,7 +154,7 @@ public class OurCraftGame extends ApplicationAdapter
                     (int) GraphicsEnvironment.viewport.height
                 );
 
-				GameManager.player.getCamera().setPerspectiveProjection(Settings.playerFOV, Gdx.graphics.getWidth() / Gdx.graphics.getHeight(), 0.1f, 100.0f);
+				GameManager.player.getCamera().setPerspectiveProjection(Settings.playerFOV, Gdx.graphics.getWidth() / Gdx.graphics.getHeight(), 0.1f, 50.0f);
 				shader.setViewMatrix(GameManager.player.getCamera().getViewMatrix());
 				shader.setProjectionMatrix(GameManager.player.getCamera().getProjectionMatrix());
 				shader.setEyePosition(GameManager.player.getCamera().eye);
@@ -257,6 +257,7 @@ public class OurCraftGame extends ApplicationAdapter
 		GraphicsEnvironment.init();
 		GameManager.init();
 		AudioManager.init();
+		TextureManager.init();
 
 		shader = GraphicsEnvironment.shader;
 

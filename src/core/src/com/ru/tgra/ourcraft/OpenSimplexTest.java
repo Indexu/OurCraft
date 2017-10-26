@@ -6,6 +6,7 @@ import com.ru.tgra.ourcraft.utilities.OpenSimplexNoise;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.*;
+import java.util.Date;
 
 public class OpenSimplexTest
 {
@@ -16,7 +17,11 @@ public class OpenSimplexTest
     public static void main(String[] args)
             throws IOException {
 
-        OpenSimplexNoise noise = new OpenSimplexNoise();
+        long seed = new Date().getTime();
+
+        System.out.println("Seed: " + seed);
+
+        OpenSimplexNoise noise = new OpenSimplexNoise(seed);
         BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         for (int x = 0; x < WIDTH; x++)
         {
@@ -27,6 +32,6 @@ public class OpenSimplexTest
                 image.setRGB(x, y, rgb);
             }
         }
-        ImageIO.write(image, "png", new File("/Users/hilmar/Desktop/noise3.png"));
+        ImageIO.write(image, "png", new File("/Users/hilmar/Desktop/noise2.png"));
     }
 }

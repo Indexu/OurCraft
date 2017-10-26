@@ -30,6 +30,7 @@ public class GameManager
     {
         gameObjects = new ArrayList<GameObject>();
         noise = new OpenSimplexNoise();
+        //noise = new OpenSimplexNoise(new Date().getTime());
         worldBlocks = new boolean[Settings.worldWidth][Settings.worldScale * 2][Settings.worldHeight];
         dead = false;
         won = false;
@@ -70,8 +71,7 @@ public class GameManager
 
     private static void createPlayer()
     {
-        //player = new Player(new Point3D(mazeGenerator.getEnd()), new Vector3D(0.25f, 0.25f, 0.25f), Settings.playerSpeed, Settings.playerMinimapMaterial);
-        player = new Player(new Point3D(), new Vector3D(0.25f, 0.25f, 0.25f), Settings.playerSpeed, Settings.playerMinimapMaterial);
+        player = new Player(new Point3D(0, Settings.worldScale, 0), new Vector3D(0.25f, 0.25f, 0.25f), Settings.playerSpeed, Settings.playerMinimapMaterial);
         gameObjects.add(player);
     }
 
@@ -89,7 +89,7 @@ public class GameManager
 //
 //                    CubeMask mask = new CubeMask();
 //
-//                    Block block = new Block(position, new Vector3D(scale), Settings.wallMaterial, Settings.wallMinimapMaterial, mask);
+//                    Block block = new Block(position, new Vector3D(scale), Settings.wallMaterial, Settings.wallMinimapMaterial, mask, Block.BlockType.GRASS);
 //
 //                    gameObjects.add(block);
 //                }
@@ -148,7 +148,15 @@ public class GameManager
 
                         Point3D position = new Point3D(x, y, z);
 
-                        Block block = new Block(position, new Vector3D(scale), Settings.wallMaterial, Settings.wallMinimapMaterial, mask);
+                        Block block = new Block
+                        (
+                            position,
+                            new Vector3D(scale),
+                            Settings.grassMaterial,
+                            Settings.wallMinimapMaterial,
+                            mask,
+                            Block.BlockType.GRASS
+                        );
 
                         gameObjects.add(block);
                     }
@@ -157,11 +165,11 @@ public class GameManager
         }
     }
 
-    private static void createFloor(Point3D pos, float sideLength)
-    {
-        Block floor = new Block(pos, new Vector3D(sideLength, 0.01f, sideLength), Settings.floorMaterial, Settings.floorMinimapMaterial, new CubeMask(false, false, false, false, true, false));
-        gameObjects.add(floor);
-    }
+//    private static void createFloor(Point3D pos, float sideLength)
+//    {
+//        Block floor = new Block(pos, new Vector3D(sideLength, 0.01f, sideLength), Settings.floorMaterial, Settings.floorMinimapMaterial, new CubeMask(false, false, false, false, true, false));
+//        gameObjects.add(floor);
+//    }
 
     private static void generateHeightMap()
     {

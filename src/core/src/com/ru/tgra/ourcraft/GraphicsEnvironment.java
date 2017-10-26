@@ -27,7 +27,7 @@ public class GraphicsEnvironment
         shader = new Shader();
         shader.setBrightness(1.0f);
         initFonts();
-        Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        Gdx.gl.glClearColor(0.3f, 0.3f, 0.8f, 1.0f);
         enableBlending();
         //setFullscreen();
     }

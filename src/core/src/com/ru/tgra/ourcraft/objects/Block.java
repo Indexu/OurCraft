@@ -1,16 +1,27 @@
 package com.ru.tgra.ourcraft.objects;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.ru.tgra.ourcraft.GameManager;
 import com.ru.tgra.ourcraft.GraphicsEnvironment;
 import com.ru.tgra.ourcraft.Settings;
+import com.ru.tgra.ourcraft.TextureManager;
 import com.ru.tgra.ourcraft.models.*;
 import com.ru.tgra.ourcraft.shapes.BoxGraphic;
 
 public class Block extends GameObject
 {
-    protected CubeMask mask;
-    protected CubeMask minimapMask;
+    public static enum BlockType
+    {
+        BEDROCK,
+        GRASS,
+        STONE
+    }
 
-    public Block(Point3D position, Vector3D scale, Material material, Material minimapMaterial, CubeMask mask)
+    private CubeMask mask;
+    private CubeMask minimapMask;
+    private BlockType blockType;
+
+    public Block(Point3D position, Vector3D scale, Material material, Material minimapMaterial, CubeMask mask, BlockType type)
     {
         super();
 
@@ -19,12 +30,20 @@ public class Block extends GameObject
         this.material = material;
         this.minimapMaterial = minimapMaterial;
         this.mask = mask;
+        blockType = type;
 
         minimapMask = new CubeMask(false, false, false, false, true, false);
     }
 
     public void draw(int viewportID)
     {
+        float distanceToPlayer = Vector3D.difference(position, GameManager.player.position).length();
+
+        if (30f < distanceToPlayer)
+        {
+            return;
+        }
+
         ModelMatrix.main.loadIdentityMatrix();
         ModelMatrix.main.addTranslation(position);
         ModelMatrix.main.addScale(scale);
@@ -34,12 +53,12 @@ public class Block extends GameObject
         if (viewportID == Settings.viewportIDMinimap)
         {
             GraphicsEnvironment.shader.setMaterial(minimapMaterial);
-            BoxGraphic.drawSolidCube(minimapMask);
+            //BoxGraphic.drawSolidCube(minimapMask);
         }
         else
         {
             GraphicsEnvironment.shader.setMaterial(material);
-            BoxGraphic.drawSolidCube(mask);
+            BoxGraphic.drawSolidCube(GraphicsEnvironment.shader, TextureManager.getBlockTexture(blockType), mask);
         }
     }
 

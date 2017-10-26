@@ -2,7 +2,9 @@ package com.ru.tgra.ourcraft.shapes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.BufferUtils;
+import com.ru.tgra.ourcraft.Shader;
 import com.ru.tgra.ourcraft.models.CubeMask;
 
 import java.nio.FloatBuffer;
@@ -11,6 +13,8 @@ public class BoxGraphic {
 
 	private static FloatBuffer vertexBuffer;
 	private static FloatBuffer normalBuffer;
+    private static FloatBuffer uvBuffer;
+
 	private static int vertexPointer;
 	private static int normalPointer;
 
@@ -77,6 +81,44 @@ public class BoxGraphic {
 		normalBuffer = BufferUtils.newFloatBuffer(72);
 		normalBuffer.put(normalArray);
 		normalBuffer.rewind();
+
+        //UV TEXTURE COORD ARRAY IS FILLED HERE
+        float[] uvArray =
+        {
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            0.0f, 1.0f,
+
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            0.0f, 1.0f,
+
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            0.0f, 1.0f,
+
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            0.0f, 1.0f,
+
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            0.0f, 1.0f,
+
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            0.0f, 1.0f,
+        };
+
+        uvBuffer = BufferUtils.newFloatBuffer(48);
+        BufferUtils.copy(uvArray, 0, uvBuffer, 48);
+        uvBuffer.rewind();
 	}
 
 	public static void drawSolidCube()
@@ -93,15 +135,18 @@ public class BoxGraphic {
 		Gdx.gl.glDrawArrays(GL20.GL_TRIANGLE_FAN, 20, 4);
 	}
 
-    public static void drawSolidCube(CubeMask mask)
+    public static void drawSolidCube(Shader shader, Texture diffuseTexture, CubeMask mask)
     {
-//    	if (mask.isInvisible())
-//		{
-//			return;
-//		}
+    	if (mask.isInvisible())
+		{
+			return;
+		}
 
-        Gdx.gl.glVertexAttribPointer(vertexPointer, 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
-        Gdx.gl.glVertexAttribPointer(normalPointer, 3, GL20.GL_FLOAT, false, 0, normalBuffer);
+        shader.setDiffuseTexture(diffuseTexture);
+
+        Gdx.gl.glVertexAttribPointer(shader.getVertexPointer(), 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
+        Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);
+        Gdx.gl.glVertexAttribPointer(shader.getUVPointer(), 2, GL20.GL_FLOAT, false, 0, uvBuffer);
 
         // North
         if (mask.isWest())

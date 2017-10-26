@@ -2,6 +2,7 @@ package com.ru.tgra.ourcraft;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.ru.tgra.ourcraft.models.*;
 
 import java.nio.FloatBuffer;
@@ -14,9 +15,12 @@ public class Shader
 
     private int positionLoc;
     private int normalLoc;
+    private int uvLoc;
+
     private int eyePosLoc;
     private int shininessFactorLoc;
     private int globalAmbienceLoc;
+
     private int[] lightPosLoc;
     private int[] lightColorLoc;
     private int[] lightDirectionLoc;
@@ -24,11 +28,16 @@ public class Shader
     private int[] lightConstAttLoc;
     private int[] lightLinearAttLoc;
     private int[] lightQuadAttLoc;
+
+    private int usesDiffuseTexLoc;
+    private int diffuseTextureLoc;
+
     private int materialDiffuseLoc;
     private int materialSpecularLoc;
     private int materialAmbienceLoc;
     private int materialEmissionLoc;
     private int materialTransparencyLoc;
+
     private int brightnessLoc;
 
     private int modelMatrixLoc;
@@ -51,6 +60,21 @@ public class Shader
         Gdx.gl.glEnableVertexAttribArray(normalLoc);
     }
 
+    public int getVertexPointer()
+    {
+        return positionLoc;
+    }
+
+    public int getNormalPointer()
+    {
+        return normalLoc;
+    }
+
+    public int getUVPointer()
+    {
+        return uvLoc;
+    }
+
     public void setMaterial(Material material)
     {
         setMaterialAmbience(material.getAmbience());
@@ -70,6 +94,23 @@ public class Shader
         setConstantAttenuation(light.getID(), light.getConstantAttenuation());
         setLinearAttenuation(light.getID(), light.getLinearAttenuation());
         setQuadraticAttenuation(light.getID(), light.getQuadraticAttenuation());
+    }
+
+    public void setDiffuseTexture(Texture tex)
+    {
+        if(tex == null)
+        {
+            Gdx.gl.glUniform1f(usesDiffuseTexLoc, 0.0f);
+        }
+        else
+        {
+            tex.bind(0);
+            Gdx.gl.glUniform1i(diffuseTextureLoc, 0);
+            Gdx.gl.glUniform1f(usesDiffuseTexLoc, 1.0f);
+
+            Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_S, GL20.GL_REPEAT);
+            Gdx.gl.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_T, GL20.GL_REPEAT);
+        }
     }
 
     public void setMaterialDiffuse(Color color)
@@ -152,16 +193,6 @@ public class Shader
         Gdx.gl.glUniform4f(eyePosLoc, position.x, position.y, position.z, 1.0f);
     }
 
-    public int getVertexPointer()
-    {
-        return positionLoc;
-    }
-
-    public int getNormalPointer()
-    {
-        return normalLoc;
-    }
-
     public void setModelMatrix(FloatBuffer matrix)
     {
         Gdx.gl.glUniformMatrix4fv(modelMatrixLoc, 1, false, matrix);
@@ -193,6 +224,11 @@ public class Shader
 
         Gdx.gl.glCompileShader(vertexShaderID);
         Gdx.gl.glCompileShader(fragmentShaderID);
+
+        System.out.println("Vertex shader compile messages:");
+        System.out.println(Gdx.gl.glGetShaderInfoLog(vertexShaderID));
+        System.out.println("Fragment shader compile messages:");
+        System.out.println(Gdx.gl.glGetShaderInfoLog(fragmentShaderID));
     }
 
     private void initProgram()
@@ -212,6 +248,9 @@ public class Shader
 
         normalLoc = Gdx.gl.glGetAttribLocation(renderingProgramID, "a_normal");
         Gdx.gl.glEnableVertexAttribArray(normalLoc);
+
+        uvLoc = Gdx.gl.glGetAttribLocation(renderingProgramID, "a_uv");
+        Gdx.gl.glEnableVertexAttribArray(uvLoc);
 
         modelMatrixLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_modelMatrix");
         viewMatrixLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_viewMatrix");
@@ -241,6 +280,9 @@ public class Shader
         }
 
         globalAmbienceLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_globalAmbience");
+
+        usesDiffuseTexLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_usesDiffuseTexture");
+        diffuseTextureLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_diffuseTexture");
 
         materialDiffuseLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialDiffuse");
         materialSpecularLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_materialSpecular");
