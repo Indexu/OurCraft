@@ -42,7 +42,6 @@ public class MazeGenerator
         generate();
         randomizeStartAndEnd();
         setWalls();
-        randomizeSpears();
     }
 
     public boolean[][] getWalls()
@@ -281,38 +280,6 @@ public class MazeGenerator
             for (int j = 0; j < width; j++ )
             {
                 walls[i][j] = nodes[j + i * width].c == '#';
-            }
-        }
-    }
-
-    private void randomizeSpears()
-    {
-        ArrayList<Node> freeNodes = new ArrayList<Node>();
-
-        for (int i = 0; i < nodes.length; i++)
-        {
-            if (nodes[i].c == ' ' && nodes[i].x != 0 && nodes[i].y != 0)
-            {
-                freeNodes.add(nodes[i]);
-            }
-        }
-
-        int numberOfSpears = (int) (freeNodes.size() * Settings.percentageOfMazeSpears);
-
-        for (int i = 0; i < numberOfSpears; i++)
-        {
-            int index = rand.nextInt(freeNodes.size() - 1);
-            freeNodes.get(index).c = 'S';
-            freeNodes.remove(index);
-        }
-
-        spears = new boolean[width][height];
-
-        for (int i = 0; i < height; i++ )
-        {
-            for (int j = 0; j < width; j++ )
-            {
-                spears[i][j] = nodes[j + i * width].c == 'S';
             }
         }
     }

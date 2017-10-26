@@ -29,7 +29,7 @@ public class GraphicsEnvironment
         initFonts();
         Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         enableBlending();
-        setFullscreen();
+        //setFullscreen();
     }
 
     public static void setViewport(float x, float y, float width, float height)

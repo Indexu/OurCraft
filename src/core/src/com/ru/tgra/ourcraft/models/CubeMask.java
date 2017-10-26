@@ -29,6 +29,11 @@ public class CubeMask
         this.bottom = true;
     }
 
+    public boolean isInvisible()
+    {
+        return (north || south || east || west || top || bottom);
+    }
+
     public boolean isNorth()
     {
         return north;

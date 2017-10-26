@@ -13,74 +13,42 @@ public class GameManager
 {
     public static ArrayList<GameObject> gameObjects;
 
-    public static MazeGenerator mazeGenerator;
-    public static boolean[][] mazeWalls;
-    public static boolean[][] mazeSpears;
+    public static boolean[][][] worldBlocks;
 
     public static boolean mainMenu;
 
     public static Light headLight;
-    public static Light endPointLight;
     public static Camera minimapCamera;
     public static Player player;
     public static boolean dead;
     public static boolean won;
 
-    private static int currentLevel;
-    private static float distanceToEnd;
-    private static float maxDistanceToEnd;
+    private static OpenSimplexNoise noise;
+    private static int[][] heightMap;
 
     public static void init()
     {
         gameObjects = new ArrayList<GameObject>();
-        mazeGenerator = new MazeGenerator();
-        currentLevel = 0;
-        distanceToEnd = 0f;
-        maxDistanceToEnd = 0f;
+        noise = new OpenSimplexNoise();
+        worldBlocks = new boolean[Settings.worldWidth][Settings.worldScale * 2][Settings.worldHeight];
         dead = false;
+        won = false;
     }
 
-    public static void createMaze()
+    public static void createWorld()
     {
-        won = false;
-        currentLevel++;
-
         gameObjects.clear();
 
-        int sideLength = Settings.startSideLength + (Settings.sideLengthIncrement * (currentLevel - 1));
-        maxDistanceToEnd = (float) Math.sqrt(sideLength * sideLength * 2);
-
-        generateMaze(sideLength);
-        createFloor(new Point3D(sideLength / 2, -0.5f, sideLength / 2), sideLength);
-        createWalls();
+        generateHeightMap();
+        createWorldBlockArray();
+        createBlocks();
         createPlayer();
-        createMinimap();
         createHeadLight();
-    }
+//        createWalls();
+//        createMinimap();
+//        createHeadLight();
 
-    public static boolean isDead()
-    {
-        return dead;
-    }
-
-    public static boolean hasWon()
-    {
-        return won;
-    }
-
-    public static void revive()
-    {
-        player.getPosition().set(GameManager.mazeGenerator.getStart());
-        AudioManager.playHeartbeat();
-        GraphicsEnvironment.shader.setBrightness(1.0f);
-        dead = false;
-    }
-
-    public static void death()
-    {
-        AudioManager.stopHeartbeat();
-        AudioManager.playDeath();
-        dead = true;
+        System.out.println(gameObjects.size());
     }
 
     private static void createHeadLight()
@@ -103,78 +71,87 @@ public class GameManager
     private static void createPlayer()
     {
         //player = new Player(new Point3D(mazeGenerator.getEnd()), new Vector3D(0.25f, 0.25f, 0.25f), Settings.playerSpeed, Settings.playerMinimapMaterial);
-        player = new Player(new Point3D(mazeGenerator.getStart()), new Vector3D(0.25f, 0.25f, 0.25f), Settings.playerSpeed, Settings.playerMinimapMaterial);
+        player = new Player(new Point3D(), new Vector3D(0.25f, 0.25f, 0.25f), Settings.playerSpeed, Settings.playerMinimapMaterial);
         gameObjects.add(player);
     }
 
-    private static void createWalls()
+    private static void createBlocks()
     {
-        Vector3D scale = new Vector3D(1f, 2f, 1f);
-        int sideLength = mazeWalls.length;
+        Vector3D scale = new Vector3D(1f, 1f, 1f);
 
-        for (int i = 0; i < sideLength; i++)
+//        for (int x = 0; x < Settings.worldWidth; x++)
+//        {
+//            for (int y = 0; y < Settings.worldHeight; y++)
+//            {
+//                for (int i = -Settings.worldScale; i < heightMap[x][y]; i++)
+//                {
+//                    Point3D position = new Point3D(x, i, y);
+//
+//                    CubeMask mask = new CubeMask();
+//
+//                    Block block = new Block(position, new Vector3D(scale), Settings.wallMaterial, Settings.wallMinimapMaterial, mask);
+//
+//                    gameObjects.add(block);
+//                }
+//            }
+//        }
+
+        int maxX = Settings.worldWidth;
+        int maxY = Settings.worldScale * 2;
+        int maxZ = Settings.worldHeight;
+
+        for (int x = 0; x < maxX; x++)
         {
-            for (int j = 0; j < sideLength; j++)
+            for (int y = 0; y < maxY; y++)
             {
-                // Skip corners
-                if ((i == 0 && j == 0) || (i == 0 && j == sideLength-1) ||
-                    (i == sideLength-1 && j == 0) || (i == sideLength-1 && j == sideLength-1))
+                for (int z = 0; z < maxZ; z++)
                 {
-                    continue;
-                }
-
-                if (mazeWalls[i][j])
-                {
-                    Point3D position = new Point3D(i, 0.5f, j);
-
-                    /* === Cube mask === */
-                    CubeMask mask = new CubeMask();
-                    mask.setBottom(false);
-                    mask.setTop(false);
-
-                    // North
-                    if (i != sideLength-1)
+                    if (worldBlocks[x][y][z])
                     {
-                        mask.setNorth(!mazeWalls[i+1][j]);
-                    }
-                    else
-                    {
-                        mask.setNorth(false);
-                    }
+                        CubeMask mask = new CubeMask();
 
-                    // South
-                    if (i != 0)
-                    {
-                        mask.setSouth(!mazeWalls[i-1][j]);
-                    }
-                    else
-                    {
-                        mask.setSouth(false);
-                    }
+                        // Up
+                        if (y+1 != maxY && worldBlocks[x][y+1][z])
+                        {
+                            mask.setTop(false);
+                        }
 
-                    // East
-                    if (j != sideLength-1)
-                    {
-                        mask.setEast(!mazeWalls[i][j+1]);
-                    }
-                    else
-                    {
-                        mask.setEast(false);
-                    }
+                        // Down
+                        if (y == 0 || worldBlocks[x][y-1][z])
+                        {
+                            mask.setBottom(false);
+                        }
 
-                    // West
-                    if (j != 0)
-                    {
-                        mask.setWest(!mazeWalls[i][j-1]);
-                    }
-                    else
-                    {
-                        mask.setWest(false);
-                    }
+                        // North
+                        if (x+1 == maxX || worldBlocks[x+1][y][z])
+                        {
+                            mask.setNorth(false);
+                        }
 
-                    Block block = new Block(position, new Vector3D(scale), Settings.wallMaterial, Settings.wallMinimapMaterial, mask);
+                        // South
+                        if (x == 0 || worldBlocks[x-1][y][z])
+                        {
+                            mask.setSouth(false);
+                        }
 
-                    gameObjects.add(block);
+                        // East
+                        if (z+1 == maxZ || worldBlocks[x][y][z+1])
+                        {
+                            mask.setEast(false);
+                        }
+
+                        // West
+                        if (z == 0 || worldBlocks[x][y][z-1])
+                        {
+                            mask.setWest(false);
+                        }
+
+                        Point3D position = new Point3D(x, y, z);
+
+                        Block block = new Block(position, new Vector3D(scale), Settings.wallMaterial, Settings.wallMinimapMaterial, mask);
+
+                        gameObjects.add(block);
+                    }
                 }
             }
         }
@@ -186,10 +163,36 @@ public class GameManager
         gameObjects.add(floor);
     }
 
-    private static void generateMaze(int sideLength)
+    private static void generateHeightMap()
     {
-        mazeGenerator.generateMaze(sideLength);
-        mazeWalls = mazeGenerator.getWalls();
-        mazeSpears = mazeGenerator.getSpears();
+        heightMap = new int[Settings.worldHeight][Settings.worldWidth];
+
+        for (int x = 0; x < Settings.worldWidth; x++)
+        {
+            for (int y = 0; y < Settings.worldHeight; y++)
+            {
+                double value = noise.eval(x / Settings.worldFeatureSize, y / Settings.worldFeatureSize, 0.0);
+                value += 1.0f;
+                value *= Settings.worldScale;
+
+                heightMap[x][y] = (int) value;
+
+                //System.out.format("Value: %f | HeightMap: %d\n", value, heightMap[y][x]);
+            }
+        }
+    }
+
+    private static void createWorldBlockArray()
+    {
+        for (int x = 0; x < Settings.worldWidth; x++)
+        {
+            for (int y = 0; y < Settings.worldHeight; y++)
+            {
+                for (int i = 0; i < heightMap[x][y]; i++)
+                {
+                    worldBlocks[x][i][y] = true;
+                }
+            }
+        }
     }
 }

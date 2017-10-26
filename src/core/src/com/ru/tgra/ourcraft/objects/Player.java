@@ -1,6 +1,7 @@
 package com.ru.tgra.ourcraft.objects;
 
 import com.ru.tgra.ourcraft.Camera;
+import com.ru.tgra.ourcraft.GameManager;
 import com.ru.tgra.ourcraft.GraphicsEnvironment;
 import com.ru.tgra.ourcraft.Settings;
 import com.ru.tgra.ourcraft.models.Material;
@@ -55,6 +56,22 @@ public class Player extends GameObject
         movementVector.set(0, 0, 0);
         yaw = 0;
         pitch = 0;
+
+        int x = (int) position.x;
+        int y = (int) position.y;
+        int z = (int) position.z;
+
+        System.out.print("\r                                 \r");
+        try
+        {
+            boolean inside = GameManager.worldBlocks[x][y][z];
+            System.out.print("x: " + x + ", y:" + y + ", z:" + z + " | In block: " + inside);
+        }
+        catch (Exception ex)
+        {
+            System.out.print("Out of bounds");
+        }
+
     }
 
     public void draw(int viewportID)

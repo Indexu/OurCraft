@@ -95,6 +95,10 @@ public class BoxGraphic {
 
     public static void drawSolidCube(CubeMask mask)
     {
+//    	if (mask.isInvisible())
+//		{
+//			return;
+//		}
 
         Gdx.gl.glVertexAttribPointer(vertexPointer, 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
         Gdx.gl.glVertexAttribPointer(normalPointer, 3, GL20.GL_FLOAT, false, 0, normalBuffer);

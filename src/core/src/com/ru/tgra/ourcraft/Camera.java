@@ -56,7 +56,7 @@ public class Camera
     public void slide(float deltaU, float deltaV, float deltaN)
     {
         eye.x += deltaU * u.x + deltaV * v.x + deltaN * n.x;
-        //eye.y += deltaU * u.y + deltaV * v.y + deltaN * n.y;
+        eye.y += deltaU * u.y + deltaV * v.y + deltaN * n.y;
         eye.z += deltaU * u.z + deltaV * v.z + deltaN * n.z;
     }
 
@@ -78,18 +78,19 @@ public class Camera
 
     public void yaw(float angle)
     {
-        rotate(angle, u, n);
 
-        /*
-        float rads = angle * (float)Math.PI / 180.0f;
-        float c = (float)Math.cos(rads);
-        float s = (float)Math.sin(rads);
+        float rads = angle * (float) Math.PI / 180.0f;
+        float c = (float) Math.cos(rads);
+        float s = (float) Math.sin(rads);
 
-        Vector3D t = new Vector3D(u);
+        yawByWorldUp(u, c, s);
+        yawByWorldUp(v, c, s);
+        yawByWorldUp(n, c, s);
+    }
 
-        u.set(t.x * c - n.x * s, t.y * c - n.y * s, t.z * c - n.z * s);
-        n.set(t.x * s + n.x * c, t.y * s + n.y * c, t.z * s + n.z * c);
-        */
+    private void yawByWorldUp(Vector3D v, float c, float s)
+    {
+        v.set(c * v.x + s * v.z, v.y, c * v.z - s * v.x);
     }
 
     public void pitch(float angle)

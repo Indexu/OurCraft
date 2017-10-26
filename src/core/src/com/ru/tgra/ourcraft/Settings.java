@@ -4,8 +4,6 @@ import com.ru.tgra.ourcraft.models.Color;
 import com.ru.tgra.ourcraft.models.Material;
 import com.ru.tgra.ourcraft.models.Vector3D;
 
-import static com.badlogic.gdx.graphics.g3d.particles.ParticleChannels.Color;
-
 public class Settings
 {
     /* === Viewport IDs === */
@@ -17,11 +15,11 @@ public class Settings
     public static final int virtualHeight = 1080;
     public static final float aspectRatio = (float)virtualWidth / (float)virtualHeight;
 
-    /* === Maze settings === */
-    // Side length must be an odd number and increment must be an even number
-    public static final int startSideLength = 15;
-    public static final int sideLengthIncrement = 4;
-    public static final float percentageOfMazeSpears = 0.15f;
+    /* === World settings === */
+    public static final int worldWidth = 32;
+    public static final int worldHeight = 32;
+    public static final int worldFeatureSize = 4;
+    public static final int worldScale = 10;
 
     /* === Player settings === */
     public static final float playerFOV = 60f;
@@ -179,7 +177,7 @@ public class Settings
 
     // Helmet light
     public static final Color helmetLightColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-    public static final float helmetLightSpotFactor = 10.0f;
+    public static final float helmetLightSpotFactor = 0.0f;
     public static final float helmetConstantAttenuation = 0.5f;
     public static final float helmetLightLinearAttenuation = 0.3f;
     public static final float helmetLightQuadraticAttenuation = 0.3f;

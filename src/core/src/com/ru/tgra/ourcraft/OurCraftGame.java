@@ -34,7 +34,8 @@ public class OurCraftGame extends ApplicationAdapter
 	{
 		init();
 
-		GameManager.mainMenu = true;
+		GameManager.mainMenu = false;
+		GameManager.createWorld();
 	}
 
 	private void mainMenuInput()
@@ -42,7 +43,7 @@ public class OurCraftGame extends ApplicationAdapter
 		if(Gdx.input.isKeyPressed(Input.Keys.ENTER))
 		{
 			GameManager.mainMenu = false;
-			GameManager.createMaze();
+			GameManager.createWorld();
 		}
 	}
 
@@ -55,11 +56,6 @@ public class OurCraftGame extends ApplicationAdapter
 		{
 			mainMenuInput();
 
-			return;
-		}
-
-		if (GameManager.isDead() || GameManager.hasWon())
-		{
 			return;
 		}
 
@@ -130,31 +126,7 @@ public class OurCraftGame extends ApplicationAdapter
 			gameObject.update(deltaTime);
 		}
 
-		if (GameManager.isDead())
-		{
-			textTimer += deltaTime;
-
-			if (Settings.fadeTime < textTimer)
-			{
-				textTimer = 0f;
-				GameManager.revive();
-			}
-		}
-		else if (GameManager.hasWon())
-		{
-			textTimer += deltaTime;
-
-			if (Settings.fadeTime < textTimer)
-			{
-				textTimer = 0f;
-				GameManager.createMaze();
-				GraphicsEnvironment.shader.setBrightness(1.0f);
-			}
-		}
-		else
-		{
-			CollisionsUtil.playerWallCollisions(GameManager.player);
-		}
+        //CollisionsUtil.playerWallCollisions(GameManager.player);
 	}
 
 	private void display()
@@ -168,20 +140,6 @@ public class OurCraftGame extends ApplicationAdapter
 			drawMainMenu();
 
 			return;
-		}
-
-		if (GameManager.isDead())
-		{
-			float ratio = 1.0f - (textTimer / Settings.fadeTime);
-
-			shader.setBrightness(ratio);
-		}
-
-		if (GameManager.hasWon())
-		{
-			float ratio = textTimer / Settings.fadeTime;
-
-			shader.setBrightness(ratio * 50.0f);
 		}
 
 		for (int viewNum = 0; viewNum < 2; viewNum++)
@@ -203,6 +161,11 @@ public class OurCraftGame extends ApplicationAdapter
 			}
 			else
 			{
+			    if (true)
+                {
+                    continue;
+                }
+
 				Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
 
                 Gdx.gl.glViewport
