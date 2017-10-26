@@ -14,6 +14,9 @@ public class Camera
     public Vector3D v;
     public Vector3D n;
 
+    private Vector3D forward;
+    private Vector3D side;
+
     private FloatBuffer matrixBuffer;
 
     private boolean orthographic;
@@ -28,6 +31,8 @@ public class Camera
         u = new Vector3D(1, 0 , 0);
         v = new Vector3D(0, 1 , 0);
         n = new Vector3D(0, 0 , 1);
+
+        forward = new Vector3D(n);
 
         this.left = -1;
         this.right = 1;
@@ -46,6 +51,9 @@ public class Camera
         n.normalize();
         u.normalize();
         v = n.cross(u);
+
+        forward = new Vector3D(n);
+        side = new Vector3D(u);
     }
 
     public void setEye(float x, float y, float z)
@@ -53,11 +61,17 @@ public class Camera
         eye.set(x, y, z);
     }
 
-    public void slide(float deltaU, float deltaV, float deltaN)
+    public void allSlide(float deltaU, float deltaV, float deltaN)
     {
         eye.x += deltaU * u.x + deltaV * v.x + deltaN * n.x;
         eye.y += deltaU * u.y + deltaV * v.y + deltaN * n.y;
         eye.z += deltaU * u.z + deltaV * v.z + deltaN * n.z;
+    }
+
+    public void slide(float deltaU, float deltaN)
+    {
+        eye.x += deltaU * side.x + deltaN * forward.x;
+        eye.z += deltaU * side.z + deltaN * forward.z;
     }
 
     public void roll(float angle)
@@ -86,6 +100,8 @@ public class Camera
         yawByWorldUp(u, c, s);
         yawByWorldUp(v, c, s);
         yawByWorldUp(n, c, s);
+        yawByWorldUp(forward, c, s);
+        yawByWorldUp(side, c, s);
     }
 
     private void yawByWorldUp(Vector3D v, float c, float s)
@@ -96,6 +112,9 @@ public class Camera
     public void pitch(float angle)
     {
         rotate(angle, n, v);
+
+        System.out.print(" | n: " + n);
+        System.out.print(" | v: " + v);
 
         /*
 
@@ -197,6 +216,11 @@ public class Camera
         float s = (float)Math.sin(rads);
 
         Vector3D t = new Vector3D(v1);
+
+        if (t.y * s + v2.y * c < 0)
+        {
+            return;
+        }
 
         v1.set(t.x * c - v2.x * s, t.y * c - v2.y * s, t.z * c - v2.z * s);
         v2.set(t.x * s + v2.x * c, t.y * s + v2.y * c, t.z * s + v2.z * c);

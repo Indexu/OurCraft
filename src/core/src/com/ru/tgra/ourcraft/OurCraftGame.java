@@ -109,6 +109,16 @@ public class OurCraftGame extends ApplicationAdapter
 		{
 			GameManager.player.moveBack();
 		}
+
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE))
+        {
+            GameManager.player.jump();
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.N))
+        {
+            GameManager.noclip = !GameManager.noclip;
+        }
 	}
 
 	private void update()
@@ -125,7 +135,10 @@ public class OurCraftGame extends ApplicationAdapter
 			gameObject.update(deltaTime);
 		}
 
-        CollisionsUtil.playerBlockCollisions(GameManager.player);
+		if (!GameManager.noclip)
+        {
+            CollisionsUtil.playerBlockCollisions(GameManager.player);
+        }
 	}
 
 	private void display()

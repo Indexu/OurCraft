@@ -67,6 +67,7 @@ public class CollisionsUtil
             if (below < 0 && y != 0 && GameManager.worldBlocks[x][y-1][z])
             {
                 position.y -= below;
+                player.resetGravity();
             }
             // Check above
             else if (1 < above && GameManager.worldBlocks[x][y+1][z])

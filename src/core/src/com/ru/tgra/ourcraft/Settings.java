@@ -23,10 +23,11 @@ public class Settings
 
     /* === Player settings === */
     public static final float playerFOV = 60f;
-    public static final float playerSpeed = 2f;
+    public static final float playerSpeed = 3f;
     public static final float playerButtonLookSensitivity = 100f;
     public static final float playerMouseLookSensitivity = 30f;
-    public static final float fadeTime = 3f;
+    public static final float gravity = 0.2f;
+    public static final float jumpStrength = 5f;
 
     /* === Materials === */
 

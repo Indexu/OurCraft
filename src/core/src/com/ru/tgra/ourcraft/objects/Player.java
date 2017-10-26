@@ -20,6 +20,7 @@ public class Player extends GameObject
     private Vector3D movementVector;
     private float yaw;
     private float pitch;
+    private float accumulatedGravity;
 
     public Player(Point3D position, Vector3D scale, float speed, Material material)
     {
@@ -41,17 +42,31 @@ public class Player extends GameObject
         movementVector = new Vector3D();
         yaw = 0;
         pitch = 0f;
+        accumulatedGravity = 0f;
     }
 
     public void update(float deltaTime)
     {
+        System.out.print("\r                                                                                            \r");
         movementVector.scale(deltaTime);
         yaw *= deltaTime;
         pitch *= deltaTime;
 
-        camera.slide(movementVector.x, movementVector.y, movementVector.z);
         camera.yaw(yaw);
         camera.pitch(pitch);
+
+        if (GameManager.noclip)
+        {
+            camera.allSlide(movementVector.x, movementVector.y, movementVector.z);
+        }
+        else
+        {
+            accumulatedGravity += Settings.gravity;
+
+            position.y -= accumulatedGravity * deltaTime;
+
+            camera.slide(movementVector.x, movementVector.z);
+        }
 
         movementVector.set(0, 0, 0);
         yaw = 0;
@@ -61,11 +76,10 @@ public class Player extends GameObject
         int y = (int) position.y;
         int z = (int) position.z;
 
-        System.out.print("\r                                 \r");
         try
         {
             boolean inside = GameManager.worldBlocks[x][y][z];
-            System.out.print("x: " + x + ", y:" + y + ", z:" + z + " | In block: " + inside);
+            System.out.print("x: " + x + ", y:" + y + ", z:" + z + " | In block: " + inside + " | Gravity: " + accumulatedGravity);
         }
         catch (Exception ex)
         {
@@ -109,6 +123,14 @@ public class Player extends GameObject
     public void moveBack()
     {
         movementVector.z = Settings.playerSpeed;
+    }
+
+    public void jump()
+    {
+        if (accumulatedGravity == 0f)
+        {
+            accumulatedGravity = -Settings.jumpStrength;
+        }
     }
 
     public void lookLeft()
@@ -164,5 +186,10 @@ public class Player extends GameObject
     public float getRadius()
     {
         return radius;
+    }
+
+    public void resetGravity()
+    {
+        accumulatedGravity = 0f;
     }
 }

@@ -21,7 +21,7 @@ public class GameManager
     public static Light headLight;
     public static Camera minimapCamera;
     public static Player player;
-    public static boolean dead;
+    public static boolean noclip;
     public static boolean won;
 
     private static OpenSimplexNoise noise;
@@ -34,7 +34,7 @@ public class GameManager
         noise = new OpenSimplexNoise();
         //noise = new OpenSimplexNoise(new Date().getTime());
         worldBlocks = new boolean[Settings.worldWidth][Settings.worldScale * 2][Settings.worldHeight];
-        dead = false;
+        noclip = false;
         won = false;
     }
 
