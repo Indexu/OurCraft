@@ -146,12 +146,17 @@ public class Player extends GameObject
         return camera;
     }
 
-    public int getMazeX()
+    public int getWorldX()
     {
         return (int) (position.x + 0.5f);
     }
 
-    public int getMazeY()
+    public int getWorldY()
+    {
+        return (int) (position.y + 0.5f);
+    }
+
+    public int getWorldZ()
     {
         return (int) (position.z + 0.5f);
     }
