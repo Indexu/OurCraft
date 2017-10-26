@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class GameManager
 {
     public static ArrayList<GameObject> gameObjects;
+    public static ArrayList<GameObject> allBlocks;
 
     public static boolean[][][] worldBlocks;
 
@@ -29,6 +30,7 @@ public class GameManager
     public static void init()
     {
         gameObjects = new ArrayList<GameObject>();
+        allBlocks = new ArrayList<GameObject>();
         noise = new OpenSimplexNoise();
         //noise = new OpenSimplexNoise(new Date().getTime());
         worldBlocks = new boolean[Settings.worldWidth][Settings.worldScale * 2][Settings.worldHeight];
@@ -158,9 +160,19 @@ public class GameManager
                             Block.BlockType.GRASS
                         );
 
-                        gameObjects.add(block);
+                        allBlocks.add(block);
                     }
                 }
+            }
+        }
+
+        for (GameObject gameObject : allBlocks)
+        {
+            Block block = (Block) gameObject;
+
+            if (!block.getMask().isInvisible())
+            {
+                gameObjects.add(gameObject);
             }
         }
     }

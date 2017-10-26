@@ -37,6 +37,11 @@ public class Block extends GameObject
 
     public void draw(int viewportID)
     {
+        if (mask.isInvisible())
+        {
+            return;
+        }
+
         float distanceToPlayer = Vector3D.difference(position, GameManager.player.position).length();
 
         if (30f < distanceToPlayer)
@@ -65,5 +70,15 @@ public class Block extends GameObject
     public void update(float deltaTime)
     {
         // Do nothing
+    }
+
+    public CubeMask getMask()
+    {
+        return mask;
+    }
+
+    public void setMask(CubeMask mask)
+    {
+        this.mask = mask;
     }
 }

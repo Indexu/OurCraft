@@ -16,8 +16,8 @@ public class Settings
     public static final float aspectRatio = (float)virtualWidth / (float)virtualHeight;
 
     /* === World settings === */
-    public static final int worldWidth = 64;
-    public static final int worldHeight = 64;
+    public static final int worldWidth = 128;
+    public static final int worldHeight = 128;
     public static final int worldFeatureSize = 4;
     public static final int worldScale = 20;
 
