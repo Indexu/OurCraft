@@ -31,6 +31,7 @@ public class Settings
     public static final float playerMouseLookSensitivity = 30f;
     public static final float gravity = 0.2f;
     public static final float jumpStrength = 5f;
+    public static final float reach = 3f;
 
     /* === Materials === */
 

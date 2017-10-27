@@ -88,6 +88,13 @@ public class Vector3D {
 		return new Vector3D(P2.x-P1.x, P2.y-P1.y, P2.z-P1.z);
 	}
 
+	public void setDifference(Point3D P2, Point3D P1)
+	{
+		this.x = P2.x-P1.x;
+		this.y = P2.y-P1.y;
+		this.z = P2.z-P1.z;
+	}
+
 	@Override
     public String toString()
     {

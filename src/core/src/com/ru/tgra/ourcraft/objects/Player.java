@@ -14,6 +14,8 @@ public class Player extends GameObject
 {
     private Camera camera;
 
+    private Block targetBlock;
+
     private float radius;
     private float offset = 0.5f;
 
@@ -43,6 +45,8 @@ public class Player extends GameObject
         yaw = 0;
         pitch = 0f;
         accumulatedGravity = 0f;
+
+        targetBlock = null;
     }
 
     public void update(float deltaTime)
@@ -190,5 +194,15 @@ public class Player extends GameObject
     public void resetGravity()
     {
         accumulatedGravity = 0f;
+    }
+
+    public Block getTargetBlock()
+    {
+        return targetBlock;
+    }
+
+    public void setTargetBlock(Block targetBlock)
+    {
+        this.targetBlock = targetBlock;
     }
 }

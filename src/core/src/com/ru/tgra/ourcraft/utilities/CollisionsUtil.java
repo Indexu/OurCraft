@@ -4,6 +4,7 @@ import com.ru.tgra.ourcraft.GameManager;
 import com.ru.tgra.ourcraft.Settings;
 import com.ru.tgra.ourcraft.models.Point3D;
 import com.ru.tgra.ourcraft.models.Vector3D;
+import com.ru.tgra.ourcraft.objects.Block;
 import com.ru.tgra.ourcraft.objects.Player;
 
 public class CollisionsUtil
@@ -107,6 +108,40 @@ public class CollisionsUtil
                 }
             }
         }
+    }
+
+    public static boolean lineIntersectsWithBlock(Point3D lineOirign, Vector3D lineDirection, Block block)
+    {
+        // r.dir is unit direction vector of ray
+        Point3D dirfrac = new Point3D();
+        dirfrac.x = 1.0f / lineDirection.x;
+        dirfrac.y = 1.0f / lineDirection.y;
+        dirfrac.z = 1.0f / lineDirection.z;
+        // lb is the corner of AABB with minimal coordinates - left bottom, rt is maximal corner
+        // r.org is origin of ray
+        float t1 = (block.getLeftBottom().x - lineOirign.x)*dirfrac.x;
+        float t2 = (block.getRightTop().x - lineOirign.x)*dirfrac.x;
+        float t3 = (block.getLeftBottom().y - lineOirign.y)*dirfrac.y;
+        float t4 = (block.getRightTop().y - lineOirign.y)*dirfrac.y;
+        float t5 = (block.getLeftBottom().z - lineOirign.z)*dirfrac.z;
+        float t6 = (block.getRightTop().z - lineOirign.z)*dirfrac.z;
+
+        float tmin = Math.max(Math.max(Math.min(t1, t2), Math.min(t3, t4)), Math.min(t5, t6));
+        float tmax = Math.min(Math.min(Math.max(t1, t2), Math.max(t3, t4)), Math.max(t5, t6));
+
+        // if tmax < 0, ray (line) is intersecting AABB, but the whole AABB is behind us
+        if (tmax < 0)
+        {
+            return false;
+        }
+
+        // if tmin > tmax, ray doesn't intersect AABB
+        if (tmin > tmax)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private static void cornerCollision(Point3D position, Vector3D cornerVector, float radius)

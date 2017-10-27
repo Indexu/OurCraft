@@ -7,10 +7,11 @@ import com.ru.tgra.ourcraft.Settings;
 import com.ru.tgra.ourcraft.TextureManager;
 import com.ru.tgra.ourcraft.models.*;
 import com.ru.tgra.ourcraft.shapes.BoxGraphic;
+import com.ru.tgra.ourcraft.utilities.CollisionsUtil;
 
 public class Block extends GameObject
 {
-    public static enum BlockType
+    public enum BlockType
     {
         BEDROCK,
         GRASS,
@@ -21,6 +22,11 @@ public class Block extends GameObject
     private CubeMask minimapMask;
     private CubeMask renderMask;
     private BlockType blockType;
+    private Vector3D vectorFromPlayer;
+    private float distanceFromPlayer;
+
+    private Point3D leftBottom;
+    private Point3D rightTop;
 
     public Block(Point3D position, Vector3D scale, Material material, Material minimapMaterial, CubeMask mask, BlockType type)
     {
@@ -35,6 +41,19 @@ public class Block extends GameObject
 
         renderMask = new CubeMask(mask);
         minimapMask = new CubeMask(false, false, false, false, true, false);
+
+        vectorFromPlayer = new Vector3D();
+        distanceFromPlayer = Float.MAX_VALUE;
+
+        leftBottom = new Point3D(position);
+        leftBottom.x -= (scale.x * 0.5f);
+        leftBottom.y -= (scale.y * 0.5f);
+        leftBottom.z -= (scale.z * 0.5f);
+
+        rightTop = new Point3D(position);
+        rightTop.x += (scale.x * 0.5f);
+        rightTop.y += (scale.y * 0.5f);
+        rightTop.z += (scale.z * 0.5f);
     }
 
     public void draw(int viewportID)
@@ -43,6 +62,8 @@ public class Block extends GameObject
         {
             return;
         }
+
+        checkTargetedBlock();
 
         GameManager.drawCount++;
 
@@ -87,18 +108,18 @@ public class Block extends GameObject
             return false;
         }
 
-        Vector3D vectorToPlayer = Vector3D.difference(position, GameManager.player.position);
-        float distanceToPlayer = vectorToPlayer.length();
+        vectorFromPlayer.setDifference(position, GameManager.player.position);
+        distanceFromPlayer = vectorFromPlayer.length();
 
         // Skip if behind player
-        if (Settings.proximityDistance < distanceToPlayer &&
-                vectorToPlayer.dot(GameManager.player.getCamera().forward) < Settings.dotProductCutoff)
+        if (Settings.proximityDistance < distanceFromPlayer &&
+            vectorFromPlayer.dot(GameManager.player.getCamera().forward) < Settings.dotProductCutoff)
         {
             return false;
         }
 
         // Skip if outside draw distance
-        if (Settings.drawDistance < distanceToPlayer)
+        if (Settings.drawDistance < distanceFromPlayer)
         {
             return false;
         }
@@ -142,5 +163,47 @@ public class Block extends GameObject
         {
             renderMask.setEast(false);
         }
+    }
+
+    private void checkTargetedBlock()
+    {
+        if (distanceFromPlayer <= Settings.reach)
+        {
+            Block block = GameManager.player.getTargetBlock();
+
+            if (block == null)
+            {
+                GameManager.player.setTargetBlock(this);
+            }
+            else if (distanceFromPlayer < block.distanceFromPlayer)
+            {
+                boolean collides = CollisionsUtil.lineIntersectsWithBlock(GameManager.player.position, GameManager.player.getCamera().forward, this);
+
+                if (collides)
+                {
+                    GameManager.player.setTargetBlock(this);
+                }
+            }
+        }
+    }
+
+    public Vector3D getVectorFromPlayer()
+    {
+        return vectorFromPlayer;
+    }
+
+    public float getDistanceFromPlayer()
+    {
+        return distanceFromPlayer;
+    }
+
+    public Point3D getLeftBottom()
+    {
+        return leftBottom;
+    }
+
+    public Point3D getRightTop()
+    {
+        return rightTop;
     }
 }

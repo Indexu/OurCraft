@@ -1,6 +1,7 @@
 package com.ru.tgra.ourcraft;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
@@ -8,6 +9,7 @@ import com.ru.tgra.ourcraft.models.ModelMatrix;
 import com.ru.tgra.ourcraft.models.Point3D;
 import com.ru.tgra.ourcraft.models.Vector3D;
 import com.ru.tgra.ourcraft.objects.GameObject;
+import com.ru.tgra.ourcraft.objects.Player;
 import com.ru.tgra.ourcraft.shapes.BoxGraphic;
 import com.ru.tgra.ourcraft.shapes.CoordFrameGraphic;
 import com.ru.tgra.ourcraft.shapes.SincGraphic;
@@ -118,6 +120,11 @@ public class OurCraftGame extends ApplicationAdapter
         if(Gdx.input.isKeyJustPressed(Input.Keys.N))
         {
             GameManager.noclip = !GameManager.noclip;
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Buttons.LEFT))
+        {
+            GameManager.player.getTargetBlock().destroy();
         }
 	}
 
