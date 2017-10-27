@@ -13,9 +13,10 @@ public class Camera
     public Vector3D u;
     public Vector3D v;
     public Vector3D n;
+    public Vector3D forward;
 
-    private Vector3D forward;
-    private Vector3D side;
+    private Vector3D worldForward;
+    private Vector3D worldSide;
 
     private FloatBuffer matrixBuffer;
 
@@ -32,7 +33,7 @@ public class Camera
         v = new Vector3D(0, 1 , 0);
         n = new Vector3D(0, 0 , 1);
 
-        forward = new Vector3D(n);
+        worldForward = new Vector3D(n);
 
         this.left = -1;
         this.right = 1;
@@ -53,7 +54,10 @@ public class Camera
         v = n.cross(u);
 
         forward = new Vector3D(n);
-        side = new Vector3D(u);
+        forward.scale(-1.0f);
+
+        worldForward = new Vector3D(n);
+        worldSide = new Vector3D(u);
     }
 
     public void setEye(float x, float y, float z)
@@ -70,8 +74,8 @@ public class Camera
 
     public void slide(float deltaU, float deltaN)
     {
-        eye.x += deltaU * side.x + deltaN * forward.x;
-        eye.z += deltaU * side.z + deltaN * forward.z;
+        eye.x += deltaU * worldSide.x + deltaN * worldForward.x;
+        eye.z += deltaU * worldSide.z + deltaN * worldForward.z;
     }
 
     public void roll(float angle)
@@ -100,8 +104,8 @@ public class Camera
         yawByWorldUp(u, c, s);
         yawByWorldUp(v, c, s);
         yawByWorldUp(n, c, s);
-        yawByWorldUp(forward, c, s);
-        yawByWorldUp(side, c, s);
+        yawByWorldUp(worldForward, c, s);
+        yawByWorldUp(worldSide, c, s);
     }
 
     private void yawByWorldUp(Vector3D v, float c, float s)

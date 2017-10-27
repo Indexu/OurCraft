@@ -42,7 +42,14 @@ public class Block extends GameObject
             return;
         }
 
-        float distanceToPlayer = Vector3D.difference(position, GameManager.player.position).length();
+        Vector3D vectorToPlayer = Vector3D.difference(position, GameManager.player.position);
+
+        if (vectorToPlayer.dot(GameManager.player.getCamera().forward) < -0.2f)
+        {
+            return;
+        }
+
+        float distanceToPlayer = vectorToPlayer.length();
 
         if (30f < distanceToPlayer)
         {
