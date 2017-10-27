@@ -19,6 +19,7 @@ public class Block extends GameObject
 
     private CubeMask mask;
     private CubeMask minimapMask;
+    private CubeMask renderMask;
     private BlockType blockType;
 
     public Block(Point3D position, Vector3D scale, Material material, Material minimapMaterial, CubeMask mask, BlockType type)
@@ -32,29 +33,18 @@ public class Block extends GameObject
         this.mask = mask;
         blockType = type;
 
+        renderMask = new CubeMask(mask);
         minimapMask = new CubeMask(false, false, false, false, true, false);
     }
 
     public void draw(int viewportID)
     {
-        if (mask.isInvisible())
+        if (!checkDraw())
         {
             return;
         }
 
-        Vector3D vectorToPlayer = Vector3D.difference(position, GameManager.player.position);
-
-        if (vectorToPlayer.dot(GameManager.player.getCamera().forward) < -0.2f)
-        {
-            return;
-        }
-
-        float distanceToPlayer = vectorToPlayer.length();
-
-        if (30f < distanceToPlayer)
-        {
-            return;
-        }
+        GameManager.drawCount++;
 
         ModelMatrix.main.loadIdentityMatrix();
         ModelMatrix.main.addTranslation(position);
@@ -70,7 +60,7 @@ public class Block extends GameObject
         else
         {
             GraphicsEnvironment.shader.setMaterial(material);
-            BoxGraphic.drawSolidCube(GraphicsEnvironment.shader, TextureManager.getBlockTexture(blockType), mask);
+            BoxGraphic.drawSolidCube(GraphicsEnvironment.shader, TextureManager.getBlockTexture(blockType), renderMask);
         }
     }
 
@@ -87,5 +77,70 @@ public class Block extends GameObject
     public void setMask(CubeMask mask)
     {
         this.mask = mask;
+    }
+
+    private boolean checkDraw()
+    {
+        // Skip if invisible
+        if (mask.isInvisible())
+        {
+            return false;
+        }
+
+        Vector3D vectorToPlayer = Vector3D.difference(position, GameManager.player.position);
+        float distanceToPlayer = vectorToPlayer.length();
+
+        // Skip if behind player
+        if (Settings.proximityDistance < distanceToPlayer &&
+                vectorToPlayer.dot(GameManager.player.getCamera().forward) < Settings.dotProductCutoff)
+        {
+            return false;
+        }
+
+        // Skip if outside draw distance
+        if (Settings.drawDistance < distanceToPlayer)
+        {
+            return false;
+        }
+
+        // Construct the render mask
+        constructRenderMask();
+
+        return !renderMask.isInvisible();
+    }
+
+    private void constructRenderMask()
+    {
+        renderMask.setMask(mask);
+
+        if (mask.isBottom() && position.y < GameManager.player.position.y)
+        {
+            renderMask.setBottom(false);
+        }
+
+        if (mask.isTop() && GameManager.player.position.y < position.y)
+        {
+            renderMask.setTop(false);
+        }
+
+        if (mask.isNorth() && GameManager.player.position.x < position.x)
+        {
+            renderMask.setNorth(false);
+        }
+
+        if (mask.isSouth() && position.x < GameManager.player.position.x)
+        {
+            renderMask.setSouth(false);
+        }
+
+        if (mask.isEast() && GameManager.player.position.z < position.z)
+        {
+            renderMask.setEast(false);
+        }
+
+        if (mask.isWest() && position.z < GameManager.player.position.z)
+        {
+            renderMask.setEast(false);
+        }
     }
 }

@@ -18,6 +18,8 @@ public class GameManager
 
     public static boolean mainMenu;
 
+    public static int drawCount;
+
     public static Light headLight;
     public static Camera minimapCamera;
     public static Player player;
@@ -51,7 +53,8 @@ public class GameManager
 //        createMinimap();
 //        createHeadLight();
 
-        System.out.println(gameObjects.size());
+        System.out.println("GameObjects: " + gameObjects.size());
+        System.out.println("All blocks: " + allBlocks.size());
     }
 
     private static void createHeadLight()

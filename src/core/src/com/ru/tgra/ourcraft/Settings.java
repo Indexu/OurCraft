@@ -20,9 +20,12 @@ public class Settings
     public static final int worldHeight = 128;
     public static final int worldFeatureSize = 4;
     public static final int worldScale = 20;
+    public static final float dotProductCutoff = -0.1f;
+    public static final float drawDistance = 30f;
+    public static final float proximityDistance = 2f;
 
     /* === Player settings === */
-    public static final float playerFOV = 60f;
+    public static final float playerFOV = 80f;
     public static final float playerSpeed = 3f;
     public static final float playerButtonLookSensitivity = 100f;
     public static final float playerMouseLookSensitivity = 30f;

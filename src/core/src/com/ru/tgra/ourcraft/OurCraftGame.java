@@ -166,7 +166,15 @@ public class OurCraftGame extends ApplicationAdapter
                     (int) GraphicsEnvironment.viewport.height
                 );
 
-				GameManager.player.getCamera().setPerspectiveProjection(Settings.playerFOV, Gdx.graphics.getWidth() / Gdx.graphics.getHeight(), 0.1f, 50.0f);
+//                Gdx.gl.glViewport
+//                (
+//                    0,
+//                    0,
+//                    Gdx.graphics.getWidth(),
+//                    Gdx.graphics.getHeight()
+//                );
+
+				GameManager.player.getCamera().setPerspectiveProjection(Settings.playerFOV, GraphicsEnvironment.viewport.width / GraphicsEnvironment.viewport.height, 0.1f, 50.0f);
 				shader.setViewMatrix(GameManager.player.getCamera().getViewMatrix());
 				shader.setProjectionMatrix(GameManager.player.getCamera().getProjectionMatrix());
 				shader.setEyePosition(GameManager.player.getCamera().eye);
@@ -208,10 +216,14 @@ public class OurCraftGame extends ApplicationAdapter
 
 			GraphicsEnvironment.shader.setLight(GameManager.headLight);
 
+            GameManager.drawCount = 0;
+
 			for (GameObject gameObject : GameManager.gameObjects)
 			{
 				gameObject.draw(viewNum);
 			}
+            System.out.print("\r                                                                                            \r");
+			System.out.print(" | Draw Count: " + GameManager.drawCount);
 		}
 
 	}

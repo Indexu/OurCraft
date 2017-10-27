@@ -47,7 +47,6 @@ public class Player extends GameObject
 
     public void update(float deltaTime)
     {
-        System.out.print("\r                                                                                            \r");
         movementVector.scale(deltaTime);
         yaw *= deltaTime;
         pitch *= deltaTime;
@@ -72,19 +71,19 @@ public class Player extends GameObject
         yaw = 0;
         pitch = 0;
 
-        int x = (int) position.x;
-        int y = (int) position.y;
-        int z = (int) position.z;
-
-        try
-        {
-            boolean inside = GameManager.worldBlocks[x][y][z];
-            System.out.print("x: " + x + ", y:" + y + ", z:" + z + " | In block: " + inside + " | Gravity: " + accumulatedGravity);
-        }
-        catch (Exception ex)
-        {
-            System.out.print("Out of bounds");
-        }
+//        int x = (int) position.x;
+//        int y = (int) position.y;
+//        int z = (int) position.z;
+//
+//        try
+//        {
+//            boolean inside = GameManager.worldBlocks[x][y][z];
+//            System.out.print("x: " + x + ", y:" + y + ", z:" + z + " | In block: " + inside + " | Gravity: " + accumulatedGravity);
+//        }
+//        catch (Exception ex)
+//        {
+//            System.out.print("Out of bounds");
+//        }
 
     }
 

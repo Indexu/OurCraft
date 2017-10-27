@@ -19,6 +19,16 @@ public class CubeMask
         this.bottom = bottom;
     }
 
+    public CubeMask(CubeMask mask)
+    {
+        this.north = mask.north;
+        this.south = mask.south;
+        this.east = mask.east;
+        this.west = mask.west;
+        this.top = mask.top;
+        this.bottom = mask.bottom;
+    }
+
     public CubeMask()
     {
         this.north = true;
@@ -27,6 +37,16 @@ public class CubeMask
         this.west = true;
         this.top = true;
         this.bottom = true;
+    }
+
+    public void setMask(CubeMask mask)
+    {
+        this.north = mask.north;
+        this.south = mask.south;
+        this.east = mask.east;
+        this.west = mask.west;
+        this.top = mask.top;
+        this.bottom = mask.bottom;
     }
 
     public boolean isInvisible()

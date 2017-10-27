@@ -78,21 +78,21 @@ public class Camera
         eye.z += deltaU * worldSide.z + deltaN * worldForward.z;
     }
 
-    public void roll(float angle)
-    {
-        rotate(angle, u, v);
-
-        /*
-        float rads = angle * (float)Math.PI / 180.0f;
-        float c = (float)Math.cos(rads);
-        float s = (float)Math.sin(rads);
-
-        Vector3D t = new Vector3D(u);
-
-        u.set(t.x * c - v.x * s, t.y * c - v.y * s, t.z * c - v.z * s);
-        v.set(t.x * s + v.x * c, t.y * s + v.y * c, t.z * s + v.z * c);
-        */
-    }
+//    public void roll(float angle)
+//    {
+//        rotate(angle, u, v);
+//
+//        /*
+//        float rads = angle * (float)Math.PI / 180.0f;
+//        float c = (float)Math.cos(rads);
+//        float s = (float)Math.sin(rads);
+//
+//        Vector3D t = new Vector3D(u);
+//
+//        u.set(t.x * c - v.x * s, t.y * c - v.y * s, t.z * c - v.z * s);
+//        v.set(t.x * s + v.x * c, t.y * s + v.y * c, t.z * s + v.z * c);
+//        */
+//    }
 
     public void yaw(float angle)
     {
@@ -104,6 +104,7 @@ public class Camera
         yawByWorldUp(u, c, s);
         yawByWorldUp(v, c, s);
         yawByWorldUp(n, c, s);
+        yawByWorldUp(forward, c, s);
         yawByWorldUp(worldForward, c, s);
         yawByWorldUp(worldSide, c, s);
     }
@@ -115,22 +116,26 @@ public class Camera
 
     public void pitch(float angle)
     {
-        rotate(angle, n, v);
-
-        System.out.print(" | n: " + n);
-        System.out.print(" | v: " + v);
-
-        /*
-
         float rads = angle * (float)Math.PI / 180.0f;
         float c = (float)Math.cos(rads);
         float s = (float)Math.sin(rads);
 
         Vector3D t = new Vector3D(n);
 
+        if (t.y * s + v.y * c < 0.2)
+        {
+            return;
+        }
+
         n.set(t.x * c - v.x * s, t.y * c - v.y * s, t.z * c - v.z * s);
+        forward.set(forward.x * c + v.x * s, forward.y * c + v.y * s, forward.z * c + v.z * s);
         v.set(t.x * s + v.x * c, t.y * s + v.y * c, t.z * s + v.z * c);
-        */
+
+//        forward = new Vector3D(n);
+//        forward.scale(-1.0f);
+
+//        System.out.print(" | Forward: " + forward);
+//        System.out.print(" | n: " + n);
     }
 
     public void setOrthographicProjection(float left, float right, float bottom, float top, float near, float far)
@@ -213,20 +218,20 @@ public class Camera
 
     }
 
-    private void rotate(float angle, Vector3D v1, Vector3D v2)
-    {
-        float rads = angle * (float)Math.PI / 180.0f;
-        float c = (float)Math.cos(rads);
-        float s = (float)Math.sin(rads);
-
-        Vector3D t = new Vector3D(v1);
-
-        if (t.y * s + v2.y * c < 0)
-        {
-            return;
-        }
-
-        v1.set(t.x * c - v2.x * s, t.y * c - v2.y * s, t.z * c - v2.z * s);
-        v2.set(t.x * s + v2.x * c, t.y * s + v2.y * c, t.z * s + v2.z * c);
-    }
+//    private void rotate(float angle, Vector3D v1, Vector3D v2)
+//    {
+//        float rads = angle * (float)Math.PI / 180.0f;
+//        float c = (float)Math.cos(rads);
+//        float s = (float)Math.sin(rads);
+//
+//        Vector3D t = new Vector3D(v1);
+//
+//        if (t.y * s + v2.y * c < 0)
+//        {
+//            return;
+//        }
+//
+//        v1.set(t.x * c - v2.x * s, t.y * c - v2.y * s, t.z * c - v2.z * s);
+//        v2.set(t.x * s + v2.x * c, t.y * s + v2.y * c, t.z * s + v2.z * c);
+//    }
 }
