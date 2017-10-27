@@ -122,9 +122,14 @@ public class OurCraftGame extends ApplicationAdapter
             GameManager.noclip = !GameManager.noclip;
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Buttons.LEFT))
+        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT))
         {
-            GameManager.player.getTargetBlock().destroy();
+            System.out.println(" | MOUSE LEFT");
+
+            if (GameManager.player.getTargetBlock() != null)
+            {
+                GameManager.player.getTargetBlock().destroy();
+            }
         }
 	}
 
@@ -141,6 +146,8 @@ public class OurCraftGame extends ApplicationAdapter
 		{
 			gameObject.update(deltaTime);
 		}
+
+        GameManager.gameObjects.removeIf(GameObject::isDestroyed);
 
 		if (!GameManager.noclip)
         {
@@ -229,7 +236,7 @@ public class OurCraftGame extends ApplicationAdapter
 			{
 				gameObject.draw(viewNum);
 			}
-            System.out.print("\r                                                                                            \r");
+
 			System.out.print(" | Draw Count: " + GameManager.drawCount);
 		}
 
@@ -248,6 +255,7 @@ public class OurCraftGame extends ApplicationAdapter
 	@Override
 	public void render ()
 	{
+        System.out.print("\r                                                                                            \r");
 		input();
 		update();
 		display();
