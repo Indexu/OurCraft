@@ -6,6 +6,7 @@ import com.ru.tgra.ourcraft.models.Vector3D;
 
 public abstract class GameObject
 {
+    protected int ID;
     protected Point3D position;
     protected Vector3D direction;
     protected float speed;
@@ -17,6 +18,7 @@ public abstract class GameObject
 
     public GameObject()
     {
+        ID = 0;
         position = new Point3D();
         direction = new Vector3D();
         speed = 0;
@@ -121,5 +123,15 @@ public abstract class GameObject
     public void setMinimapMaterial(Material minimapMaterial)
     {
         this.minimapMaterial = minimapMaterial;
+    }
+
+    public int getID()
+    {
+        return ID;
+    }
+
+    public void setID(int ID)
+    {
+        this.ID = ID;
     }
 }

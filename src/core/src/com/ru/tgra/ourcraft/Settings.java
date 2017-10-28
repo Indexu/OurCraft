@@ -20,6 +20,10 @@ public class Settings
     public static final int worldHeight = 128;
     public static final int worldFeatureSize = 4;
     public static final int worldScale = 20;
+    public static final int chunkWidth = 16;
+    public static final int chunkHeight = 16;
+    public static final int chunkDrawRadius = 2;
+    public static final Vector3D blockSize = new Vector3D(1f, 1f, 1f);
     public static final float dotProductCutoff = -0.1f;
     public static final float drawDistance = 30f;
     public static final float proximityDistance = 2f;
@@ -40,6 +44,17 @@ public class Settings
     (
             new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
             new Color(0.408f, 0.624f, 0.22f, 1.0f), // Diffuse
+            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Specular
+            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
+            128f,
+            1f
+    );
+
+    // Selected
+    public static final Material selectedMaterial = new Material
+    (
+            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
+            new Color(0.8f, 0.0f, 0.0f, 1.0f), // Diffuse
             new Color(0.0f, 0.0f, 0.0f, 0.0f), // Specular
             new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
             128f,

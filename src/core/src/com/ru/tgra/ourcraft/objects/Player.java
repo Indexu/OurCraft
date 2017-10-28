@@ -10,6 +10,8 @@ import com.ru.tgra.ourcraft.models.Point3D;
 import com.ru.tgra.ourcraft.models.Vector3D;
 import com.ru.tgra.ourcraft.shapes.SphereGraphic;
 
+import java.util.ArrayList;
+
 public class Player extends GameObject
 {
     private Camera camera;
@@ -24,10 +26,11 @@ public class Player extends GameObject
     private float pitch;
     private float accumulatedGravity;
 
-    public Player(Point3D position, Vector3D scale, float speed, Material material)
+    public Player(int ID, Point3D position, Vector3D scale, float speed, Material material)
     {
         super();
 
+        this.ID = ID;
         this.position = position;
         this.scale = scale;
         this.speed = speed;
@@ -74,6 +77,7 @@ public class Player extends GameObject
         movementVector.set(0, 0, 0);
         yaw = 0;
         pitch = 0;
+        targetBlock = null;
 
 //        int x = (int) position.x;
 //        int y = (int) position.y;

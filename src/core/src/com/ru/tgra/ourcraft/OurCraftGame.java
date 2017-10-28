@@ -147,7 +147,7 @@ public class OurCraftGame extends ApplicationAdapter
 			gameObject.update(deltaTime);
 		}
 
-        GameManager.gameObjects.removeIf(GameObject::isDestroyed);
+        //GameManager.gameObjects.removeIf(GameObject::isDestroyed);
 
 		if (!GameManager.noclip)
         {
@@ -159,7 +159,7 @@ public class OurCraftGame extends ApplicationAdapter
 	{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-		Gdx.graphics.setTitle("Labyrinth | FPS: " + Gdx.graphics.getFramesPerSecond());
+		Gdx.graphics.setTitle("OurCraft | FPS: " + Gdx.graphics.getFramesPerSecond());
 
 		if (GameManager.mainMenu)
 		{
@@ -231,6 +231,8 @@ public class OurCraftGame extends ApplicationAdapter
 			GraphicsEnvironment.shader.setLight(GameManager.headLight);
 
             GameManager.drawCount = 0;
+
+			GameManager.drawWorld(viewNum);
 
 			for (GameObject gameObject : GameManager.gameObjects)
 			{

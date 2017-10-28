@@ -13,6 +13,9 @@ public class DesktopLauncher {
 		config.height = 648;
 		config.x = 100;
 		config.y = 50;
+//		config.vSyncEnabled = false; // Setting to false disables vertical sync
+//		config.foregroundFPS = 0; // Setting to 0 disables foreground fps throttling
+//		config.backgroundFPS = 0; // Setting to 0 disables background fps throttling
 
 		new LwjglApplication(new OurCraftGame(), config);
 	}

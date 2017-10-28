@@ -29,4 +29,9 @@ public class MathUtils
 
         return f1Negative == f2Negative;
     }
+
+    public static int cartesianHash(int x, int y, int z)
+    {
+        return x + (y << 10) + (z << 20);
+    }
 }

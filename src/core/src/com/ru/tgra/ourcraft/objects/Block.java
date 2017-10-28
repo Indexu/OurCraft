@@ -28,10 +28,11 @@ public class Block extends GameObject
     private Point3D leftBottom;
     private Point3D rightTop;
 
-    public Block(Point3D position, Vector3D scale, Material material, Material minimapMaterial, CubeMask mask, BlockType type)
+    public Block(int ID, Point3D position, Vector3D scale, Material material, Material minimapMaterial, CubeMask mask, BlockType type)
     {
         super();
 
+        this.ID = ID;
         this.position = position;
         this.scale = scale;
         this.material = material;
@@ -63,7 +64,7 @@ public class Block extends GameObject
             return;
         }
 
-        checkTargetedBlock();
+        //checkTargetedBlock();
 
         GameManager.drawCount++;
 
@@ -80,7 +81,15 @@ public class Block extends GameObject
         }
         else
         {
-            GraphicsEnvironment.shader.setMaterial(material);
+            if (GameManager.player.getTargetBlock() != null && GameManager.player.getTargetBlock().getID() == this.ID)
+            {
+                GraphicsEnvironment.shader.setMaterial(Settings.selectedMaterial);
+            }
+            else
+            {
+                GraphicsEnvironment.shader.setMaterial(material);
+            }
+
             BoxGraphic.drawSolidCube(GraphicsEnvironment.shader, TextureManager.getBlockTexture(blockType), renderMask);
         }
     }
