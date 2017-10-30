@@ -135,7 +135,7 @@ public class BoxGraphic {
 		Gdx.gl.glDrawArrays(GL20.GL_TRIANGLE_FAN, 20, 4);
 	}
 
-    public static void drawSolidCube(Shader shader, Texture diffuseTexture, CubeMask mask)
+    public static void drawSolidCube(Shader shader, Texture diffuseTexture, FloatBuffer uvBuffer, CubeMask mask)
     {
     	if (mask.isInvisible())
 		{

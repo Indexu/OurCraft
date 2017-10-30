@@ -39,39 +39,39 @@ public class CollisionsUtil
             boolean collided = false;
 
             // Check right
-            if (right < 0 && x != 0 && GameManager.worldBlocks[x-1][y][z])
+            if (right < 0 && x != 0 && GameManager.worldBlocks[x-1][y][z] != Block.BlockType.EMPTY)
             {
                 position.x -= right;
                 collided = true;
             }
             // Check left
-            else if (1 < left && GameManager.worldBlocks[x+1][y][z])
+            else if (1 < left && GameManager.worldBlocks[x+1][y][z] != Block.BlockType.EMPTY)
             {
                 position.x -= (left % 1);
                 collided = true;
             }
 
             // Check bottom
-            if (bottom < 0 && z != 0 && GameManager.worldBlocks[x][y][z-1])
+            if (bottom < 0 && z != 0 && GameManager.worldBlocks[x][y][z-1] != Block.BlockType.EMPTY)
             {
                 position.z -= bottom;
                 collided = true;
             }
             // Check top
-            else if (1 < top && GameManager.worldBlocks[x][y][z+1])
+            else if (1 < top && GameManager.worldBlocks[x][y][z+1] != Block.BlockType.EMPTY)
             {
                 position.z -= (top % 1);
                 collided = true;
             }
 
             // Check below
-            if (below < 0 && y != 0 && GameManager.worldBlocks[x][y-1][z])
+            if (below < 0 && y != 0 && GameManager.worldBlocks[x][y-1][z] != Block.BlockType.EMPTY)
             {
                 position.y -= below;
                 player.resetGravity();
             }
             // Check above
-            else if (1 < above && GameManager.worldBlocks[x][y+1][z])
+            else if (1 < above && GameManager.worldBlocks[x][y+1][z] != Block.BlockType.EMPTY)
             {
                 position.y -= (above % 1);
             }
@@ -80,28 +80,28 @@ public class CollisionsUtil
             if (!collided)
             {
                 // Top left
-                if (GameManager.worldBlocks[x+1][y][z+1])
+                if (GameManager.worldBlocks[x+1][y][z+1] != Block.BlockType.EMPTY)
                 {
                     Vector3D v = new Vector3D(position.x - (x + 0.5f), 0f, position.z - (z + 0.5f));
                     cornerCollision(position, v, radius);
                 }
 
                 // Top right
-                if (x != 0 && GameManager.worldBlocks[x-1][y][z+1])
+                if (x != 0 && GameManager.worldBlocks[x-1][y][z+1] != Block.BlockType.EMPTY)
                 {
                     Vector3D v = new Vector3D(position.x - (x - 0.5f), 0f, position.z - (z + 0.5f));
                     cornerCollision(position, v, radius);
                 }
 
                 // Bottom left
-                if (z != 0 && GameManager.worldBlocks[x+1][y][z-1])
+                if (z != 0 && GameManager.worldBlocks[x+1][y][z-1] != Block.BlockType.EMPTY)
                 {
                     Vector3D v = new Vector3D(position.x - (x + 0.5f), 0f, position.z - (z - 0.5f));
                     cornerCollision(position, v, radius);
                 }
 
                 // Bottom right
-                if (x != 0 && z != 0 && GameManager.worldBlocks[x-1][y][z-1])
+                if (x != 0 && z != 0 && GameManager.worldBlocks[x-1][y][z-1] != Block.BlockType.EMPTY)
                 {
                     Vector3D v = new Vector3D(position.x - (x - 0.5f), 0f, position.z - (z - 0.5f));
                     cornerCollision(position, v, radius);
@@ -110,21 +110,23 @@ public class CollisionsUtil
         }
     }
 
-    public static boolean lineIntersectsWithBlock(Point3D lineOirign, Vector3D lineDirection, Block block)
+    // Raycast source: https://gamedev.stackexchange.com/questions/18436/most-efficient-aabb-vs-ray-collision-algorithms
+    public static boolean lineIntersectsWithBlock(Point3D lineOrigin, Vector3D lineDirection, Block block)
     {
         // r.dir is unit direction vector of ray
         Point3D dirfrac = new Point3D();
         dirfrac.x = 1.0f / lineDirection.x;
         dirfrac.y = 1.0f / lineDirection.y;
         dirfrac.z = 1.0f / lineDirection.z;
+
         // lb is the corner of AABB with minimal coordinates - left bottom, rt is maximal corner
         // r.org is origin of ray
-        float t1 = (block.getLeftBottom().x - lineOirign.x)*dirfrac.x;
-        float t2 = (block.getRightTop().x - lineOirign.x)*dirfrac.x;
-        float t3 = (block.getLeftBottom().y - lineOirign.y)*dirfrac.y;
-        float t4 = (block.getRightTop().y - lineOirign.y)*dirfrac.y;
-        float t5 = (block.getLeftBottom().z - lineOirign.z)*dirfrac.z;
-        float t6 = (block.getRightTop().z - lineOirign.z)*dirfrac.z;
+        float t1 = (block.getLeftBottom().x - lineOrigin.x)*dirfrac.x;
+        float t2 = (block.getRightTop().x - lineOrigin.x)*dirfrac.x;
+        float t3 = (block.getLeftBottom().y - lineOrigin.y)*dirfrac.y;
+        float t4 = (block.getRightTop().y - lineOrigin.y)*dirfrac.y;
+        float t5 = (block.getLeftBottom().z - lineOrigin.z)*dirfrac.z;
+        float t6 = (block.getRightTop().z - lineOrigin.z)*dirfrac.z;
 
         float tmin = Math.max(Math.max(Math.min(t1, t2), Math.min(t3, t4)), Math.min(t5, t6));
         float tmax = Math.min(Math.min(Math.max(t1, t2), Math.max(t3, t4)), Math.max(t5, t6));
@@ -139,6 +141,31 @@ public class CollisionsUtil
         if (tmin > tmax)
         {
             return false;
+        }
+
+        if (tmax == t1)
+        {
+            block.setTargetFace(Block.TargetFace.NORTH);
+        }
+        else if (tmax == t2)
+        {
+            block.setTargetFace(Block.TargetFace.SOUTH);
+        }
+        else if (tmax == t3)
+        {
+            block.setTargetFace(Block.TargetFace.TOP);
+        }
+        else if (tmax == t4)
+        {
+            block.setTargetFace(Block.TargetFace.BOTTOM);
+        }
+        else if (tmax == t5)
+        {
+            block.setTargetFace(Block.TargetFace.EAST);
+        }
+        else if (tmax == t6)
+        {
+            block.setTargetFace(Block.TargetFace.WEST);
         }
 
         return true;

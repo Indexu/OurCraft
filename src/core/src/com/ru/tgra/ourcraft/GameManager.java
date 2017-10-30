@@ -9,9 +9,10 @@ import java.util.ArrayList;
 public class GameManager
 {
     public static ArrayList<GameObject> gameObjects;
-    public static ArrayList<GameObject> allBlocks;
+    public static ArrayList<Block> blocksToRemove;
 
-    public static boolean[][][] worldBlocks;
+    public static WorldGenerator worldGenerator;
+    public static Block.BlockType[][][] worldBlocks;
     public static Chunk[][] chunks;
 
     public static boolean mainMenu;
@@ -24,12 +25,10 @@ public class GameManager
     public static boolean noclip;
     public static boolean won;
 
-    private static WorldGenerator worldGenerator;
-
     public static void init()
     {
-        gameObjects = new ArrayList<GameObject>();
-        allBlocks = new ArrayList<GameObject>();
+        gameObjects = new ArrayList<>();
+        blocksToRemove = new ArrayList<>();
         worldGenerator = new WorldGenerator();
         noclip = false;
         won = false;
@@ -47,7 +46,6 @@ public class GameManager
         chunks = worldGenerator.getChunks();
 
         System.out.println("GameObjects: " + gameObjects.size());
-        System.out.println("All blocks: " + allBlocks.size());
     }
 
     public static void drawWorld(int viewportID)
@@ -84,6 +82,18 @@ public class GameManager
         System.out.format(" | Chunks drawn: %d", chunkDraw);
     }
 
+    public static void removeBlocks()
+    {
+        for (Block block : blocksToRemove)
+        {
+            setWorldBlocksBlock(block.getPosition(), Block.BlockType.EMPTY);
+            redoMasksForAdjacentBlocks(block);
+            chunks[block.getChunkX()][block.getChunkY()].removeBlock(block.getID());
+        }
+
+        blocksToRemove.clear();
+    }
+
     private static void createHeadLight()
     {
         headLight = new Light();
@@ -103,7 +113,72 @@ public class GameManager
 
     private static void createPlayer()
     {
-        player = new Player(1, new Point3D(0, Settings.worldScale, 0), new Vector3D(0.25f, 0.25f, 0.25f), Settings.playerSpeed, Settings.playerMinimapMaterial);
+        player = new Player(1, new Point3D(0, Settings.worldScale*2, 0), new Vector3D(0.25f, 0.25f, 0.25f), Settings.playerSpeed, Settings.playerMinimapMaterial);
         gameObjects.add(player);
+    }
+
+    private static void setWorldBlocksBlock(Point3D pos, Block.BlockType val)
+    {
+        int x = (int) pos.x;
+        int y = (int) pos.y;
+        int z = (int) pos.z;
+
+        worldBlocks[x][y][z] = val;
+    }
+
+    private static void redoMasksForAdjacentBlocks(Block block)
+    {
+        int x = (int) block.getPosition().x;
+        int y = (int) block.getPosition().y;
+        int z = (int) block.getPosition().z;
+
+        // Up
+        if (y+1 != worldGenerator.getMaxY() && worldBlocks[x][y+1][z] != Block.BlockType.EMPTY)
+        {
+            redoBlock(x, y + 1, z);
+        }
+
+        // Down
+        if (y != 0 && worldBlocks[x][y-1][z] != Block.BlockType.EMPTY)
+        {
+            redoBlock(x, y - 1, z);
+        }
+
+        // North
+        if (x+1 != worldGenerator.getMaxX() && worldBlocks[x+1][y][z] != Block.BlockType.EMPTY)
+        {
+            redoBlock(x + 1, y, z);
+        }
+
+        // South
+        if (x != 0 && worldBlocks[x-1][y][z] != Block.BlockType.EMPTY)
+        {
+            redoBlock(x - 1, y, z);
+        }
+
+        // East
+        if (z+1 != worldGenerator.getMaxZ() && worldBlocks[x][y][z+1] != Block.BlockType.EMPTY)
+        {
+            redoBlock(x, y, z + 1);
+        }
+
+        // West
+        if (z != 0 && worldBlocks[x][y][z-1] != Block.BlockType.EMPTY)
+        {
+            redoBlock(x, y, z - 1);
+        }
+    }
+
+    private static void redoBlock(int x, int y, int z)
+    {
+        CubeMask mask = BlockUtils.createBlockMask(x, y, z, worldBlocks);
+
+        int chunkX = MathUtils.getChunkX(x, Settings.chunkWidth);
+        int chunkY = MathUtils.getChunkY(z, Settings.chunkHeight);
+
+        int ID = MathUtils.cartesianHash(x, y, z);
+
+        chunks[chunkX][chunkY].assertBlock(ID, x, y, z, worldBlocks[x][y][z]);
+        chunks[chunkX][chunkY].setBlockMask(ID, mask);
     }
 }

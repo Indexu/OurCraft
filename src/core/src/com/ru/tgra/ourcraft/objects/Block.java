@@ -13,9 +13,21 @@ public class Block extends GameObject
 {
     public enum BlockType
     {
+        EMPTY,
         BEDROCK,
         GRASS,
-        STONE
+        STONE,
+        DIRT
+    }
+
+    public enum TargetFace
+    {
+        TOP,
+        BOTTOM,
+        NORTH,
+        SOUTH,
+        EAST,
+        WEST
     }
 
     private CubeMask mask;
@@ -24,11 +36,14 @@ public class Block extends GameObject
     private BlockType blockType;
     private Vector3D vectorFromPlayer;
     private float distanceFromPlayer;
+    private int chunkX;
+    private int chunkY;
+    private TargetFace targetFace;
 
     private Point3D leftBottom;
     private Point3D rightTop;
 
-    public Block(int ID, Point3D position, Vector3D scale, Material material, Material minimapMaterial, CubeMask mask, BlockType type)
+    public Block(int ID, Point3D position, Vector3D scale, Material material, Material minimapMaterial, CubeMask mask, BlockType type, int chunkX, int chunkY)
     {
         super();
 
@@ -39,6 +54,8 @@ public class Block extends GameObject
         this.minimapMaterial = minimapMaterial;
         this.mask = mask;
         blockType = type;
+        this.chunkX = chunkX;
+        this.chunkY = chunkY;
 
         renderMask = new CubeMask(mask);
         minimapMask = new CubeMask(false, false, false, false, true, false);
@@ -55,6 +72,8 @@ public class Block extends GameObject
         rightTop.x += (scale.x * 0.5f);
         rightTop.y += (scale.y * 0.5f);
         rightTop.z += (scale.z * 0.5f);
+
+        targetFace = null;
     }
 
     public void draw(int viewportID)
@@ -64,7 +83,7 @@ public class Block extends GameObject
             return;
         }
 
-        //checkTargetedBlock();
+        checkTargetedBlock();
 
         GameManager.drawCount++;
 
@@ -90,13 +109,23 @@ public class Block extends GameObject
                 GraphicsEnvironment.shader.setMaterial(material);
             }
 
-            BoxGraphic.drawSolidCube(GraphicsEnvironment.shader, TextureManager.getBlockTexture(blockType), renderMask);
+            BoxGraphic.drawSolidCube(
+                GraphicsEnvironment.shader,
+                TextureManager.getBlockTexture(blockType),
+                TextureManager.getBlockUVBuffer(blockType),
+                renderMask
+            );
         }
     }
 
     public void update(float deltaTime)
     {
         // Do nothing
+    }
+
+    public void destroy()
+    {
+        GameManager.blocksToRemove.add(this);
     }
 
     public CubeMask getMask()
@@ -170,7 +199,7 @@ public class Block extends GameObject
 
         if (mask.isWest() && position.z < GameManager.player.position.z)
         {
-            renderMask.setEast(false);
+            renderMask.setWest(false);
         }
     }
 
@@ -178,17 +207,16 @@ public class Block extends GameObject
     {
         if (distanceFromPlayer <= Settings.reach)
         {
+            boolean collides = CollisionsUtil.lineIntersectsWithBlock(GameManager.player.position, GameManager.player.getCamera().forward, this);
             Block block = GameManager.player.getTargetBlock();
 
-            if (block == null)
+            if (collides)
             {
-                GameManager.player.setTargetBlock(this);
-            }
-            else if (distanceFromPlayer < block.distanceFromPlayer)
-            {
-                boolean collides = CollisionsUtil.lineIntersectsWithBlock(GameManager.player.position, GameManager.player.getCamera().forward, this);
-
-                if (collides)
+                if (block == null)
+                {
+                    GameManager.player.setTargetBlock(this);
+                }
+                else if (distanceFromPlayer < block.distanceFromPlayer)
                 {
                     GameManager.player.setTargetBlock(this);
                 }
@@ -214,5 +242,25 @@ public class Block extends GameObject
     public Point3D getRightTop()
     {
         return rightTop;
+    }
+
+    public int getChunkX()
+    {
+        return chunkX;
+    }
+
+    public int getChunkY()
+    {
+        return chunkY;
+    }
+
+    public TargetFace getTargetFace()
+    {
+        return targetFace;
+    }
+
+    public void setTargetFace(TargetFace targetFace)
+    {
+        this.targetFace = targetFace;
     }
 }

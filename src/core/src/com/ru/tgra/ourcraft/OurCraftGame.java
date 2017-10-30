@@ -1,13 +1,13 @@
 package com.ru.tgra.ourcraft;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.ru.tgra.ourcraft.models.ModelMatrix;
 import com.ru.tgra.ourcraft.models.Point3D;
 import com.ru.tgra.ourcraft.models.Vector3D;
+import com.ru.tgra.ourcraft.objects.Block;
 import com.ru.tgra.ourcraft.objects.GameObject;
 import com.ru.tgra.ourcraft.objects.Player;
 import com.ru.tgra.ourcraft.shapes.BoxGraphic;
@@ -29,6 +29,7 @@ public class OurCraftGame extends ApplicationAdapter
 	private float oldMouseX;
 	private float oldMouseY;
 	private float textTimer;
+	private Cursor crosshair;
 
 	@Override
 	public void create ()
@@ -122,15 +123,15 @@ public class OurCraftGame extends ApplicationAdapter
             GameManager.noclip = !GameManager.noclip;
         }
 
-        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT))
-        {
-            System.out.println(" | MOUSE LEFT");
-
-            if (GameManager.player.getTargetBlock() != null)
-            {
-                GameManager.player.getTargetBlock().destroy();
-            }
-        }
+//        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT))
+//        {
+//            System.out.println(" | MOUSE LEFT");
+//
+//            if (GameManager.player.getTargetBlock() != null)
+//            {
+//                GameManager.player.getTargetBlock().destroy();
+//            }
+//        }
 	}
 
 	private void update()
@@ -153,6 +154,8 @@ public class OurCraftGame extends ApplicationAdapter
         {
             CollisionsUtil.playerBlockCollisions(GameManager.player);
         }
+
+        GameManager.removeBlocks();
 	}
 
 	private void display()
@@ -299,6 +302,7 @@ public class OurCraftGame extends ApplicationAdapter
 		GameManager.init();
 		AudioManager.init();
 		TextureManager.init();
+        initInput();
 
 		shader = GraphicsEnvironment.shader;
 
@@ -311,8 +315,10 @@ public class OurCraftGame extends ApplicationAdapter
 		ModelMatrix.main.loadIdentityMatrix();
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
-		Gdx.input.setCursorCatched(true);
-		Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+//        crosshair = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("crosshairs/crosshair.png")), 32, 32);
+//        Gdx.graphics.setCursor(crosshair);
+        Gdx.input.setCursorCatched(true);
+        Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 
 		oldMouseX = Gdx.input.getX();
 		oldMouseY = Gdx.input.getY() - Gdx.graphics.getHeight();
@@ -337,5 +343,58 @@ public class OurCraftGame extends ApplicationAdapter
 
 		mainMenuMessagePosition = new Point3D(mainMenuPlayPosition);
 		mainMenuMessagePosition.y -= offset;
+	}
+
+	private void initInput()
+	{
+		Gdx.input.setInputProcessor(new InputAdapter() {
+			@Override
+			public boolean touchDown(int x, int y, int pointer, int button)
+            {
+				if (button == Input.Buttons.LEFT)
+				{
+                    if (GameManager.player.getTargetBlock() != null)
+                    {
+                        Block.TargetFace face = GameManager.player.getTargetBlock().getTargetFace();
+                        String f = "";
+
+                        switch (face)
+                        {
+                            case TOP:
+                                f = "TOP";
+                                break;
+
+                            case BOTTOM:
+                                f = "BOTTOM";
+                                break;
+
+                            case SOUTH:
+                                f = "SOUTH";
+                                break;
+
+                            case NORTH:
+                                f = "NORTH";
+                                break;
+
+                            case EAST:
+                                f = "EAST";
+                                break;
+
+                            case WEST:
+                                f = "WEST";
+                                break;
+
+                            default:
+                                break;
+                        }
+
+                        System.out.println(f);
+                        GameManager.player.getTargetBlock().destroy();
+                    }
+				}
+
+				return false;
+			}
+        });
 	}
 }

@@ -8,20 +8,27 @@ import com.ru.tgra.ourcraft.objects.Block;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class WorldGenerator
 {
-    private boolean[][][] worldBlocks;
+    private Block.BlockType[][][] worldBlocks;
     private Chunk[][] chunks;
     private OpenSimplexNoise noise;
     private int[][] heightMap;
+    private int maxX;
+    private int maxY;
+    private int maxZ;
 
     public WorldGenerator()
     {
-        worldBlocks = new boolean[Settings.worldWidth][Settings.worldScale * 2][Settings.worldHeight];
+        worldBlocks = new Block.BlockType[Settings.worldWidth][Settings.worldScale * 2][Settings.worldHeight];
         heightMap = new int[Settings.worldHeight][Settings.worldWidth];
         noise = new OpenSimplexNoise();
         //noise = new OpenSimplexNoise(new Date().getTime());
+        maxX = Settings.worldWidth;
+        maxY = Settings.worldScale * 2;
+        maxZ = Settings.worldHeight;
     }
 
     public void generateWorld()
@@ -35,7 +42,7 @@ public class WorldGenerator
         System.out.println("Chunks: " + (chunks.length * chunks[0].length));
     }
 
-    public boolean[][][] getWorldBlocks()
+    public Block.BlockType[][][] getWorldBlocks()
     {
         return worldBlocks;
     }
@@ -64,13 +71,24 @@ public class WorldGenerator
 
     private void createWorldBlockArray()
     {
-        for (int x = 0; x < Settings.worldWidth; x++)
+        for (int x = 0; x < maxX; x++)
         {
-            for (int y = 0; y < Settings.worldHeight; y++)
+            for (int z = 0; z < maxZ; z++)
             {
-                for (int i = 0; i < heightMap[x][y]; i++)
+                for (int y = 0; y < maxY; y++)
                 {
-                    worldBlocks[x][i][y] = true;
+                    if (y < heightMap[x][z])
+                    {
+                        worldBlocks[x][y][z] = Block.BlockType.DIRT;
+                    }
+                    else if (y == heightMap[x][z])
+                    {
+                        worldBlocks[x][y][z] = Block.BlockType.GRASS;
+                    }
+                    else
+                    {
+                        worldBlocks[x][y][z] = Block.BlockType.EMPTY;
+                    }
                 }
             }
         }
@@ -94,10 +112,6 @@ public class WorldGenerator
 
     private void createChunk(int startX, int startZ)
     {
-        int maxX = Settings.worldWidth;
-        int maxY = Settings.worldScale * 2;
-        int maxZ = Settings.worldHeight;
-
         Map<Integer, Block> blockMap = new HashMap<>();
 
         for (int x = startX; x < (startX + Settings.chunkWidth); x++)
@@ -106,60 +120,29 @@ public class WorldGenerator
             {
                 for (int z = startZ; z < (startZ + Settings.chunkHeight); z++)
                 {
-                    if (worldBlocks[x][y][z])
+                    if (worldBlocks[x][y][z] != Block.BlockType.EMPTY && worldBlocks[x][y][z] != null)
                     {
-                        CubeMask mask = new CubeMask();
-
-                        // Up
-                        if (y+1 != maxY && worldBlocks[x][y+1][z])
-                        {
-                            mask.setTop(false);
-                        }
-
-                        // Down
-                        if (y == 0 || worldBlocks[x][y-1][z])
-                        {
-                            mask.setBottom(false);
-                        }
-
-                        // North
-                        if (x+1 == maxX || worldBlocks[x+1][y][z])
-                        {
-                            mask.setNorth(false);
-                        }
-
-                        // South
-                        if (x == 0 || worldBlocks[x-1][y][z])
-                        {
-                            mask.setSouth(false);
-                        }
-
-                        // East
-                        if (z+1 == maxZ || worldBlocks[x][y][z+1])
-                        {
-                            mask.setEast(false);
-                        }
-
-                        // West
-                        if (z == 0 || worldBlocks[x][y][z-1])
-                        {
-                            mask.setWest(false);
-                        }
+                        CubeMask mask = BlockUtils.createBlockMask(x, y, z, worldBlocks);
 
                         if (!mask.isInvisible())
                         {
                             Point3D position = new Point3D(x, y, z);
                             int ID = MathUtils.cartesianHash(x, y, z);
 
+                            int chunkX = MathUtils.getChunkX(x, Settings.chunkWidth);
+                            int chunkY = MathUtils.getChunkY(z, Settings.chunkHeight);
+
                             Block block = new Block
                             (
-                                    ID,
-                                    position,
-                                    Settings.blockSize,
-                                    Settings.grassMaterial,
-                                    Settings.wallMinimapMaterial,
-                                    mask,
-                                    Block.BlockType.GRASS
+                                ID,
+                                position,
+                                Settings.blockSize,
+                                Settings.grassMaterial,
+                                Settings.wallMinimapMaterial,
+                                mask,
+                                worldBlocks[x][y][z],
+                                chunkX,
+                                chunkY
                             );
 
                             blockMap.put(ID, block);
@@ -169,6 +152,24 @@ public class WorldGenerator
             }
         }
 
-        chunks[startX / Settings.chunkWidth][startZ / Settings.chunkHeight] = new Chunk(blockMap);
+        int chunkX = startX / Settings.chunkWidth;
+        int chunkY = startZ / Settings.chunkHeight;
+
+        chunks[chunkX][chunkY] = new Chunk(blockMap, chunkX, chunkY);
+    }
+
+    public int getMaxX()
+    {
+        return maxX;
+    }
+
+    public int getMaxY()
+    {
+        return maxY;
+    }
+
+    public int getMaxZ()
+    {
+        return maxZ;
     }
 }

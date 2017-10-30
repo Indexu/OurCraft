@@ -1,5 +1,6 @@
 package com.ru.tgra.ourcraft.models;
 
+import com.ru.tgra.ourcraft.Settings;
 import com.ru.tgra.ourcraft.objects.Block;
 
 import java.util.Map;
@@ -7,10 +8,14 @@ import java.util.Map;
 public class Chunk
 {
     private Map<Integer, Block> blockMap;
+    private int chunkX;
+    private int chunkY;
 
-    public Chunk(Map<Integer, Block> blockMap)
+    public Chunk(Map<Integer, Block> blockMap, int chunkX, int chunkY)
     {
         this.blockMap = blockMap;
+        this.chunkX = chunkX;
+        this.chunkY = chunkY;
     }
 
     public void drawBlocks(int viewportID)
@@ -29,5 +34,38 @@ public class Chunk
     public void removeBlock(int ID)
     {
         blockMap.remove(ID);
+    }
+
+    public void setBlockMask(int ID, CubeMask mask)
+    {
+        Block block = blockMap.get(ID);
+
+        if (block != null)
+        {
+            block.setMask(mask);
+        }
+    }
+
+    public void assertBlock(int ID, int x, int y, int z, Block.BlockType type)
+    {
+        if (!blockMap.containsKey(ID))
+        {
+            Point3D position = new Point3D(x, y, z);
+
+            Block block = new Block
+            (
+                ID,
+                position,
+                Settings.blockSize,
+                Settings.grassMaterial,
+                Settings.wallMinimapMaterial,
+                new CubeMask(),
+                type,
+                chunkX,
+                chunkY
+            );
+
+            addBlock(block);
+        }
     }
 }

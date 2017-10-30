@@ -14,7 +14,6 @@ public abstract class GameObject
     protected Vector3D scale;
     protected Material material;
     protected Material minimapMaterial;
-    protected boolean destroyed;
 
     public GameObject()
     {
@@ -26,7 +25,6 @@ public abstract class GameObject
         scale = new Vector3D();
         material = new Material();
         minimapMaterial = new Material();
-        destroyed = false;
     }
 
     public GameObject(Point3D position, Vector3D direction, float speed, Vector3D rotation, Vector3D scale, Material material)
@@ -37,23 +35,11 @@ public abstract class GameObject
         this.rotation = rotation;
         this.scale = scale;
         this.material = material;
-
-        destroyed = false;
     }
 
     public abstract void draw(int viewportID);
 
     public abstract void update(float deltaTime);
-
-    public void destroy()
-    {
-        destroyed = true;
-    }
-
-    public boolean isDestroyed()
-    {
-        return destroyed;
-    }
 
     public Point3D getPosition()
     {

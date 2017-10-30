@@ -1,5 +1,7 @@
 package com.ru.tgra.ourcraft.utilities;
 
+import com.ru.tgra.ourcraft.Settings;
+
 public class MathUtils
 {
     public static float clamp(float number, float min, float max)
@@ -33,5 +35,15 @@ public class MathUtils
     public static int cartesianHash(int x, int y, int z)
     {
         return x + (y << 10) + (z << 20);
+    }
+
+    public static int getChunkX(int x, int chunkWidth)
+    {
+        return (x / chunkWidth);
+    }
+
+    public static int getChunkY(int y, int chunkHeight)
+    {
+        return (y / chunkHeight);
     }
 }

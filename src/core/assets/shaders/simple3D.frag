@@ -44,7 +44,7 @@ void main()
 	if(u_usesDiffuseTexture == 1.0)
 	{
 		materialDiffuse = texture2D(u_diffuseTexture, v_uv);  //also * u_materialDiffuse ??? up to you.
-		materialDiffuse *= u_materialDiffuse;
+		//materialDiffuse *= u_materialDiffuse;
 	}
 	else
 	{
