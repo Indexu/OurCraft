@@ -38,6 +38,18 @@ public class Settings
     public static final float reach = 3f;
     public static final int playerHeight = 2;
 
+    /* === Skybox settings === */
+    public static final Vector3D skyboxScale = new Vector3D(10.0f, 10.0f, 10.0f);
+    public static final Material skyboxMaterial = new Material
+    (
+            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
+            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Diffuse
+            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Specular
+            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
+            0f,
+            1f
+    );
+
     /* === UI settings === */
     public static final Color crosshairColor = new Color(1.0f, 1.0f, 1.0f, 0.8f);
 

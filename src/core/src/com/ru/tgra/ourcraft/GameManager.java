@@ -22,6 +22,7 @@ public class GameManager
     public static Light headLight;
     public static Camera minimapCamera;
     public static Player player;
+    public static Skybox skybox;
     public static boolean noclip;
     public static boolean won;
 
@@ -42,6 +43,7 @@ public class GameManager
 
         worldGenerator.generateWorld();
         createPlayer();
+        createSkybox();
         createHeadLight();
 
         worldBlocks = worldGenerator.getWorldBlocks();
@@ -90,13 +92,11 @@ public class GameManager
         int y = (int) pos.y;
         int z = (int) pos.z;
 
-        int playerX = (int) player.getPosition().x;
-        int playerY = (int) player.getPosition().y;
-        int playerZ = (int) player.getPosition().z;
+        int playerX = Math.round(player.getPosition().x);
+        int playerY = Math.round(player.getPosition().y);
+        int playerZ = Math.round(player.getPosition().z);
 
-        System.out.format("(%d, %d, %d) | (%d, %d, %d) \n", x, y, z, playerX, playerY, playerZ);
-
-        if (x == playerX && y == playerY && z == playerZ)
+        if (x == playerX && (y == playerY || y == playerY - 1) && z == playerZ)
         {
             return;
         }
@@ -155,6 +155,11 @@ public class GameManager
     {
         player = new Player(1, new Point3D(0, Settings.worldScale+10, 0), new Vector3D(0.25f, 0.25f, 0.25f), Settings.playerSpeed, Settings.playerMinimapMaterial);
         gameObjects.add(player);
+    }
+
+    private static void createSkybox()
+    {
+        skybox = new Skybox();
     }
 
     private static void setWorldBlocksBlock(Point3D pos, Block.BlockType val)

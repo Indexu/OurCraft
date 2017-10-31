@@ -13,14 +13,11 @@ public class BoxGraphic {
 
 	private static FloatBuffer vertexBuffer;
 	private static FloatBuffer normalBuffer;
-    private static FloatBuffer uvBuffer;
+	private static FloatBuffer invertedNormalBuffer;
+    //private static FloatBuffer uvBuffer;
 
-	private static int vertexPointer;
-	private static int normalPointer;
+	public static void create() {
 
-	public static void create(int vertexPointer, int normalPointer) {
-		BoxGraphic.vertexPointer = vertexPointer;
-		BoxGraphic.normalPointer = normalPointer;
 		//VERTEX ARRAY IS FILLED HERE
 		float[] vertexArray = {-0.5f, -0.5f, -0.5f,
 						-0.5f, 0.5f, -0.5f,
@@ -82,60 +79,56 @@ public class BoxGraphic {
 		normalBuffer.put(normalArray);
 		normalBuffer.rewind();
 
-        //UV TEXTURE COORD ARRAY IS FILLED HERE
-        float[] uvArray =
+        // INVERTED NORMAL ARRAY IS FILLED HERE
+        for (int i = 0; i < normalArray.length; i++)
         {
-            0.0f, 0.0f,
-            1.0f, 0.0f,
-            1.0f, 1.0f,
-            0.0f, 1.0f,
+            normalArray[i] = -1 * normalArray[i];
+        }
 
-            0.0f, 0.0f,
-            1.0f, 0.0f,
-            1.0f, 1.0f,
-            0.0f, 1.0f,
+        invertedNormalBuffer = BufferUtils.newFloatBuffer(72);
+        invertedNormalBuffer.put(normalArray);
+        invertedNormalBuffer.rewind();
 
-            0.0f, 0.0f,
-            1.0f, 0.0f,
-            1.0f, 1.0f,
-            0.0f, 1.0f,
-
-            0.0f, 0.0f,
-            1.0f, 0.0f,
-            1.0f, 1.0f,
-            0.0f, 1.0f,
-
-            0.0f, 0.0f,
-            1.0f, 0.0f,
-            1.0f, 1.0f,
-            0.0f, 1.0f,
-
-            0.0f, 0.0f,
-            1.0f, 0.0f,
-            1.0f, 1.0f,
-            0.0f, 1.0f,
-        };
-
-        uvBuffer = BufferUtils.newFloatBuffer(48);
-        BufferUtils.copy(uvArray, 0, uvBuffer, 48);
-        uvBuffer.rewind();
+//        //UV TEXTURE COORD ARRAY IS FILLED HERE
+//        float[] uvArray =
+//        {
+//            0.0f, 0.0f,
+//            1.0f, 0.0f,
+//            1.0f, 1.0f,
+//            0.0f, 1.0f,
+//
+//            0.0f, 0.0f,
+//            1.0f, 0.0f,
+//            1.0f, 1.0f,
+//            0.0f, 1.0f,
+//
+//            0.0f, 0.0f,
+//            1.0f, 0.0f,
+//            1.0f, 1.0f,
+//            0.0f, 1.0f,
+//
+//            0.0f, 0.0f,
+//            1.0f, 0.0f,
+//            1.0f, 1.0f,
+//            0.0f, 1.0f,
+//
+//            0.0f, 0.0f,
+//            1.0f, 0.0f,
+//            1.0f, 1.0f,
+//            0.0f, 1.0f,
+//
+//            0.0f, 0.0f,
+//            1.0f, 0.0f,
+//            1.0f, 1.0f,
+//            0.0f, 1.0f,
+//        };
+//
+//        uvBuffer = BufferUtils.newFloatBuffer(48);
+//        BufferUtils.copy(uvArray, 0, uvBuffer, 48);
+//        uvBuffer.rewind();
 	}
 
-	public static void drawSolidCube()
-	{
-
-		Gdx.gl.glVertexAttribPointer(vertexPointer, 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
-		Gdx.gl.glVertexAttribPointer(normalPointer, 3, GL20.GL_FLOAT, false, 0, normalBuffer);
-
-		Gdx.gl.glDrawArrays(GL20.GL_TRIANGLE_FAN, 0, 4);
-		Gdx.gl.glDrawArrays(GL20.GL_TRIANGLE_FAN, 4, 4);
-		Gdx.gl.glDrawArrays(GL20.GL_TRIANGLE_FAN, 8, 4);
-		Gdx.gl.glDrawArrays(GL20.GL_TRIANGLE_FAN, 12, 4);
-		Gdx.gl.glDrawArrays(GL20.GL_TRIANGLE_FAN, 16, 4);
-		Gdx.gl.glDrawArrays(GL20.GL_TRIANGLE_FAN, 20, 4);
-	}
-
-    public static void drawSolidCube(Shader shader, Texture diffuseTexture, FloatBuffer uvBuffer, CubeMask mask)
+    public static void drawSolidCube(Shader shader, Texture diffuseTexture, FloatBuffer uvBuffer, CubeMask mask, boolean invertedNormal)
     {
     	if (mask.isInvisible())
 		{
@@ -145,7 +138,16 @@ public class BoxGraphic {
         shader.setDiffuseTexture(diffuseTexture);
 
         Gdx.gl.glVertexAttribPointer(shader.getVertexPointer(), 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
-        Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);
+
+        if (invertedNormal)
+        {
+            Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, invertedNormalBuffer);
+        }
+        else
+        {
+            Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);
+        }
+
         Gdx.gl.glVertexAttribPointer(shader.getUVPointer(), 2, GL20.GL_FLOAT, false, 0, uvBuffer);
 
         // North
@@ -184,18 +186,5 @@ public class BoxGraphic {
             Gdx.gl.glDrawArrays(GL20.GL_TRIANGLE_FAN, 20, 4);
         }
     }
-
-	public static void drawOutlineCube() {
-
-		Gdx.gl.glVertexAttribPointer(vertexPointer, 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
-		Gdx.gl.glVertexAttribPointer(normalPointer, 3, GL20.GL_FLOAT, false, 0, normalBuffer);
-		
-		Gdx.gl.glDrawArrays(GL20.GL_LINE_LOOP, 0, 4);
-		Gdx.gl.glDrawArrays(GL20.GL_LINE_LOOP, 4, 4);
-		Gdx.gl.glDrawArrays(GL20.GL_LINE_LOOP, 8, 4);
-		Gdx.gl.glDrawArrays(GL20.GL_LINE_LOOP, 12, 4);
-		Gdx.gl.glDrawArrays(GL20.GL_LINE_LOOP, 16, 4);
-		Gdx.gl.glDrawArrays(GL20.GL_LINE_LOOP, 20, 4);
-	}
 
 }

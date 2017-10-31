@@ -189,6 +189,7 @@ public class OurCraftGame extends ApplicationAdapter
 
 			if (viewNum == Settings.viewportIDPerspective)
 			{
+			    GameManager.skybox.draw(viewNum);
 				GameManager.headLight.setPosition(GameManager.player.getPosition(), true);
 				GameManager.headLight.setDirection(new Vector3D(-GameManager.player.getCamera().n.x, -GameManager.player.getCamera().n.y, -GameManager.player.getCamera().n.z));
 			}
@@ -320,8 +321,8 @@ public class OurCraftGame extends ApplicationAdapter
 
 		shader = GraphicsEnvironment.shader;
 
-		BoxGraphic.create(shader.getVertexPointer(), shader.getNormalPointer());
-		SphereGraphic.create(shader.getVertexPointer(), shader.getNormalPointer());
+		BoxGraphic.create();
+		SphereGraphic.create();
 		SincGraphic.create(shader.getVertexPointer());
 		CoordFrameGraphic.create(shader.getVertexPointer());
 
@@ -371,45 +372,6 @@ public class OurCraftGame extends ApplicationAdapter
 				{
                     if (GameManager.player.getTargetBlock() != null)
                     {
-                        Block.TargetFace face = GameManager.player.getTargetBlock().getTargetFace();
-
-                        if (face != null)
-                        {
-                            String f = "";
-                            switch (face)
-                            {
-                                case TOP:
-                                    f = "TOP";
-                                    break;
-
-                                case BOTTOM:
-                                    f = "BOTTOM";
-                                    break;
-
-                                case SOUTH:
-                                    f = "SOUTH";
-                                    break;
-
-                                case NORTH:
-                                    f = "NORTH";
-                                    break;
-
-                                case EAST:
-                                    f = "EAST";
-                                    break;
-
-                                case WEST:
-                                    f = "WEST";
-                                    break;
-
-                                default:
-                                    break;
-                            }
-
-                            System.out.println(f);
-                        }
-
-
                         GameManager.player.getTargetBlock().destroy();
                     }
 				}

@@ -1,147 +1,91 @@
 package com.ru.tgra.ourcraft.shapes;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.utils.BufferUtils;
-
 import java.nio.FloatBuffer;
 
-public class SphereGraphic
-{
-    private static class SphereInfo
-    {
-        public FloatBuffer vertexBuffer;
-        public FloatBuffer normalBuffer;
-        public int stacks;
-        public int slices;
-        public int vertexCount;
-    }
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.BufferUtils;
+import com.ru.tgra.ourcraft.Shader;
 
-    private static SphereInfo polySphere;
-    private static SphereInfo sphere;
-    private static SphereInfo spear;
+public class SphereGraphic {
 
-    private static int vertexPointer;
-    private static int normalPointer;
+    private static FloatBuffer vertexBuffer;
+    private static FloatBuffer normalBuffer;
+    private static FloatBuffer uvBuffer;
 
-    public static void create(int vertexPointer, int normalPointer) {
-        SphereGraphic.vertexPointer = vertexPointer;
-        SphereGraphic.normalPointer = normalPointer;
+
+    private static int stacks = 24;
+    private static int slices = 48;
+    private static int vertexCount;
+
+    public static void create() {
         //VERTEX ARRAY IS FILLED HERE
-        //float[] array = new float[2*verticesPerCircle];
 
-        sphere = new SphereInfo();
-        sphere.stacks = 12;
-        sphere.slices = 24;
-        create(sphere);
+        vertexCount = 0;
+        float[] array = new float[(stacks)*(slices+1)*6];
+        float[] uvArray = new float[(stacks)*(slices+1)*4];
 
-        polySphere = new SphereInfo();
-        polySphere.stacks = 6;
-        polySphere.slices = 12;
-        create(polySphere);
-
-        spear = new SphereInfo();
-        spear.stacks = 3;
-        spear.slices = 24;
-        create(spear);
-    }
-
-    public static void drawSolidSphere() {
-
-        Gdx.gl.glVertexAttribPointer(vertexPointer, 3, GL20.GL_FLOAT, false, 0, sphere.vertexBuffer);
-        Gdx.gl.glVertexAttribPointer(normalPointer, 3, GL20.GL_FLOAT, false, 0, sphere.normalBuffer);
-
-        for(int i = 0; i < sphere.vertexCount; i += (sphere.slices+1)*2)
-        {
-            Gdx.gl.glDrawArrays(GL20.GL_TRIANGLE_STRIP, i, (sphere.slices+1)*2);
-        }
-    }
-
-    public static void drawOutlineSphere() {
-
-        Gdx.gl.glVertexAttribPointer(vertexPointer, 3, GL20.GL_FLOAT, false, 0, sphere.vertexBuffer);
-        Gdx.gl.glVertexAttribPointer(normalPointer, 3, GL20.GL_FLOAT, false, 0, sphere.normalBuffer);
-
-        for(int i = 0; i < sphere.vertexCount; i += (sphere.slices+1)*2)
-        {
-            Gdx.gl.glDrawArrays(GL20.GL_LINE_STRIP, i, (sphere.slices+1)*2);
-        }
-    }
-
-    public static void drawSolidPolySphere() {
-
-        Gdx.gl.glVertexAttribPointer(vertexPointer, 3, GL20.GL_FLOAT, false, 0, polySphere.vertexBuffer);
-        Gdx.gl.glVertexAttribPointer(normalPointer, 3, GL20.GL_FLOAT, false, 0, polySphere.normalBuffer);
-
-        for(int i = 0; i < polySphere.vertexCount; i += (polySphere.slices+1)*2)
-        {
-            Gdx.gl.glDrawArrays(GL20.GL_TRIANGLE_STRIP, i, (polySphere.slices+1)*2);
-        }
-    }
-
-    public static void drawOutlinePolySphere() {
-
-        Gdx.gl.glVertexAttribPointer(vertexPointer, 3, GL20.GL_FLOAT, false, 0, polySphere.vertexBuffer);
-        Gdx.gl.glVertexAttribPointer(normalPointer, 3, GL20.GL_FLOAT, false, 0, polySphere.normalBuffer);
-
-        for(int i = 0; i < polySphere.vertexCount; i += (polySphere.slices+1)*2)
-        {
-            Gdx.gl.glDrawArrays(GL20.GL_LINE_STRIP, i, (polySphere.slices+1)*2);
-        }
-    }
-
-    public static void drawSolidSpear() {
-
-        Gdx.gl.glVertexAttribPointer(vertexPointer, 3, GL20.GL_FLOAT, false, 0, spear.vertexBuffer);
-        Gdx.gl.glVertexAttribPointer(normalPointer, 3, GL20.GL_FLOAT, false, 0, spear.normalBuffer);
-
-        for(int i = 0; i < spear.vertexCount; i += (spear.slices+1)*2)
-        {
-            Gdx.gl.glDrawArrays(GL20.GL_TRIANGLE_STRIP, i, (spear.slices+1)*2);
-        }
-    }
-
-    public static void drawOutlineSpear() {
-
-        Gdx.gl.glVertexAttribPointer(vertexPointer, 3, GL20.GL_FLOAT, false, 0, spear.vertexBuffer);
-        Gdx.gl.glVertexAttribPointer(normalPointer, 3, GL20.GL_FLOAT, false, 0, spear.normalBuffer);
-
-        for(int i = 0; i < spear.vertexCount; i += (spear.slices+1)*2)
-        {
-            Gdx.gl.glDrawArrays(GL20.GL_LINE_STRIP, i, (spear.slices+1)*2);
-        }
-    }
-
-    private static void create(SphereInfo info)
-    {
-        info.vertexCount = 0;
-        float[] array = new float[(info.stacks)*(info.slices+1)*6];
-        float stackInterval = (float)Math.PI / (float)info.stacks;
-        float sliceInterval = 2.0f*(float)Math.PI / (float)info.slices;
+        float stackInterval = (float)Math.PI / (float)stacks;
+        float sliceInterval = 2.0f*(float)Math.PI / (float)slices;
         float stackAngle, sliceAngle;
-        for(int stackCount = 0; stackCount < info.stacks; stackCount++)
+
+        for(int stackCount = 0; stackCount < stacks; stackCount++)
         {
             stackAngle = stackCount * stackInterval;
-            for(int sliceCount = 0; sliceCount < info.slices+1; sliceCount++)
+            for(int sliceCount = 0; sliceCount <= slices; sliceCount++)
             {
                 sliceAngle = sliceCount * sliceInterval;
-                array[info.vertexCount*3] = 	 (float)Math.sin(stackAngle) * (float)Math.cos(sliceAngle);
-                array[info.vertexCount*3 + 1] = (float)Math.cos(stackAngle);
-                array[info.vertexCount*3 + 2] = (float)Math.sin(stackAngle) * (float)Math.sin(sliceAngle);
+                array[vertexCount*3] = 	 (float)Math.sin(stackAngle) * (float)Math.cos(sliceAngle);
+                array[vertexCount*3 + 1] = (float)Math.cos(stackAngle);
+                array[vertexCount*3 + 2] = (float)Math.sin(stackAngle) * (float)Math.sin(sliceAngle);
 
-                array[info.vertexCount*3 + 3] = (float)Math.sin(stackAngle + stackInterval) * (float)Math.cos(sliceAngle);
-                array[info.vertexCount*3 + 4] = (float)Math.cos(stackAngle + stackInterval);
-                array[info.vertexCount*3 + 5] = (float)Math.sin(stackAngle + stackInterval) * (float)Math.sin(sliceAngle);
+                uvArray[vertexCount*2] = (float) sliceCount / (float) slices;
+                uvArray[vertexCount*2 + 1] = (float) stackCount / (float) stacks;
 
-                info.vertexCount += 2;
+                array[vertexCount*3 + 3] = (float)Math.sin(stackAngle + stackInterval) * (float)Math.cos(sliceAngle);
+                array[vertexCount*3 + 4] = (float)Math.cos(stackAngle + stackInterval);
+                array[vertexCount*3 + 5] = (float)Math.sin(stackAngle + stackInterval) * (float)Math.sin(sliceAngle);
+
+                uvArray[vertexCount*2 + 2] = ((float) sliceCount / (float) slices);
+                uvArray[vertexCount*2 + 3] = (float) (stackCount + 1) / (float) stacks;
+
+                vertexCount += 2;
             }
         }
 
-        info.vertexBuffer = BufferUtils.newFloatBuffer(info.vertexCount*3);
-        info.vertexBuffer.put(array);
-        info.vertexBuffer.rewind();
-        info.normalBuffer = BufferUtils.newFloatBuffer(info.vertexCount*3);
-        info.normalBuffer.put(array);
-        info.normalBuffer.rewind();
+        vertexBuffer = BufferUtils.newFloatBuffer(vertexCount*3);
+        vertexBuffer.put(array);
+        vertexBuffer.rewind();
+
+        for (int i = 0; i < array.length; i++)
+        {
+            array[i] = -1 * array[i];
+        }
+
+        normalBuffer = BufferUtils.newFloatBuffer(vertexCount*3);
+        normalBuffer.put(array);
+        normalBuffer.rewind();
+
+        uvBuffer = BufferUtils.newFloatBuffer(vertexCount*2);
+        uvBuffer.put(uvArray);
+        uvBuffer.rewind();
     }
+
+    public static void drawSolidSphere(Shader shader, Texture diffuseTexture) {
+
+        shader.setDiffuseTexture(diffuseTexture);
+
+        Gdx.gl.glVertexAttribPointer(shader.getVertexPointer(), 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
+        Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);
+        Gdx.gl.glVertexAttribPointer(shader.getUVPointer(), 2, GL20.GL_FLOAT, false, 0, uvBuffer);
+
+        for(int i = 0; i < vertexCount; i += (slices+1)*2)
+        {
+            Gdx.gl.glDrawArrays(GL20.GL_TRIANGLE_STRIP, i, (slices+1)*2);
+        }
+
+
+    }
+
 }

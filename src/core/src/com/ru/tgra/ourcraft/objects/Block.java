@@ -113,7 +113,8 @@ public class Block extends GameObject
                 GraphicsEnvironment.shader,
                 TextureManager.getBlockTexture(blockType),
                 TextureManager.getBlockUVBuffer(blockType),
-                renderMask
+                renderMask,
+                false
             );
         }
     }
