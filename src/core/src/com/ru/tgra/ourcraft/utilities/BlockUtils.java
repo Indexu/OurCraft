@@ -2,6 +2,8 @@ package com.ru.tgra.ourcraft.utilities;
 
 import com.ru.tgra.ourcraft.GameManager;
 import com.ru.tgra.ourcraft.models.CubeMask;
+import com.ru.tgra.ourcraft.models.Point2D;
+import com.ru.tgra.ourcraft.models.Point3D;
 import com.ru.tgra.ourcraft.objects.Block;
 
 public class BlockUtils
@@ -47,5 +49,39 @@ public class BlockUtils
         }
 
         return mask;
+    }
+
+    public static Point3D getTargetArea(Block targetBlock)
+    {
+        Point3D pos = new Point3D(targetBlock.getPosition());
+
+        switch (targetBlock.getTargetFace())
+        {
+            case TOP:
+                pos.y += 1;
+                break;
+
+            case BOTTOM:
+                pos.y -= 1;
+                break;
+
+            case NORTH:
+                pos.x += 1;
+                break;
+
+            case SOUTH:
+                pos.x -= 1;
+                break;
+
+            case EAST:
+                pos.z += 1;
+                break;
+
+            case WEST:
+                pos.z -= 1;
+                break;
+        }
+
+        return pos;
     }
 }

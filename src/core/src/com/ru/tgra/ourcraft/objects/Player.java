@@ -9,6 +9,7 @@ import com.ru.tgra.ourcraft.models.ModelMatrix;
 import com.ru.tgra.ourcraft.models.Point3D;
 import com.ru.tgra.ourcraft.models.Vector3D;
 import com.ru.tgra.ourcraft.shapes.SphereGraphic;
+import com.ru.tgra.ourcraft.utilities.BlockUtils;
 
 import java.util.ArrayList;
 
@@ -97,19 +98,19 @@ public class Player extends GameObject
 
     public void draw(int viewportID)
     {
-        if (viewportID == Settings.viewportIDPerspective)
-        {
-            return;
-        }
-
-        ModelMatrix.main.loadIdentityMatrix();
-        ModelMatrix.main.addTranslation(position);
-        ModelMatrix.main.addScale(scale);
-
-        GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        GraphicsEnvironment.shader.setMaterial(material);
-
-        SphereGraphic.drawSolidPolySphere();
+//        if (viewportID == Settings.viewportIDPerspective)
+//        {
+//            return;
+//        }
+//
+//        ModelMatrix.main.loadIdentityMatrix();
+//        ModelMatrix.main.addTranslation(position);
+//        ModelMatrix.main.addScale(scale);
+//
+//        GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
+//        GraphicsEnvironment.shader.setMaterial(material);
+//
+//        SphereGraphic.drawSolidPolySphere();
     }
 
     public void moveLeft()
@@ -208,5 +209,17 @@ public class Player extends GameObject
     public void setTargetBlock(Block targetBlock)
     {
         this.targetBlock = targetBlock;
+    }
+
+    public void placeBlock()
+    {
+        if (targetBlock == null)
+        {
+            return;
+        }
+
+        Point3D pos = BlockUtils.getTargetArea(targetBlock);
+
+        GameManager.addBlock(pos, Block.BlockType.DIRT);
     }
 }

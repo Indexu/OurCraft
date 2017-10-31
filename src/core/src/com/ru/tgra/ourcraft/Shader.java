@@ -53,11 +53,13 @@ public class Shader
         Gdx.gl.glUseProgram(renderingProgramID);
     }
 
-    public void setShader()
+    public void useShader()
     {
+        //Gdx.gl.glLinkProgram(renderingProgramID);
         Gdx.gl.glUseProgram(renderingProgramID);
         Gdx.gl.glEnableVertexAttribArray(positionLoc);
         Gdx.gl.glEnableVertexAttribArray(normalLoc);
+        Gdx.gl.glEnableVertexAttribArray(uvLoc);
     }
 
     public int getVertexPointer()
@@ -225,9 +227,9 @@ public class Shader
         Gdx.gl.glCompileShader(vertexShaderID);
         Gdx.gl.glCompileShader(fragmentShaderID);
 
-        System.out.println("Vertex shader compile messages:");
+        System.out.println("Vertex shader 3D compile messages:");
         System.out.println(Gdx.gl.glGetShaderInfoLog(vertexShaderID));
-        System.out.println("Fragment shader compile messages:");
+        System.out.println("Fragment shader 3D compile messages:");
         System.out.println(Gdx.gl.glGetShaderInfoLog(fragmentShaderID));
     }
 

@@ -4,16 +4,11 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.ru.tgra.ourcraft.models.ModelMatrix;
-import com.ru.tgra.ourcraft.models.Point3D;
-import com.ru.tgra.ourcraft.models.Vector3D;
+import com.ru.tgra.ourcraft.models.*;
 import com.ru.tgra.ourcraft.objects.Block;
 import com.ru.tgra.ourcraft.objects.GameObject;
 import com.ru.tgra.ourcraft.objects.Player;
-import com.ru.tgra.ourcraft.shapes.BoxGraphic;
-import com.ru.tgra.ourcraft.shapes.CoordFrameGraphic;
-import com.ru.tgra.ourcraft.shapes.SincGraphic;
-import com.ru.tgra.ourcraft.shapes.SphereGraphic;
+import com.ru.tgra.ourcraft.shapes.*;
 import com.ru.tgra.ourcraft.utilities.CollisionsUtil;
 
 public class OurCraftGame extends ApplicationAdapter
@@ -29,7 +24,8 @@ public class OurCraftGame extends ApplicationAdapter
 	private float oldMouseX;
 	private float oldMouseY;
 	private float textTimer;
-	private Cursor crosshair;
+
+	private Point2D center;
 
 	@Override
 	public void create ()
@@ -121,6 +117,12 @@ public class OurCraftGame extends ApplicationAdapter
         if(Gdx.input.isKeyJustPressed(Input.Keys.N))
         {
             GameManager.noclip = !GameManager.noclip;
+            GameManager.player.resetGravity();
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1))
+        {
+            GameManager.player.placeBlock();
         }
 
 //        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT))
@@ -160,6 +162,7 @@ public class OurCraftGame extends ApplicationAdapter
 
 	private void display()
 	{
+	    GraphicsEnvironment.shader.useShader();
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		Gdx.graphics.setTitle("OurCraft | FPS: " + Gdx.graphics.getFramesPerSecond());
@@ -173,49 +176,13 @@ public class OurCraftGame extends ApplicationAdapter
 
 		for (int viewNum = 0; viewNum < 2; viewNum++)
 		{
-			if (viewNum == 0)
+			if (viewNum == Settings.viewportIDPerspective)
 			{
-				Gdx.gl.glViewport
-                (
-                    (int) GraphicsEnvironment.viewport.x,
-                    (int) GraphicsEnvironment.viewport.y,
-                    (int) GraphicsEnvironment.viewport.width,
-                    (int) GraphicsEnvironment.viewport.height
-                );
-
-//                Gdx.gl.glViewport
-//                (
-//                    0,
-//                    0,
-//                    Gdx.graphics.getWidth(),
-//                    Gdx.graphics.getHeight()
-//                );
-
-				GameManager.player.getCamera().setPerspectiveProjection(Settings.playerFOV, GraphicsEnvironment.viewport.width / GraphicsEnvironment.viewport.height, 0.1f, 50.0f);
-				shader.setViewMatrix(GameManager.player.getCamera().getViewMatrix());
-				shader.setProjectionMatrix(GameManager.player.getCamera().getProjectionMatrix());
-				shader.setEyePosition(GameManager.player.getCamera().eye);
+                GraphicsEnvironment.setPerspectiveCamera();
 			}
 			else
 			{
-			    if (true)
-                {
-                    continue;
-                }
-
-				Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
-
-                Gdx.gl.glViewport
-                (
-                        (int) (GraphicsEnvironment.viewport.width * 0.75f),
-                        (int) (GraphicsEnvironment.viewport.height * 0.61f),
-                        (int) (GraphicsEnvironment.viewport.width / 4.5f),
-                        (int) (GraphicsEnvironment.viewport.height / 2.5f)
-                );
-
-				GameManager.minimapCamera.look(new Point3D(GameManager.player.getCamera().eye.x, 30.0f, GameManager.player.getCamera().eye.z), GameManager.player.getPosition(), new Vector3D(0, 0, 1));
-				shader.setViewMatrix(GameManager.minimapCamera.getViewMatrix());
-				shader.setProjectionMatrix(GameManager.minimapCamera.getProjectionMatrix());
+				GraphicsEnvironment.setMinimapCamera();
 			}
 
 			shader.setGlobalAmbience(Settings.globalAmbience);
@@ -227,8 +194,15 @@ public class OurCraftGame extends ApplicationAdapter
 			}
 			else
 			{
-				GameManager.headLight.getPosition().y = 3f;
-				GameManager.headLight.getDirection().add(new Vector3D(0f, -1f, 0f));
+//				GameManager.headLight.getPosition().y = 3f;
+//				GameManager.headLight.getDirection().add(new Vector3D(0f, -1f, 0f));
+
+//                ModelMatrix.main.loadIdentityMatrix();
+//                ModelMatrix.main.addScale(1f, 4f, 1f);
+//
+//                GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
+//
+//                RectangleGraphic.drawSolid();
 			}
 
 			GraphicsEnvironment.shader.setLight(GameManager.headLight);
@@ -242,7 +216,12 @@ public class OurCraftGame extends ApplicationAdapter
 				gameObject.draw(viewNum);
 			}
 
-			System.out.print(" | Draw Count: " + GameManager.drawCount);
+            if (viewNum == Settings.viewportIDPerspective)
+            {
+                ui();
+            }
+
+			//System.out.print(" | Draw Count: " + GameManager.drawCount);
 		}
 
 	}
@@ -256,6 +235,34 @@ public class OurCraftGame extends ApplicationAdapter
 //		GraphicsEnvironment.drawText(mainMenuPlayPosition, "Press ENTER to play", new Color(1.0f, 1.0f, 1.0f, 1.0f), 2);
 //		GraphicsEnvironment.drawText(mainMenuMessagePosition, "Good luck and beware the above...", new Color(1.0f, 1.0f, 1.0f, 1.0f), 2);
 	}
+
+	private void ui()
+    {
+        GraphicsEnvironment.shader2D.useShader();
+
+        GraphicsEnvironment.shader2D.OrthographicProjection2D(
+            (int) GraphicsEnvironment.viewport.x,
+            (int) GraphicsEnvironment.viewport.y,
+            (int) GraphicsEnvironment.viewport.width,
+            (int) GraphicsEnvironment.viewport.height
+        );
+
+        GraphicsEnvironment.shader2D.drawText(
+            center,
+            "|",
+            Settings.crosshairColor,
+            Enums.Fonts.ARIAL,
+            Enums.Size.NORMAL
+        );
+
+        GraphicsEnvironment.shader2D.drawText(
+            center,
+            "---",
+            Settings.crosshairColor,
+            Enums.Fonts.ARIAL,
+            Enums.Size.NORMAL
+        );
+    }
 
 	@Override
 	public void render ()
@@ -294,7 +301,14 @@ public class OurCraftGame extends ApplicationAdapter
         float h = (float) Settings.virtualHeight * scale;
 
         GraphicsEnvironment.setViewport(cropX, cropY, w, h);
+
+        setPoints();
 	}
+
+	private void setPoints()
+    {
+        center.setPoint(GraphicsEnvironment.viewport.width / 2, GraphicsEnvironment.viewport.height / 2);
+    }
 
 	private void init()
 	{
@@ -326,6 +340,8 @@ public class OurCraftGame extends ApplicationAdapter
 
 		float offset = Gdx.graphics.getHeight() / 8;
 
+        center = new Point2D();
+
 		mainMenuTitlePosition = new Point3D(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0f);
 		mainMenuTitlePosition.y += offset * 2.5f;
 
@@ -356,39 +372,44 @@ public class OurCraftGame extends ApplicationAdapter
                     if (GameManager.player.getTargetBlock() != null)
                     {
                         Block.TargetFace face = GameManager.player.getTargetBlock().getTargetFace();
-                        String f = "";
 
-                        switch (face)
+                        if (face != null)
                         {
-                            case TOP:
-                                f = "TOP";
-                                break;
+                            String f = "";
+                            switch (face)
+                            {
+                                case TOP:
+                                    f = "TOP";
+                                    break;
 
-                            case BOTTOM:
-                                f = "BOTTOM";
-                                break;
+                                case BOTTOM:
+                                    f = "BOTTOM";
+                                    break;
 
-                            case SOUTH:
-                                f = "SOUTH";
-                                break;
+                                case SOUTH:
+                                    f = "SOUTH";
+                                    break;
 
-                            case NORTH:
-                                f = "NORTH";
-                                break;
+                                case NORTH:
+                                    f = "NORTH";
+                                    break;
 
-                            case EAST:
-                                f = "EAST";
-                                break;
+                                case EAST:
+                                    f = "EAST";
+                                    break;
 
-                            case WEST:
-                                f = "WEST";
-                                break;
+                                case WEST:
+                                    f = "WEST";
+                                    break;
 
-                            default:
-                                break;
+                                default:
+                                    break;
+                            }
+
+                            System.out.println(f);
                         }
 
-                        System.out.println(f);
+
                         GameManager.player.getTargetBlock().destroy();
                     }
 				}

@@ -35,7 +35,7 @@ public class CollisionsUtil
             float top = unitZ + radius;
             float bottom = unitZ - radius;
             float below = unitY - radius;
-            float above = unitY - radius;
+            float above = unitY + radius;
             boolean collided = false;
 
             // Check right
@@ -64,14 +64,16 @@ public class CollisionsUtil
                 collided = true;
             }
 
+            System.out.format("y: %d | length: %d\n", y, GameManager.worldBlocks[x][0].length);
+
             // Check below
-            if (below < 0 && y != 0 && GameManager.worldBlocks[x][y-1][z] != Block.BlockType.EMPTY)
+            if (below < 0 && y != 1 && GameManager.worldBlocks[x][y-Settings.playerHeight][z] != Block.BlockType.EMPTY)
             {
                 position.y -= below;
                 player.resetGravity();
             }
             // Check above
-            else if (1 < above && GameManager.worldBlocks[x][y+1][z] != Block.BlockType.EMPTY)
+            else if (1 < above && y + Settings.playerHeight < GameManager.worldBlocks[x][0].length && GameManager.worldBlocks[x][y+1][z] != Block.BlockType.EMPTY)
             {
                 position.y -= (above % 1);
             }
@@ -114,19 +116,19 @@ public class CollisionsUtil
     public static boolean lineIntersectsWithBlock(Point3D lineOrigin, Vector3D lineDirection, Block block)
     {
         // r.dir is unit direction vector of ray
-        Point3D dirfrac = new Point3D();
+        Vector3D dirfrac = new Vector3D();
         dirfrac.x = 1.0f / lineDirection.x;
         dirfrac.y = 1.0f / lineDirection.y;
         dirfrac.z = 1.0f / lineDirection.z;
 
         // lb is the corner of AABB with minimal coordinates - left bottom, rt is maximal corner
         // r.org is origin of ray
-        float t1 = (block.getLeftBottom().x - lineOrigin.x)*dirfrac.x;
-        float t2 = (block.getRightTop().x - lineOrigin.x)*dirfrac.x;
-        float t3 = (block.getLeftBottom().y - lineOrigin.y)*dirfrac.y;
-        float t4 = (block.getRightTop().y - lineOrigin.y)*dirfrac.y;
-        float t5 = (block.getLeftBottom().z - lineOrigin.z)*dirfrac.z;
-        float t6 = (block.getRightTop().z - lineOrigin.z)*dirfrac.z;
+        float t1 = (block.getLeftBottom().x - lineOrigin.x) * dirfrac.x;
+        float t2 = (block.getRightTop().x - lineOrigin.x) * dirfrac.x;
+        float t3 = (block.getLeftBottom().y - lineOrigin.y) * dirfrac.y;
+        float t4 = (block.getRightTop().y - lineOrigin.y) * dirfrac.y;
+        float t5 = (block.getLeftBottom().z - lineOrigin.z) * dirfrac.z;
+        float t6 = (block.getRightTop().z - lineOrigin.z) * dirfrac.z;
 
         float tmin = Math.max(Math.max(Math.min(t1, t2), Math.min(t3, t4)), Math.min(t5, t6));
         float tmax = Math.min(Math.min(Math.max(t1, t2), Math.max(t3, t4)), Math.max(t5, t6));
@@ -143,29 +145,29 @@ public class CollisionsUtil
             return false;
         }
 
-        if (tmax == t1)
-        {
-            block.setTargetFace(Block.TargetFace.NORTH);
-        }
-        else if (tmax == t2)
+        if (tmin == t1)
         {
             block.setTargetFace(Block.TargetFace.SOUTH);
         }
-        else if (tmax == t3)
+        else if (tmin == t2)
         {
-            block.setTargetFace(Block.TargetFace.TOP);
+            block.setTargetFace(Block.TargetFace.NORTH);
         }
-        else if (tmax == t4)
+        else if (tmin == t3)
         {
             block.setTargetFace(Block.TargetFace.BOTTOM);
         }
-        else if (tmax == t5)
+        else if (tmin == t4)
         {
-            block.setTargetFace(Block.TargetFace.EAST);
+            block.setTargetFace(Block.TargetFace.TOP);
         }
-        else if (tmax == t6)
+        else if (tmin == t5)
         {
             block.setTargetFace(Block.TargetFace.WEST);
+        }
+        else if (tmin == t6)
+        {
+            block.setTargetFace(Block.TargetFace.EAST);
         }
 
         return true;

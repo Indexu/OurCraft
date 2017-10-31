@@ -36,6 +36,10 @@ public class Settings
     public static final float gravity = 0.2f;
     public static final float jumpStrength = 5f;
     public static final float reach = 3f;
+    public static final int playerHeight = 2;
+
+    /* === UI settings === */
+    public static final Color crosshairColor = new Color(1.0f, 1.0f, 1.0f, 0.8f);
 
     /* === Materials === */
 

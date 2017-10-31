@@ -32,6 +32,8 @@ public class GameManager
         worldGenerator = new WorldGenerator();
         noclip = false;
         won = false;
+
+        createMinimap();
     }
 
     public static void createWorld()
@@ -65,8 +67,8 @@ public class GameManager
         int endY = chunkY + Settings.chunkDrawRadius;
         endY = (chunks[0].length-1 < endY ? chunks[0].length-1 : endY);
 
-        System.out.format(" | chunkX: %d | chunkY: %d", chunkX, chunkY);
-        System.out.format(" | startX: %d | endX: %d | startY: %d | endY: %d", startX, endX, startY, endY);
+        //System.out.format(" | chunkX: %d | chunkY: %d", chunkX, chunkY);
+        //System.out.format(" | startX: %d | endX: %d | startY: %d | endY: %d", startX, endX, startY, endY);
 
         int chunkDraw = 0;
 
@@ -79,7 +81,45 @@ public class GameManager
             }
         }
 
-        System.out.format(" | Chunks drawn: %d", chunkDraw);
+        //System.out.format(" | Chunks drawn: %d", chunkDraw);
+    }
+
+    public static void addBlock(Point3D pos, Block.BlockType type)
+    {
+        int x = (int) pos.x;
+        int y = (int) pos.y;
+        int z = (int) pos.z;
+
+        int playerX = (int) player.getPosition().x;
+        int playerY = (int) player.getPosition().y;
+        int playerZ = (int) player.getPosition().z;
+
+        System.out.format("(%d, %d, %d) | (%d, %d, %d) \n", x, y, z, playerX, playerY, playerZ);
+
+        if (x == playerX && y == playerY && z == playerZ)
+        {
+            return;
+        }
+
+        int chunkX = MathUtils.getChunkX(x, Settings.chunkWidth);
+        int chunkY = MathUtils.getChunkY(z, Settings.chunkHeight);
+
+        setWorldBlocksBlock(pos, type);
+
+        Block block = new Block(
+            MathUtils.cartesianHash(x, y, z),
+            pos,
+            Settings.blockSize,
+            Settings.grassMaterial,
+            Settings.wallMinimapMaterial,
+            BlockUtils.createBlockMask(x, y, z, worldBlocks),
+            type,
+            chunkX,
+            chunkY
+        );
+
+        redoMasksForAdjacentBlocks(block);
+        chunks[block.getChunkX()][block.getChunkY()].addBlock(block);
     }
 
     public static void removeBlocks()
@@ -178,7 +218,14 @@ public class GameManager
 
         int ID = MathUtils.cartesianHash(x, y, z);
 
-        chunks[chunkX][chunkY].assertBlock(ID, x, y, z, worldBlocks[x][y][z]);
-        chunks[chunkX][chunkY].setBlockMask(ID, mask);
+        if (mask.isInvisible())
+        {
+            chunks[chunkX][chunkY].removeBlock(ID);
+        }
+        else
+        {
+            chunks[chunkX][chunkY].assertBlock(ID, x, y, z, worldBlocks[x][y][z]);
+            chunks[chunkX][chunkY].setBlockMask(ID, mask);
+        }
     }
 }
