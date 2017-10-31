@@ -31,6 +31,14 @@ public class Color
         this.a = color.a;
     }
 
+    public void scale(float s)
+    {
+        r *= s;
+        g *= s;
+        b *= s;
+        a *= s;
+    }
+
     public float getRed()
     {
         return r;

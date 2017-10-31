@@ -100,14 +100,7 @@ public class Block extends GameObject
         }
         else
         {
-            if (GameManager.player.getTargetBlock() != null && GameManager.player.getTargetBlock().getID() == this.ID)
-            {
-                GraphicsEnvironment.shader.setMaterial(Settings.selectedMaterial);
-            }
-            else
-            {
-                GraphicsEnvironment.shader.setMaterial(material);
-            }
+            GraphicsEnvironment.shader.setMaterial(material);
 
             BoxGraphic.drawSolidCube(
                 GraphicsEnvironment.shader,

@@ -114,6 +114,11 @@ public class OurCraftGame extends ApplicationAdapter
             GameManager.player.jump();
         }
 
+        if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT))
+        {
+            GameManager.player.sprint();
+        }
+
         if(Gdx.input.isKeyJustPressed(Input.Keys.N))
         {
             GameManager.noclip = !GameManager.noclip;
@@ -144,6 +149,8 @@ public class OurCraftGame extends ApplicationAdapter
 		{
 			return;
 		}
+
+		LightManager.updateSunAngle(deltaTime);
 
 		for (GameObject gameObject : GameManager.gameObjects)
 		{
@@ -185,13 +192,13 @@ public class OurCraftGame extends ApplicationAdapter
 				GraphicsEnvironment.setMinimapCamera();
 			}
 
-			shader.setGlobalAmbience(Settings.globalAmbience);
+			shader.setGlobalAmbience(LightManager.globalAmbiance);
 
 			if (viewNum == Settings.viewportIDPerspective)
 			{
 			    GameManager.skybox.draw(viewNum);
-				GameManager.headLight.setPosition(GameManager.player.getPosition(), true);
-				GameManager.headLight.setDirection(new Vector3D(-GameManager.player.getCamera().n.x, -GameManager.player.getCamera().n.y, -GameManager.player.getCamera().n.z));
+//				GameManager.headLight.setPosition(GameManager.player.getPosition(), true);
+//				GameManager.headLight.setDirection(new Vector3D(-GameManager.player.getCamera().n.x, -GameManager.player.getCamera().n.y, -GameManager.player.getCamera().n.z));
 			}
 			else
 			{
@@ -206,7 +213,44 @@ public class OurCraftGame extends ApplicationAdapter
 //                RectangleGraphic.drawSolid();
 			}
 
-			GraphicsEnvironment.shader.setLight(GameManager.headLight);
+            GraphicsEnvironment.shader.setLight(LightManager.sun);
+            GraphicsEnvironment.shader.setLight(LightManager.moon);
+
+//			GraphicsEnvironment.shader.setLight(LightManager.sun);
+//
+//            ModelMatrix.main.loadIdentityMatrix();
+//            ModelMatrix.main.addTranslation(LightManager.sun.getPosition());
+//            ModelMatrix.main.addScale(new Vector3D(5f, 5f, 5f));
+//
+//            GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
+//
+//            GraphicsEnvironment.shader.setMaterial(Settings.floorMaterial);
+//
+//            BoxGraphic.drawSolidCube(
+//                    GraphicsEnvironment.shader,
+//                    null,
+//                    TextureManager.getCubeMapUVBuffer(),
+//                    new CubeMask(),
+//                    false
+//            );
+//
+//            GraphicsEnvironment.shader.setLight(LightManager.moon);
+//
+//            ModelMatrix.main.loadIdentityMatrix();
+//            ModelMatrix.main.addTranslation(LightManager.moon.getPosition());
+//            ModelMatrix.main.addScale(new Vector3D(5f, 5f, 5f));
+//
+//            GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
+//
+//            GraphicsEnvironment.shader.setMaterial(Settings.spearMaterial);
+//
+//            BoxGraphic.drawSolidCube(
+//                    GraphicsEnvironment.shader,
+//                    null,
+//                    TextureManager.getCubeMapUVBuffer(),
+//                    new CubeMask(),
+//                    false
+//            );
 
             GameManager.drawCount = 0;
 
@@ -317,6 +361,7 @@ public class OurCraftGame extends ApplicationAdapter
 		GameManager.init();
 		AudioManager.init();
 		TextureManager.init();
+		LightManager.init();
         initInput();
 
 		shader = GraphicsEnvironment.shader;

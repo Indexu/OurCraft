@@ -10,6 +10,7 @@ public class Light
     private float constantAttenuation;
     private float linearAttenuation;
     private float quadraticAttenuation;
+    private boolean on;
 
     public Light()
     {
@@ -21,6 +22,7 @@ public class Light
         constantAttenuation = 0;
         linearAttenuation = 0;
         quadraticAttenuation = 0;
+        on = true;
     }
 
     public Light(int ID, Point3D position, Color color, Vector3D direction, float spotFactor, float constantAttenuation, float linearAttenuation, float quadraticAttenuation)
@@ -71,7 +73,7 @@ public class Light
 
     public void setColor(Color color)
     {
-        this.color = color;
+        this.color = new Color(color);
     }
 
     public Vector3D getDirection()
@@ -122,5 +124,15 @@ public class Light
     public void setQuadraticAttenuation(float quadraticAttenuation)
     {
         this.quadraticAttenuation = quadraticAttenuation;
+    }
+
+    public boolean isOn()
+    {
+        return on;
+    }
+
+    public void setOn(boolean on)
+    {
+        this.on = on;
     }
 }

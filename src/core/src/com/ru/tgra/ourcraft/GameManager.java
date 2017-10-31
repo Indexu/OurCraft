@@ -17,6 +17,8 @@ public class GameManager
 
     public static boolean mainMenu;
 
+    public static Point3D worldCenter;
+
     public static int drawCount;
 
     public static Light headLight;
@@ -31,6 +33,7 @@ public class GameManager
         gameObjects = new ArrayList<>();
         blocksToRemove = new ArrayList<>();
         worldGenerator = new WorldGenerator();
+        worldCenter = new Point3D(Settings.worldWidth / 2, Settings.worldScale, Settings.worldHeight / 2);
         noclip = false;
         won = false;
 
@@ -44,7 +47,6 @@ public class GameManager
         worldGenerator.generateWorld();
         createPlayer();
         createSkybox();
-        createHeadLight();
 
         worldBlocks = worldGenerator.getWorldBlocks();
         chunks = worldGenerator.getChunks();
@@ -153,7 +155,7 @@ public class GameManager
 
     private static void createPlayer()
     {
-        player = new Player(1, new Point3D(0, Settings.worldScale+10, 0), new Vector3D(0.25f, 0.25f, 0.25f), Settings.playerSpeed, Settings.playerMinimapMaterial);
+        player = new Player(1, new Point3D(Settings.worldWidth / 2, Settings.worldScale * 2.0f, Settings.worldHeight / 2), new Vector3D(0.25f, 0.25f, 0.25f), Settings.playerSpeed, Settings.playerMinimapMaterial);
         gameObjects.add(player);
     }
 

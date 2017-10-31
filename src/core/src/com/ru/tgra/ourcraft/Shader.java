@@ -28,6 +28,7 @@ public class Shader
     private int[] lightConstAttLoc;
     private int[] lightLinearAttLoc;
     private int[] lightQuadAttLoc;
+    private int[] lightOnLoc;
 
     private int usesDiffuseTexLoc;
     private int diffuseTextureLoc;
@@ -96,6 +97,7 @@ public class Shader
         setConstantAttenuation(light.getID(), light.getConstantAttenuation());
         setLinearAttenuation(light.getID(), light.getLinearAttenuation());
         setQuadraticAttenuation(light.getID(), light.getQuadraticAttenuation());
+        setOn(light.getID(), light.isOn());
     }
 
     public void setDiffuseTexture(Texture tex)
@@ -185,6 +187,12 @@ public class Shader
         Gdx.gl.glUniform1f(lightQuadAttLoc[lightID], f);
     }
 
+    public void setOn(int lightID, boolean on)
+    {
+        float f = (on ? 1.0f : 0.0f);
+        Gdx.gl.glUniform1f(lightOnLoc[lightID], f);
+    }
+
     public void setGlobalAmbience(Color color)
     {
         Gdx.gl.glUniform4f(globalAmbienceLoc, color.r, color.g, color.b, color.a);
@@ -269,6 +277,7 @@ public class Shader
         lightConstAttLoc = new int[Settings.numberOfLights];
         lightLinearAttLoc = new int[Settings.numberOfLights];
         lightQuadAttLoc = new int[Settings.numberOfLights];
+        lightOnLoc = new int[Settings.numberOfLights];
 
         for (int i = 0; i < Settings.numberOfLights; i++)
         {
@@ -279,6 +288,7 @@ public class Shader
             lightConstAttLoc[i] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lights[" + i + "].constantAttenuation");
             lightLinearAttLoc[i] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lights[" + i + "].linearAttenuation");
             lightQuadAttLoc[i] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lights[" + i + "].quadraticAttenuation");
+            lightOnLoc[i] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lights[" + i + "].on");
         }
 
         globalAmbienceLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_globalAmbience");

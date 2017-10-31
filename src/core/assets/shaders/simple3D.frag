@@ -13,6 +13,7 @@ struct light
     float constantAttenuation;
     float linearAttenuation;
     float quadraticAttenuation;
+    float on;
 };
 
 uniform float u_shininessFactor;
@@ -58,6 +59,11 @@ void main()
 
     for (int i = 0; i < numberOfLights; i++)
     {
+        if (u_lights[i].on == 0.0)
+        {
+            continue;
+        }
+
         float len_s = length(v_s[i]);
         float attinuation = 1.0;
 
@@ -93,7 +99,7 @@ void main()
         color += lightColor;
     }
 
-    color += u_globalAmbience * u_materialAmbience;
+    color += u_globalAmbience * materialDiffuse;
     color += u_materialEmission;
     color.a = u_materialTransparency;
 

@@ -148,7 +148,10 @@ public class BoxGraphic {
             Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);
         }
 
-        Gdx.gl.glVertexAttribPointer(shader.getUVPointer(), 2, GL20.GL_FLOAT, false, 0, uvBuffer);
+        if (uvBuffer != null)
+		{
+			Gdx.gl.glVertexAttribPointer(shader.getUVPointer(), 2, GL20.GL_FLOAT, false, 0, uvBuffer);
+		}
 
         // North
         if (mask.isWest())

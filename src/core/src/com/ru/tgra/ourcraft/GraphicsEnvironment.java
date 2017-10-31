@@ -54,7 +54,7 @@ public class GraphicsEnvironment
                 (int) viewport.height
         );
 
-        GameManager.player.getCamera().setPerspectiveProjection(Settings.playerFOV, viewport.width / viewport.height, 0.1f, 50.0f);
+        GameManager.player.getCamera().setPerspectiveProjection(Settings.playerFOV, viewport.width / viewport.height, 0.1f, 5000.0f);
         shader.setViewMatrix(GameManager.player.getCamera().getViewMatrix());
         shader.setProjectionMatrix(GameManager.player.getCamera().getProjectionMatrix());
         shader.setEyePosition(GameManager.player.getCamera().eye);

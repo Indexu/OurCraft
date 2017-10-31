@@ -16,8 +16,8 @@ public class Settings
     public static final float aspectRatio = (float)virtualWidth / (float)virtualHeight;
 
     /* === World settings === */
-    public static final int worldWidth = 256;
-    public static final int worldHeight = 256;
+    public static final int worldWidth = 128;
+    public static final int worldHeight = 128;
     public static final int worldFeatureSize = 4;
     public static final int worldScale = 40;
     public static final int chunkWidth = 16;
@@ -27,10 +27,13 @@ public class Settings
     public static final float dotProductCutoff = -0.1f;
     public static final float drawDistance = 30f;
     public static final float proximityDistance = 2f;
+    public static final float dayNightCycleSpeed = 0.5f;
+    public static final float fullCircle = 2 * (float) Math.PI;
 
     /* === Player settings === */
     public static final float playerFOV = 80f;
     public static final float playerSpeed = 3f;
+    public static final float playerSprintMultiplier = 4f;
     public static final float playerButtonLookSensitivity = 100f;
     public static final float playerMouseLookSensitivity = 30f;
     public static final float gravity = 0.2f;
@@ -46,7 +49,7 @@ public class Settings
             new Color(0.0f, 0.0f, 0.0f, 0.0f), // Diffuse
             new Color(0.0f, 0.0f, 0.0f, 0.0f), // Specular
             new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
-            0f,
+            0.1f,
             1f
     );
 
@@ -58,7 +61,7 @@ public class Settings
     // Grass
     public static final Material grassMaterial = new Material
     (
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
+            new Color(1.0f, 1.0f, 1.0f, 1.0f), // Ambience
             new Color(0.408f, 0.624f, 0.22f, 1.0f), // Diffuse
             new Color(0.0f, 0.0f, 0.0f, 0.0f), // Specular
             new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
@@ -102,8 +105,8 @@ public class Settings
     public static final Material spearMaterial = new Material
     (
             new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Diffuse
-            new Color(0.4f, 0.4f, 0.4f, 1.0f), // Specular
+            new Color(0.4f, 0.4f, 0.8f, 0.0f), // Diffuse
+            new Color(0.0f, 0.0f, 0.0f, 1.0f), // Specular
             new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
             32f,
             1f
@@ -113,9 +116,9 @@ public class Settings
     public static final Material floorMaterial = new Material
     (
             new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
-            new Color(0.5f, 0.5f, 0.5f, 1.0f), // Diffuse
-            new Color(1.0f, 1.0f, 1.0f, 1.0f), // Specular
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
+            new Color(0.8f, 0.4f, 0.4f, 1.0f), // Diffuse
+            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Specular
+            new Color(0.3f, 0.0f, 0.0f, 1.0f), // Emission
             Float.MAX_VALUE,
             1f
     );
@@ -205,7 +208,7 @@ public class Settings
 
     /* === Lights === */
     public static final int numberOfLights = 6; // !!!MUST MATCH IN THE SHADER!!!
-    public static final Color globalAmbience = new Color(0.5f, 0.0f, 0.0f, 1.0f);
+    public static final Color globalAmbience = new Color(0.2f, 0.2f, 0.2f, 1.0f);
 
     // Helmet light
     public static final Color helmetLightColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -214,13 +217,11 @@ public class Settings
     public static final float helmetLightLinearAttenuation = 0.3f;
     public static final float helmetLightQuadraticAttenuation = 0.3f;
 
-    // End point light
-    public static final Color endPointLightColor = new Color(1.0f, 0.0f, 0.0f, 1.0f);
-    public static final Vector3D endPointLightDirection = new Vector3D(0, -1, 0);
-    public static final float endPointLightSpotFactor = 5.0f;
-    public static final float endPointConstantAttenuation = 0.0f;
-    public static final float endPointLightLinearAttenuation = 0f;
-    public static final float endPointLightQuadraticAttenuation = 2f;
+    // Sun
+    public static final Color sunLightColor = new Color(0.3f, 0.25f, 0.1f, 1.0f);
+
+    // Moon
+    public static final Color moonLightColor = new Color(0.1f, 0.2f, 0.3f, 1.0f);
 
     // Watchtower light
     public static final Color watchtowerLightColor = new Color(1.0f, 0.0f, 0.0f, 1.0f);

@@ -26,6 +26,7 @@ public class Player extends GameObject
     private float yaw;
     private float pitch;
     private float accumulatedGravity;
+    private boolean sprinting;
 
     public Player(int ID, Point3D position, Vector3D scale, float speed, Material material)
     {
@@ -49,6 +50,7 @@ public class Player extends GameObject
         yaw = 0;
         pitch = 0f;
         accumulatedGravity = 0f;
+        sprinting = false;
 
         targetBlock = null;
     }
@@ -61,6 +63,11 @@ public class Player extends GameObject
 
         camera.yaw(yaw);
         camera.pitch(pitch);
+
+        if (sprinting)
+        {
+            movementVector.scale(Settings.playerSprintMultiplier);
+        }
 
         if (GameManager.noclip)
         {
@@ -79,6 +86,7 @@ public class Player extends GameObject
         yaw = 0;
         pitch = 0;
         targetBlock = null;
+        sprinting = false;
 
 //        int x = (int) position.x;
 //        int y = (int) position.y;
@@ -139,6 +147,11 @@ public class Player extends GameObject
         {
             accumulatedGravity = -Settings.jumpStrength;
         }
+    }
+
+    public void sprint()
+    {
+        sprinting = true;
     }
 
     public void lookLeft()

@@ -47,4 +47,9 @@ public class MathUtils
     {
         return (y / chunkHeight);
     }
+
+    public static float lerp(float a, float b, float t)
+    {
+        return ((1 - t) * a) + (b * t);
+    }
 }
