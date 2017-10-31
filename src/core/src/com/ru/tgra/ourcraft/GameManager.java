@@ -153,7 +153,7 @@ public class GameManager
 
     private static void createPlayer()
     {
-        player = new Player(1, new Point3D(0, Settings.worldScale*2, 0), new Vector3D(0.25f, 0.25f, 0.25f), Settings.playerSpeed, Settings.playerMinimapMaterial);
+        player = new Player(1, new Point3D(0, Settings.worldScale+10, 0), new Vector3D(0.25f, 0.25f, 0.25f), Settings.playerSpeed, Settings.playerMinimapMaterial);
         gameObjects.add(player);
     }
 

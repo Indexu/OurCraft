@@ -18,17 +18,17 @@ public class CollisionsUtil
         int y = player.getWorldY();
         int z = player.getWorldZ();
 
-        float unitX = (position.x - ((float)(int)position.x) + 0.5f) % 1f;
-        float unitY = (position.y - ((float)(int)position.y) + 0.5f) % 1f;
-        float unitZ = (position.z - ((float)(int)position.z) + 0.5f) % 1f;
+        float unitX = (position.x - ((float) (int) position.x) + 0.5f) % 1f;
+        float unitY = (position.y - ((float) (int) position.y) + 0.5f) % 1f;
+        float unitZ = (position.z - ((float) (int) position.z) + 0.5f) % 1f;
 
         int maxX = GameManager.worldBlocks.length - 1;
         int maxY = GameManager.worldBlocks[0].length - 1;
         int maxZ = GameManager.worldBlocks[0][0].length - 1;
 
         if (0 <= x && x < maxX
-            && 0 <= y && y < maxY
-            && 0 <= z && z < maxZ)
+                && 0 <= y && y < maxY
+                && 0 <= z && z < maxZ)
         {
             float left = unitX + radius;
             float right = unitX - radius;
@@ -39,71 +39,70 @@ public class CollisionsUtil
             boolean collided = false;
 
             // Check right
-            if (right < 0 && x != 0 && GameManager.worldBlocks[x-1][y][z] != Block.BlockType.EMPTY)
+            if (right < 0 && 0 < x && ((GameManager.worldBlocks[x - 1][y][z] != Block.BlockType.EMPTY) || (0 < y && GameManager.worldBlocks[x - 1][y - 1][z] != Block.BlockType.EMPTY)))
             {
                 position.x -= right;
                 collided = true;
             }
             // Check left
-            else if (1 < left && GameManager.worldBlocks[x+1][y][z] != Block.BlockType.EMPTY)
+            else if (1 < left && ((GameManager.worldBlocks[x + 1][y][z] != Block.BlockType.EMPTY) || (0 < y && GameManager.worldBlocks[x + 1][y - 1][z] != Block.BlockType.EMPTY)))
             {
                 position.x -= (left % 1);
                 collided = true;
             }
 
             // Check bottom
-            if (bottom < 0 && z != 0 && GameManager.worldBlocks[x][y][z-1] != Block.BlockType.EMPTY)
+            if (bottom < 0 && 0 < z && ((GameManager.worldBlocks[x][y][z - 1] != Block.BlockType.EMPTY) || (0 < y && GameManager.worldBlocks[x][y - 1][z - 1] != Block.BlockType.EMPTY)))
             {
                 position.z -= bottom;
                 collided = true;
             }
             // Check top
-            else if (1 < top && GameManager.worldBlocks[x][y][z+1] != Block.BlockType.EMPTY)
+            else if (1 < top && ((GameManager.worldBlocks[x][y][z + 1] != Block.BlockType.EMPTY) || (0 < y && GameManager.worldBlocks[x][y - 1][z + 1] != Block.BlockType.EMPTY)))
             {
                 position.z -= (top % 1);
                 collided = true;
             }
 
-            System.out.format("y: %d | length: %d\n", y, GameManager.worldBlocks[x][0].length);
-
             // Check below
-            if (below < 0 && y != 1 && GameManager.worldBlocks[x][y-Settings.playerHeight][z] != Block.BlockType.EMPTY)
+            if (below < 0 && 1 < y && GameManager.worldBlocks[x][y - Settings.playerHeight][z] != Block.BlockType.EMPTY)
             {
                 position.y -= below;
                 player.resetGravity();
             }
             // Check above
-            else if (1 < above && y + Settings.playerHeight < GameManager.worldBlocks[x][0].length && GameManager.worldBlocks[x][y+1][z] != Block.BlockType.EMPTY)
+            else if (1 < above && y + 1 < GameManager.worldBlocks[x].length && GameManager.worldBlocks[x][y + 1][z] != Block.BlockType.EMPTY)
             {
                 position.y -= (above % 1);
+                player.resetGravity();
             }
 
             // Check diagonal
             if (!collided)
             {
                 // Top left
-                if (GameManager.worldBlocks[x+1][y][z+1] != Block.BlockType.EMPTY)
+                if (GameManager.worldBlocks[x + 1][y][z + 1] != Block.BlockType.EMPTY)
                 {
                     Vector3D v = new Vector3D(position.x - (x + 0.5f), 0f, position.z - (z + 0.5f));
                     cornerCollision(position, v, radius);
                 }
 
                 // Top right
-                if (x != 0 && GameManager.worldBlocks[x-1][y][z+1] != Block.BlockType.EMPTY)
+                if (x != 0 && GameManager.worldBlocks[x - 1][y][z + 1] != Block.BlockType.EMPTY)
                 {
                     Vector3D v = new Vector3D(position.x - (x - 0.5f), 0f, position.z - (z + 0.5f));
                     cornerCollision(position, v, radius);
                 }
 
                 // Bottom left
-                if (z != 0 && GameManager.worldBlocks[x+1][y][z-1] != Block.BlockType.EMPTY)
+                if (z != 0 && GameManager.worldBlocks[x + 1][y][z - 1] != Block.BlockType.EMPTY)
                 {
                     Vector3D v = new Vector3D(position.x - (x + 0.5f), 0f, position.z - (z - 0.5f));
                     cornerCollision(position, v, radius);
                 }
 
                 // Bottom right
-                if (x != 0 && z != 0 && GameManager.worldBlocks[x-1][y][z-1] != Block.BlockType.EMPTY)
+                if (x != 0 && z != 0 && GameManager.worldBlocks[x - 1][y][z - 1] != Block.BlockType.EMPTY)
                 {
                     Vector3D v = new Vector3D(position.x - (x - 0.5f), 0f, position.z - (z - 0.5f));
                     cornerCollision(position, v, radius);

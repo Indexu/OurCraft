@@ -16,10 +16,10 @@ public class Settings
     public static final float aspectRatio = (float)virtualWidth / (float)virtualHeight;
 
     /* === World settings === */
-    public static final int worldWidth = 128;
-    public static final int worldHeight = 128;
+    public static final int worldWidth = 256;
+    public static final int worldHeight = 256;
     public static final int worldFeatureSize = 4;
-    public static final int worldScale = 20;
+    public static final int worldScale = 40;
     public static final int chunkWidth = 16;
     public static final int chunkHeight = 16;
     public static final int chunkDrawRadius = 2;

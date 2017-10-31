@@ -6,6 +6,7 @@ import com.ru.tgra.ourcraft.models.CubeMask;
 import com.ru.tgra.ourcraft.models.Point3D;
 import com.ru.tgra.ourcraft.objects.Block;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -24,8 +25,8 @@ public class WorldGenerator
     {
         worldBlocks = new Block.BlockType[Settings.worldWidth][Settings.worldScale * 2][Settings.worldHeight];
         heightMap = new int[Settings.worldHeight][Settings.worldWidth];
-        noise = new OpenSimplexNoise();
-        //noise = new OpenSimplexNoise(new Date().getTime());
+        //noise = new OpenSimplexNoise();
+        noise = new OpenSimplexNoise(new Date().getTime());
         maxX = Settings.worldWidth;
         maxY = Settings.worldScale * 2;
         maxZ = Settings.worldHeight;
@@ -34,6 +35,7 @@ public class WorldGenerator
     public void generateWorld()
     {
         generateHeightMap();
+        smoothenHeightMap();
         createWorldBlockArray();
         generateChunks();
 
@@ -63,8 +65,79 @@ public class WorldGenerator
                 value *= Settings.worldScale;
 
                 heightMap[x][y] = (int) value;
+            }
+        }
+    }
 
-                //System.out.format("Value: %f | HeightMap: %d\n", value, heightMap[y][x]);
+    private void smoothenHeightMap()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            for (int x = 0; x < Settings.worldWidth; x++)
+            {
+                for (int y = 0; y < Settings.worldHeight; y++)
+                {
+                    int sum = 0;
+                    int count = 0;
+
+                    // Up
+                    if (y + 1 < Settings.worldHeight)
+                    {
+                        sum += heightMap[x][y + 1];
+                        count++;
+
+                        // Up-Right
+                        if (x + 1 < Settings.worldWidth)
+                        {
+                            sum += heightMap[x + 1][y + 1];
+                            count++;
+                        }
+
+                        // Up-Left
+                        if (0 < x)
+                        {
+                            sum += heightMap[x - 1][y + 1];
+                            count++;
+                        }
+                    }
+
+                    // Down
+                    if (0 < y)
+                    {
+                        sum += heightMap[x][y - 1];
+                        count++;
+
+                        // Down-Right
+                        if (x + 1 < Settings.worldWidth)
+                        {
+                            sum += heightMap[x + 1][y - 1];
+                            count++;
+                        }
+
+                        // Down-Left
+                        if (0 < x)
+                        {
+                            sum += heightMap[x - 1][y - 1];
+                            count++;
+                        }
+                    }
+
+                    // Right
+                    if (x + 1 < Settings.worldWidth)
+                    {
+                        sum += heightMap[x + 1][y];
+                        count++;
+                    }
+
+                    // Left
+                    if (0 < x)
+                    {
+                        sum += heightMap[x - 1][y];
+                        count++;
+                    }
+
+                    heightMap[x][y] = (sum / count);
+                }
             }
         }
     }
