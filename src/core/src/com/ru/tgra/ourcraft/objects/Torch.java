@@ -14,7 +14,7 @@ public class Torch extends GameObject
         super();
 
         this.ID = ID;
-        this.position = GameManager.player.getPosition();
+        this.position = new Point3D();
         this.scale = Settings.torchSize;
 
         mask = new CubeMask();
@@ -27,7 +27,7 @@ public class Torch extends GameObject
         GameManager.drawCount++;
 
         ModelMatrix.main.loadIdentityMatrix();
-        ModelMatrix.main.addTranslation(position.x, position.y - 0.15f, position.z);
+        ModelMatrix.main.addTranslation(position);
         ModelMatrix.main.addScale(scale);
 
         GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
@@ -52,6 +52,10 @@ public class Torch extends GameObject
     @Override
     public void update(float deltaTime)
     {
-        // Do nothing
+        float x = GameManager.player.getCamera().forward.x + GameManager.player.getPosition().x;
+        float y = GameManager.player.getPosition().y;
+        float z = GameManager.player.getCamera().forward.z + GameManager.player.getPosition().z;
+
+        position.set(x, y, z);
     }
 }

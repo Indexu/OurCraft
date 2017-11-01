@@ -17,7 +17,7 @@ public class LightManager
     public static void init()
     {
         globalAmbiance = Settings.globalAmbience;
-        sunAngle = 0f;
+        sunAngle = (float) Math.PI/2;
         radius = Settings.worldWidth * 2f;
 
         createSun();
@@ -46,7 +46,8 @@ public class LightManager
         System.out.print(" | Sun pos: " + sun.getPosition());
         System.out.print(" | Moon pos: " + moon.getPosition());
         System.out.print(" | Sun on: " + sun.isOn());
-        System.out.print(" | Mon on: " + moon.isOn());
+        System.out.print(" | Moon on: " + moon.isOn());
+        System.out.print(" | Moon color: " + moon.getColor());
     }
 
     public static void createSun()
@@ -103,6 +104,9 @@ public class LightManager
 
             sunColor.scale(t);
             moonColor.scale(1-t);
+
+            sunColor.a = t;
+            moonColor.a = 1-t;
         }
         // To midnight
         else
@@ -119,16 +123,9 @@ public class LightManager
 
             moonColor.scale(t);
             sunColor.scale(1-t);
+
+            moonColor.a = t;
+            sunColor.a = 1-t;
         }
-
-        sunColor.r = 0;
-        sunColor.g = 0;
-        sunColor.b = 0;
-        sunColor.a = 0;
-
-        moonColor.r = 0;
-        moonColor.g = 0;
-        moonColor.b = 0;
-        moonColor.a = 0;
     }
 }

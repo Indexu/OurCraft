@@ -62,7 +62,7 @@ void main()
     {
         if (u_lights[i].on == 0.0)
         {
-            break;
+            continue;
         }
 
         float len_s = length(v_s[i]);

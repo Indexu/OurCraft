@@ -30,7 +30,7 @@ public class Settings
     public static final float dotProductCutoff = -0.1f;
     public static final float drawDistance = 30f;
     public static final float proximityDistance = 2f;
-    public static final float dayNightCycleSpeed = 0.5f;
+    public static final float dayNightCycleSpeed = 0.01f;
     public static final float fullCircle = 2 * (float) Math.PI;
 
     /* === Player settings === */
@@ -72,128 +72,12 @@ public class Settings
             1f
     );
 
-    // Selected
-    public static final Material selectedMaterial = new Material
-    (
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
-            new Color(0.8f, 0.0f, 0.0f, 1.0f), // Diffuse
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Specular
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
-            128f,
-            1f
-    );
-
-    // Walls
-    public static final Material wallMaterial = new Material
-    (
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
-            new Color(1.0f, 1.0f, 1.0f, 1.0f), // Diffuse
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Specular
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
-            128f,
-            1f
-    );
-
     public static final Material wallMinimapMaterial = new Material
     (
             new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
             new Color(1.0f, 1.0f, 1.0f, 1.0f), // Diffuse
             new Color(0.0f, 0.0f, 0.0f, 0.0f), // Specular
             new Color(0.0f, 0.0f, 0.0f, 1.0f), // Emission
-            128f,
-            1f
-    );
-
-    // Spears
-    public static final Material spearMaterial = new Material
-    (
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
-            new Color(0.4f, 0.4f, 0.8f, 0.0f), // Diffuse
-            new Color(0.0f, 0.0f, 0.0f, 1.0f), // Specular
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
-            32f,
-            1f
-    );
-
-    // Floor
-    public static final Material floorMaterial = new Material
-    (
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
-            new Color(0.8f, 0.4f, 0.4f, 1.0f), // Diffuse
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Specular
-            new Color(0.3f, 0.0f, 0.0f, 1.0f), // Emission
-            Float.MAX_VALUE,
-            1f
-    );
-
-    public static final Material floorMinimapMaterial = new Material
-    (
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
-            new Color(0.5f, 0.5f, 0.5f, 1.0f), // Diffuse
-            new Color(1.0f, 1.0f, 1.0f, 1.0f), // Specular
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
-            Float.MAX_VALUE,
-            1f
-    );
-
-    // End point
-    public static final Material endPointMaterial = new Material
-    (
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
-            new Color(1.0f, 0.0f, 0.0f, 1.0f), // Diffuse
-            new Color(0.5f, 0.5f, 0.5f, 1.0f), // Specular
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
-            32f,
-            1f
-    );
-    public static final Material endPointMinimapMaterial = new Material
-    (
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
-            new Color(1.0f, 0.0f, 0.0f, 1.0f), // Diffuse
-            new Color(1.0f, 1.0f, 1.0f, 1.0f), // Specular
-            new Color(1.0f, 0.0f, 0.0f, 0.0f), // Emission
-            128f,
-            1f
-    );
-
-    // Watchtower material
-    public static final Material watchtowerMaterial = new Material
-    (
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
-            new Color(0.4f, 0.4f, 0.4f, 1.0f), // Diffuse
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Specular
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
-            128f,
-            1f
-    );
-
-    public static final Material watchtowerMinimapMaterial = new Material
-    (
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
-            new Color(0.4f, 0.4f, 0.4f, 1.0f), // Diffuse
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Specular
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
-            128f,
-            1f
-    );
-
-    // Watchtower orb material
-    public static final Material watchtowerOrbMaterial = new Material
-    (
-            new Color(0.6f, 0.0f, 0.0f, 1.0f), // Ambience
-            new Color(1.0f, 0.0f, 0.0f, 1.0f), // Diffuse
-            new Color(1.0f, 0.0f, 0.0f, 1.0f), // Specular
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
-            128f,
-            1f
-    );
-
-    public static final Material watchtowerOrbMinimapMaterial = new Material
-    (
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
-            new Color(1.0f, 1.0f, 1.0f, 1.0f), // Diffuse
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Specular
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
             128f,
             1f
     );
@@ -211,17 +95,10 @@ public class Settings
 
     /* === Lights === */
     public static final int numberOfLights = 3; // !!!MUST MATCH IN THE SHADER!!!
-    public static final Color globalAmbience = new Color(0.2f, 0.2f, 0.2f, 1.0f);
-
-    // Helmet light
-    public static final Color helmetLightColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-    public static final float helmetLightSpotFactor = 0.0f;
-    public static final float helmetConstantAttenuation = 0.5f;
-    public static final float helmetLightLinearAttenuation = 0.3f;
-    public static final float helmetLightQuadraticAttenuation = 0.3f;
+    public static final Color globalAmbience = new Color(0.1f, 0.1f, 0.1f, 1.0f);
 
     // Sun light
-    public static final Color sunLightColor = new Color(0.3f, 0.25f, 0.1f, 1.0f);
+    public static final Color sunLightColor = new Color(0.35f, 0.35f, 0.25f, 1.0f);
 
     // Moon light
     public static final Color moonLightColor = new Color(0.1f, 0.2f, 0.3f, 1.0f);

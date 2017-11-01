@@ -45,6 +45,7 @@ public class GameManager
         gameObjects.clear();
 
         worldGenerator.generateWorld();
+        //createTorch();
         createPlayer();
         createSkybox();
 
@@ -169,15 +170,10 @@ public class GameManager
         }
     }
 
-    private static void createHeadLight()
+    private static void createTorch()
     {
-        headLight = new Light();
-        headLight.setID(4);
-        headLight.setColor(Settings.helmetLightColor);
-        headLight.setSpotFactor(Settings.helmetLightSpotFactor);
-        headLight.setConstantAttenuation(Settings.helmetConstantAttenuation);
-        headLight.setLinearAttenuation(Settings.helmetLightLinearAttenuation);
-        headLight.setQuadraticAttenuation(Settings.helmetLightQuadraticAttenuation);
+        Torch torch = new Torch();
+        gameObjects.add(torch);
     }
 
     private static void createMinimap()
