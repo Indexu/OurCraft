@@ -11,18 +11,22 @@ public class TextureManager
 {
     private static Texture grassTexture;
     private static Texture dirtTexture;
+    private static Texture torchTexture;
     private static Texture skyboxTexture;
 
     private static FloatBuffer UVTopBottomSideBuffer;
     private static FloatBuffer UVAllBuffer;
+    private static FloatBuffer UVTorchBuffer;
     private static FloatBuffer UVCubeMapBuffer;
 
     public static void init()
     {
         initTextures();
+
         initUVAllBuffer();
         initUVTopBottomSideBuffer();
         initUVCubeMapBuffer();
+        initUVTorchBuffer();
     }
 
     public static Texture getBlockTexture(Block.BlockType type)
@@ -34,6 +38,9 @@ public class TextureManager
 
             case DIRT:
                 return dirtTexture;
+
+            case TORCH:
+                return torchTexture;
 
             default:
                 return null;
@@ -49,6 +56,9 @@ public class TextureManager
 
             case DIRT:
                 return UVAllBuffer;
+
+            case TORCH:
+                return UVTorchBuffer;
 
             default:
                 return null;
@@ -69,6 +79,7 @@ public class TextureManager
     {
         grassTexture = new Texture(Gdx.files.internal("textures/blocks/grass.png"));
         dirtTexture = new Texture(Gdx.files.internal("textures/blocks/dirt.png"));
+        torchTexture = new Texture(Gdx.files.internal("textures/blocks/torch_on.png"));
         skyboxTexture = new Texture(Gdx.files.internal("textures/skybox/sky_photo3.jpg"));
     }
 
@@ -152,6 +163,48 @@ public class TextureManager
         UVTopBottomSideBuffer = BufferUtils.newFloatBuffer(48);
         BufferUtils.copy(uvArray, 0, UVTopBottomSideBuffer, 48);
         UVTopBottomSideBuffer.rewind();
+    }
+
+    private static void initUVTorchBuffer()
+    {
+        float[] uvArray =
+        {
+            7f/16f, 6f/16f,
+            9f/16f, 6f/16f,
+            9f/16f, 1.0f,
+            7f/16f, 1.0f,
+
+            7f/16f, 6f/16f,
+            9f/16f, 6f/16f,
+            9f/16f, 1.0f,
+            7f/16f, 1.0f,
+
+            // Bottom
+            0.5f, 1.0f,
+            0.5f, 0.5f,
+            1.0f, 0.5f,
+            1.0f, 1.0f,
+
+            // Top
+            7f/16f, 6f/16f,
+            9f/16f, 6f/16f,
+            9f/16f, 0.5f,
+            7f/16f, 0.5f,
+
+            7f/16f, 6f/16f,
+            9f/16f, 6f/16f,
+            9f/16f, 1.0f,
+            7f/16f, 1.0f,
+
+            7f/16f, 6f/16f,
+            9f/16f, 6f/16f,
+            9f/16f, 1.0f,
+            7f/16f, 1.0f,
+        };
+
+        UVTorchBuffer = BufferUtils.newFloatBuffer(48);
+        BufferUtils.copy(uvArray, 0, UVTorchBuffer, 48);
+        UVTorchBuffer.rewind();
     }
 
     private static void initUVCubeMapBuffer()

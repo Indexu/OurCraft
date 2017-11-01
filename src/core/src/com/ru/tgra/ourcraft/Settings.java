@@ -24,6 +24,7 @@ public class Settings
     public static final int chunkHeight = 16;
     public static final int chunkDrawRadius = 2;
     public static final Vector3D blockSize = new Vector3D(1f, 1f, 1f);
+    public static final Vector3D torchSize = new Vector3D(0.15f, 0.66f, 0.15f);
     public static final float dotProductCutoff = -0.1f;
     public static final float drawDistance = 30f;
     public static final float proximityDistance = 2f;

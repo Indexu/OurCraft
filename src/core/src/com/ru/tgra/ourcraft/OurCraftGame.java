@@ -130,6 +130,11 @@ public class OurCraftGame extends ApplicationAdapter
             GameManager.player.placeBlock();
         }
 
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2))
+        {
+            GameManager.player.placeTorch();
+        }
+
 //        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT))
 //        {
 //            System.out.println(" | MOUSE LEFT");

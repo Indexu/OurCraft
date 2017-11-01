@@ -39,39 +39,50 @@ public class CollisionsUtil
             boolean collided = false;
 
             // Check right
-            if (right < 0 && 0 < x && ((GameManager.worldBlocks[x - 1][y][z] != Block.BlockType.EMPTY) || (0 < y && GameManager.worldBlocks[x - 1][y - 1][z] != Block.BlockType.EMPTY)))
+            if (right < 0 && 0 < x &&
+                ((GameManager.worldBlocks[x - 1][y][z] != Block.BlockType.EMPTY && GameManager.worldBlocks[x - 1][y][z] != Block.BlockType.TORCH) ||
+                (0 < y && GameManager.worldBlocks[x - 1][y - 1][z] != Block.BlockType.EMPTY && GameManager.worldBlocks[x - 1][y - 1][z] != Block.BlockType.TORCH)))
             {
                 position.x -= right;
                 collided = true;
             }
             // Check left
-            else if (1 < left && ((GameManager.worldBlocks[x + 1][y][z] != Block.BlockType.EMPTY) || (0 < y && GameManager.worldBlocks[x + 1][y - 1][z] != Block.BlockType.EMPTY)))
+            else if (1 < left &&
+                    ((GameManager.worldBlocks[x + 1][y][z] != Block.BlockType.EMPTY && GameManager.worldBlocks[x + 1][y][z] != Block.BlockType.TORCH) ||
+                    (0 < y && GameManager.worldBlocks[x + 1][y - 1][z] != Block.BlockType.EMPTY && GameManager.worldBlocks[x + 1][y - 1][z] != Block.BlockType.TORCH)))
             {
                 position.x -= (left % 1);
                 collided = true;
             }
 
             // Check bottom
-            if (bottom < 0 && 0 < z && ((GameManager.worldBlocks[x][y][z - 1] != Block.BlockType.EMPTY) || (0 < y && GameManager.worldBlocks[x][y - 1][z - 1] != Block.BlockType.EMPTY)))
+            if (bottom < 0 && 0 < z && ((GameManager.worldBlocks[x][y][z - 1] != Block.BlockType.EMPTY && GameManager.worldBlocks[x][y][z - 1] != Block.BlockType.TORCH) ||
+                (0 < y && GameManager.worldBlocks[x][y - 1][z - 1] != Block.BlockType.EMPTY && GameManager.worldBlocks[x][y - 1][z - 1] != Block.BlockType.TORCH)))
             {
                 position.z -= bottom;
                 collided = true;
             }
             // Check top
-            else if (1 < top && ((GameManager.worldBlocks[x][y][z + 1] != Block.BlockType.EMPTY) || (0 < y && GameManager.worldBlocks[x][y - 1][z + 1] != Block.BlockType.EMPTY)))
+            else if (1 < top &&
+                    ((GameManager.worldBlocks[x][y][z + 1] != Block.BlockType.EMPTY && GameManager.worldBlocks[x][y][z + 1] != Block.BlockType.TORCH) ||
+                    (0 < y && GameManager.worldBlocks[x][y - 1][z + 1] != Block.BlockType.EMPTY && GameManager.worldBlocks[x][y - 1][z + 1] != Block.BlockType.TORCH)))
             {
                 position.z -= (top % 1);
                 collided = true;
             }
 
             // Check below
-            if (below < 0 && 1 < y && GameManager.worldBlocks[x][y - Settings.playerHeight][z] != Block.BlockType.EMPTY)
+            if (below < 0 && 1 < y &&
+                GameManager.worldBlocks[x][y - Settings.playerHeight][z] != Block.BlockType.EMPTY &&
+                GameManager.worldBlocks[x][y - Settings.playerHeight][z] != Block.BlockType.TORCH)
             {
                 position.y -= below;
                 player.resetGravity();
             }
             // Check above
-            else if (1 < above && y + 1 < GameManager.worldBlocks[x].length && GameManager.worldBlocks[x][y + 1][z] != Block.BlockType.EMPTY)
+            else if (1 < above && y + 1 < GameManager.worldBlocks[x].length &&
+                    GameManager.worldBlocks[x][y + 1][z] != Block.BlockType.EMPTY &&
+                    GameManager.worldBlocks[x][y + 1][z] != Block.BlockType.TORCH)
             {
                 position.y -= (above % 1);
                 player.resetGravity();
@@ -81,28 +92,36 @@ public class CollisionsUtil
             if (!collided)
             {
                 // Top left
-                if (GameManager.worldBlocks[x + 1][y][z + 1] != Block.BlockType.EMPTY)
+                if (x + 1 < maxX && z + 1 < maxZ &&
+                    ((GameManager.worldBlocks[x + 1][y][z + 1] != Block.BlockType.EMPTY && GameManager.worldBlocks[x + 1][y][z + 1] != Block.BlockType.TORCH) ||
+                    ((0 < y && GameManager.worldBlocks[x + 1][y - 1][z + 1] != Block.BlockType.EMPTY && GameManager.worldBlocks[x + 1][y - 1][z + 1] != Block.BlockType.TORCH))))
                 {
                     Vector3D v = new Vector3D(position.x - (x + 0.5f), 0f, position.z - (z + 0.5f));
                     cornerCollision(position, v, radius);
                 }
 
                 // Top right
-                if (x != 0 && GameManager.worldBlocks[x - 1][y][z + 1] != Block.BlockType.EMPTY)
+                if (0 < x && z + 1 < maxZ &&
+                    ((GameManager.worldBlocks[x - 1][y][z + 1] != Block.BlockType.EMPTY && GameManager.worldBlocks[x - 1][y][z + 1] != Block.BlockType.TORCH) ||
+                    ((0 < y && GameManager.worldBlocks[x - 1][y - 1][z + 1] != Block.BlockType.EMPTY && GameManager.worldBlocks[x - 1][y - 1][z + 1] != Block.BlockType.TORCH))))
                 {
                     Vector3D v = new Vector3D(position.x - (x - 0.5f), 0f, position.z - (z + 0.5f));
                     cornerCollision(position, v, radius);
                 }
 
                 // Bottom left
-                if (z != 0 && GameManager.worldBlocks[x + 1][y][z - 1] != Block.BlockType.EMPTY)
+                if (x + 1 < maxX && 0 < z &&
+                    ((GameManager.worldBlocks[x + 1][y][z - 1] != Block.BlockType.EMPTY && GameManager.worldBlocks[x + 1][y][z - 1] != Block.BlockType.TORCH) ||
+                    (0 < y && GameManager.worldBlocks[x + 1][y - 1][z - 1] != Block.BlockType.EMPTY && GameManager.worldBlocks[x + 1][y - 1][z - 1] != Block.BlockType.TORCH)))
                 {
                     Vector3D v = new Vector3D(position.x - (x + 0.5f), 0f, position.z - (z - 0.5f));
                     cornerCollision(position, v, radius);
                 }
 
                 // Bottom right
-                if (x != 0 && z != 0 && GameManager.worldBlocks[x - 1][y][z - 1] != Block.BlockType.EMPTY)
+                if (0 < x && 0 < z &&
+                    ((GameManager.worldBlocks[x - 1][y][z - 1] != Block.BlockType.EMPTY && GameManager.worldBlocks[x - 1][y][z - 1] != Block.BlockType.TORCH) ||
+                    (0 < y && GameManager.worldBlocks[x - 1][y - 1][z - 1] != Block.BlockType.EMPTY && GameManager.worldBlocks[x - 1][y - 1][z - 1] != Block.BlockType.TORCH)))
                 {
                     Vector3D v = new Vector3D(position.x - (x - 0.5f), 0f, position.z - (z - 0.5f));
                     cornerCollision(position, v, radius);

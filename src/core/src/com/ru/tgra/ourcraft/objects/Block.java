@@ -7,6 +7,7 @@ import com.ru.tgra.ourcraft.Settings;
 import com.ru.tgra.ourcraft.TextureManager;
 import com.ru.tgra.ourcraft.models.*;
 import com.ru.tgra.ourcraft.shapes.BoxGraphic;
+import com.ru.tgra.ourcraft.utilities.BlockUtils;
 import com.ru.tgra.ourcraft.utilities.CollisionsUtil;
 
 public class Block extends GameObject
@@ -17,7 +18,8 @@ public class Block extends GameObject
         BEDROCK,
         GRASS,
         STONE,
-        DIRT
+        DIRT,
+        TORCH
     }
 
     public enum TargetFace
@@ -30,18 +32,19 @@ public class Block extends GameObject
         WEST
     }
 
-    private CubeMask mask;
-    private CubeMask minimapMask;
-    private CubeMask renderMask;
-    private BlockType blockType;
-    private Vector3D vectorFromPlayer;
-    private float distanceFromPlayer;
-    private int chunkX;
-    private int chunkY;
-    private TargetFace targetFace;
+    protected CubeMask mask;
+    protected CubeMask minimapMask;
+    protected CubeMask renderMask;
 
-    private Point3D leftBottom;
-    private Point3D rightTop;
+    protected BlockType blockType;
+    protected Vector3D vectorFromPlayer;
+    protected float distanceFromPlayer;
+    protected int chunkX;
+    protected int chunkY;
+    protected TargetFace targetFace;
+
+    protected Point3D leftBottom;
+    protected Point3D rightTop;
 
     public Block(int ID, Point3D position, Vector3D scale, Material material, Material minimapMaterial, CubeMask mask, BlockType type, int chunkX, int chunkY)
     {
@@ -132,7 +135,7 @@ public class Block extends GameObject
         this.mask = mask;
     }
 
-    private boolean checkDraw()
+    protected boolean checkDraw()
     {
         // Skip if invisible
         if (mask.isInvisible())
@@ -157,47 +160,12 @@ public class Block extends GameObject
         }
 
         // Construct the render mask
-        constructRenderMask();
+        BlockUtils.constructRenderMask(mask, renderMask, position, GameManager.player.position);
 
         return !renderMask.isInvisible();
     }
 
-    private void constructRenderMask()
-    {
-        renderMask.setMask(mask);
-
-        if (mask.isBottom() && position.y < GameManager.player.position.y)
-        {
-            renderMask.setBottom(false);
-        }
-
-        if (mask.isTop() && GameManager.player.position.y < position.y)
-        {
-            renderMask.setTop(false);
-        }
-
-        if (mask.isNorth() && GameManager.player.position.x < position.x)
-        {
-            renderMask.setNorth(false);
-        }
-
-        if (mask.isSouth() && position.x < GameManager.player.position.x)
-        {
-            renderMask.setSouth(false);
-        }
-
-        if (mask.isEast() && GameManager.player.position.z < position.z)
-        {
-            renderMask.setEast(false);
-        }
-
-        if (mask.isWest() && position.z < GameManager.player.position.z)
-        {
-            renderMask.setWest(false);
-        }
-    }
-
-    private void checkTargetedBlock()
+    protected void checkTargetedBlock()
     {
         if (distanceFromPlayer <= Settings.reach)
         {
@@ -256,5 +224,10 @@ public class Block extends GameObject
     public void setTargetFace(TargetFace targetFace)
     {
         this.targetFace = targetFace;
+    }
+
+    public BlockType getBlockType()
+    {
+        return blockType;
     }
 }

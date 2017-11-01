@@ -98,7 +98,8 @@ public class GameManager
         int playerY = Math.round(player.getPosition().y);
         int playerZ = Math.round(player.getPosition().z);
 
-        if (x == playerX && (y == playerY || y == playerY - 1) && z == playerZ)
+        if ((x == playerX && (y == playerY || y == playerY - 1) && z == playerZ && type != Block.BlockType.TORCH) ||
+            (type == Block.BlockType.TORCH && !BlockUtils.isValidPlaceForTorch(x, y, z, worldBlocks)))
         {
             return;
         }
@@ -108,19 +109,37 @@ public class GameManager
 
         setWorldBlocksBlock(pos, type);
 
-        Block block = new Block(
-            MathUtils.cartesianHash(x, y, z),
-            pos,
-            Settings.blockSize,
-            Settings.grassMaterial,
-            Settings.wallMinimapMaterial,
-            BlockUtils.createBlockMask(x, y, z, worldBlocks),
-            type,
-            chunkX,
-            chunkY
-        );
+        Block block;
 
-        redoMasksForAdjacentBlocks(block);
+        if (type == Block.BlockType.TORCH)
+        {
+            block = new Torch(
+                MathUtils.cartesianHash(x, y, z),
+                pos,
+                Settings.torchSize,
+                Settings.grassMaterial,
+                Settings.wallMinimapMaterial,
+                chunkX,
+                chunkY
+            );
+        }
+        else
+        {
+            block = new Block(
+                MathUtils.cartesianHash(x, y, z),
+                pos,
+                Settings.blockSize,
+                Settings.grassMaterial,
+                Settings.wallMinimapMaterial,
+                BlockUtils.createBlockMask(x, y, z, worldBlocks),
+                type,
+                chunkX,
+                chunkY
+            );
+
+            redoMasksForAdjacentBlocks(block);
+        }
+
         chunks[block.getChunkX()][block.getChunkY()].addBlock(block);
     }
 
@@ -129,11 +148,32 @@ public class GameManager
         for (Block block : blocksToRemove)
         {
             setWorldBlocksBlock(block.getPosition(), Block.BlockType.EMPTY);
-            redoMasksForAdjacentBlocks(block);
+
+            if (block.getBlockType() != Block.BlockType.TORCH)
+            {
+                redoMasksForAdjacentBlocks(block);
+                assertRemoveTorch(block.getPosition(), block.getChunkX(), block.getChunkY());
+            }
+
             chunks[block.getChunkX()][block.getChunkY()].removeBlock(block.getID());
         }
 
         blocksToRemove.clear();
+    }
+
+    private static void assertRemoveTorch(Point3D lowerPos, int chunkX, int chunkY)
+    {
+        int x = (int) lowerPos.x;
+        int y = (int) lowerPos.y + 1;
+        int z = (int) lowerPos.z;
+
+        if (y < worldGenerator.getMaxY() && worldBlocks[x][y][z] == Block.BlockType.TORCH)
+        {
+            worldBlocks[x][y][z] = Block.BlockType.EMPTY;
+
+            int ID = MathUtils.cartesianHash(x, y, z);
+            chunks[chunkX][chunkY].removeBlock(ID);
+        }
     }
 
     private static void createHeadLight()
@@ -218,6 +258,11 @@ public class GameManager
 
     private static void redoBlock(int x, int y, int z)
     {
+        if (worldBlocks[x][y][z] == Block.BlockType.TORCH)
+        {
+            return;
+        }
+
         CubeMask mask = BlockUtils.createBlockMask(x, y, z, worldBlocks);
 
         int chunkX = MathUtils.getChunkX(x, Settings.chunkWidth);
