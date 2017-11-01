@@ -67,6 +67,22 @@ public class LightManager
         moon.setPosition(new Point3D(), false);
     }
 
+    public static Light createTorchLight(Point3D position)
+    {
+        Light torchLight = new Light();
+        torchLight.setID(2);
+        torchLight.setPosition(position, false);
+        torchLight.setDirection(Settings.torchLightDirection);
+        torchLight.setColor(Settings.torchLightColor);
+        torchLight.setSpotFactor(Settings.torchLightSpotFactor);
+        torchLight.setConstantAttenuation(Settings.torchLightConstantAttenuation);
+        torchLight.setLinearAttenuation(Settings.torchLightLinearAttenuation);
+        torchLight.setQuadraticAttenuation(Settings.torchLightQuadraticAttenuation);
+        torchLight.setSpotlight(false);
+
+        return torchLight;
+    }
+
     private static void setSunMoonColors(float s, float c)
     {
         Color sunColor = sun.getColor();
@@ -104,5 +120,15 @@ public class LightManager
             moonColor.scale(t);
             sunColor.scale(1-t);
         }
+
+        sunColor.r = 0;
+        sunColor.g = 0;
+        sunColor.b = 0;
+        sunColor.a = 0;
+
+        moonColor.r = 0;
+        moonColor.g = 0;
+        moonColor.b = 0;
+        moonColor.a = 0;
     }
 }

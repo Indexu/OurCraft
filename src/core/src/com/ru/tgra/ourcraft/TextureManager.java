@@ -39,9 +39,6 @@ public class TextureManager
             case DIRT:
                 return dirtTexture;
 
-            case TORCH:
-                return torchTexture;
-
             default:
                 return null;
         }
@@ -57,9 +54,6 @@ public class TextureManager
             case DIRT:
                 return UVAllBuffer;
 
-            case TORCH:
-                return UVTorchBuffer;
-
             default:
                 return null;
         }
@@ -70,9 +64,19 @@ public class TextureManager
         return skyboxTexture;
     }
 
+    public static Texture getTorchTexture()
+    {
+        return torchTexture;
+    }
+
     public static FloatBuffer getCubeMapUVBuffer()
     {
         return UVCubeMapBuffer;
+    }
+
+    public static FloatBuffer getTorchUVBuffer()
+    {
+        return UVTorchBuffer;
     }
 
     private static void initTextures()
@@ -169,15 +173,15 @@ public class TextureManager
     {
         float[] uvArray =
         {
+            7f/16f, 1.0f,
             7f/16f, 6f/16f,
             9f/16f, 6f/16f,
             9f/16f, 1.0f,
-            7f/16f, 1.0f,
 
+            7f/16f, 1.0f,
             7f/16f, 6f/16f,
             9f/16f, 6f/16f,
             9f/16f, 1.0f,
-            7f/16f, 1.0f,
 
             // Bottom
             0.5f, 1.0f,
@@ -191,15 +195,15 @@ public class TextureManager
             9f/16f, 0.5f,
             7f/16f, 0.5f,
 
-            7f/16f, 6f/16f,
-            9f/16f, 6f/16f,
             9f/16f, 1.0f,
             7f/16f, 1.0f,
+            7f/16f, 6f/16f,
+            9f/16f, 6f/16f,
 
-            7f/16f, 6f/16f,
-            9f/16f, 6f/16f,
             9f/16f, 1.0f,
             7f/16f, 1.0f,
+            7f/16f, 6f/16f,
+            9f/16f, 6f/16f,
         };
 
         UVTorchBuffer = BufferUtils.newFloatBuffer(48);

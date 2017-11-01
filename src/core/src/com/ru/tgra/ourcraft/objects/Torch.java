@@ -1,41 +1,29 @@
 package com.ru.tgra.ourcraft.objects;
 
-import com.ru.tgra.ourcraft.GameManager;
-import com.ru.tgra.ourcraft.GraphicsEnvironment;
-import com.ru.tgra.ourcraft.Settings;
-import com.ru.tgra.ourcraft.TextureManager;
+import com.ru.tgra.ourcraft.*;
 import com.ru.tgra.ourcraft.models.*;
 import com.ru.tgra.ourcraft.shapes.BoxGraphic;
 
-public class Torch extends Block
+public class Torch extends GameObject
 {
-    public Torch(int ID, Point3D position, Vector3D scale, Material material, Material minimapMaterial, int chunkX, int chunkY)
+    private Light torchLight;
+    private CubeMask mask;
+
+    public Torch()
     {
-        super(ID, position, scale, material, minimapMaterial, new CubeMask(), BlockType.TORCH, chunkX, chunkY);
+        super();
 
         this.ID = ID;
-        this.position = position;
-        this.scale = scale;
-        this.material = material;
-        this.minimapMaterial = minimapMaterial;
-        this.chunkX = chunkX;
-        this.chunkY = chunkY;
-
-        blockType = Block.BlockType.TORCH;
+        this.position = GameManager.player.getPosition();
+        this.scale = Settings.torchSize;
 
         mask = new CubeMask();
-        renderMask = new CubeMask();
+
+        torchLight = LightManager.createTorchLight(new Point3D(position.x, position.y + 1, position.z));
     }
 
     public void draw(int viewportID)
     {
-        if (!checkDraw())
-        {
-            return;
-        }
-
-        checkTargetedBlock();
-
         GameManager.drawCount++;
 
         ModelMatrix.main.loadIdentityMatrix();
@@ -43,23 +31,27 @@ public class Torch extends Block
         ModelMatrix.main.addScale(scale);
 
         GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
+        GraphicsEnvironment.shader.setLight(torchLight);
 
         if (viewportID == Settings.viewportIDMinimap)
         {
-            GraphicsEnvironment.shader.setMaterial(minimapMaterial);
             //BoxGraphic.drawSolidCube(minimapMask);
         }
         else
         {
-            GraphicsEnvironment.shader.setMaterial(material);
-
             BoxGraphic.drawSolidCube(
                     GraphicsEnvironment.shader,
-                    TextureManager.getBlockTexture(blockType),
-                    TextureManager.getBlockUVBuffer(blockType),
-                    renderMask,
+                    TextureManager.getTorchTexture(),
+                    TextureManager.getTorchUVBuffer(),
+                    mask,
                     false
             );
         }
+    }
+
+    @Override
+    public void update(float deltaTime)
+    {
+        // Do nothing
     }
 }

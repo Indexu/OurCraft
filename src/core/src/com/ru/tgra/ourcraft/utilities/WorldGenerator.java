@@ -71,7 +71,7 @@ public class WorldGenerator
 
     private void smoothenHeightMap()
     {
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < Settings.worldSmoothness; i++)
         {
             for (int x = 0; x < Settings.worldWidth; x++)
             {

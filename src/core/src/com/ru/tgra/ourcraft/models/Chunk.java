@@ -2,7 +2,9 @@ package com.ru.tgra.ourcraft.models;
 
 import com.ru.tgra.ourcraft.Settings;
 import com.ru.tgra.ourcraft.objects.Block;
+import com.ru.tgra.ourcraft.objects.Torch;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Chunk
@@ -24,6 +26,11 @@ public class Chunk
         {
             block.draw(viewportID);
         }
+    }
+
+    public Block getBlock(int ID)
+    {
+        return blockMap.get(ID);
     }
 
     public void addBlock(Block block)

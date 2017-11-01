@@ -28,6 +28,7 @@ public class Shader
     private int[] lightConstAttLoc;
     private int[] lightLinearAttLoc;
     private int[] lightQuadAttLoc;
+    private int[] lightSpotlightLoc;
     private int[] lightOnLoc;
 
     private int usesDiffuseTexLoc;
@@ -90,14 +91,20 @@ public class Shader
 
     public void setLight(Light light)
     {
-        setLightPosition(light.getID(), light.getPosition());
-        setLightColor(light.getID(), light.getColor());
-        setLightDirection(light.getID(), light.getDirection());
-        setSpotFactor(light.getID(), light.getSpotFactor());
-        setConstantAttenuation(light.getID(), light.getConstantAttenuation());
-        setLinearAttenuation(light.getID(), light.getLinearAttenuation());
-        setQuadraticAttenuation(light.getID(), light.getQuadraticAttenuation());
-        setOn(light.getID(), light.isOn());
+        setLight(light.getID(), light);
+    }
+
+    public void setLight(int ID, Light light)
+    {
+        setLightPosition(ID, light.getPosition());
+        setLightColor(ID, light.getColor());
+        setLightDirection(ID, light.getDirection());
+        setSpotFactor(ID, light.getSpotFactor());
+        setConstantAttenuation(ID, light.getConstantAttenuation());
+        setLinearAttenuation(ID, light.getLinearAttenuation());
+        setQuadraticAttenuation(ID, light.getQuadraticAttenuation());
+        setSpotlight(ID, light.isSpotlight());
+        setOn(ID, light.isOn());
     }
 
     public void setDiffuseTexture(Texture tex)
@@ -193,6 +200,12 @@ public class Shader
         Gdx.gl.glUniform1f(lightOnLoc[lightID], f);
     }
 
+    public void setSpotlight(int lightID, boolean spotlight)
+    {
+        float f = (spotlight ? 1.0f : 0.0f);
+        Gdx.gl.glUniform1f(lightSpotlightLoc[lightID], f);
+    }
+
     public void setGlobalAmbience(Color color)
     {
         Gdx.gl.glUniform4f(globalAmbienceLoc, color.r, color.g, color.b, color.a);
@@ -277,6 +290,7 @@ public class Shader
         lightConstAttLoc = new int[Settings.numberOfLights];
         lightLinearAttLoc = new int[Settings.numberOfLights];
         lightQuadAttLoc = new int[Settings.numberOfLights];
+        lightSpotlightLoc = new int[Settings.numberOfLights];
         lightOnLoc = new int[Settings.numberOfLights];
 
         for (int i = 0; i < Settings.numberOfLights; i++)
@@ -288,6 +302,7 @@ public class Shader
             lightConstAttLoc[i] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lights[" + i + "].constantAttenuation");
             lightLinearAttLoc[i] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lights[" + i + "].linearAttenuation");
             lightQuadAttLoc[i] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lights[" + i + "].quadraticAttenuation");
+            lightSpotlightLoc[i] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lights[" + i + "].spotlight");
             lightOnLoc[i] = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lights[" + i + "].on");
         }
 

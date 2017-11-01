@@ -235,16 +235,4 @@ public class Player extends GameObject
 
         GameManager.addBlock(pos, Block.BlockType.DIRT);
     }
-
-    public void placeTorch()
-    {
-        if (targetBlock == null)
-        {
-            return;
-        }
-
-        Point3D pos = BlockUtils.getTargetArea(targetBlock);
-
-        GameManager.addBlock(pos, Block.BlockType.TORCH);
-    }
 }

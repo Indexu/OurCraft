@@ -10,6 +10,7 @@ public class Light
     private float constantAttenuation;
     private float linearAttenuation;
     private float quadraticAttenuation;
+    private boolean spotlight;
     private boolean on;
 
     public Light()
@@ -23,6 +24,7 @@ public class Light
         linearAttenuation = 0;
         quadraticAttenuation = 0;
         on = true;
+        spotlight = false;
     }
 
     public Light(int ID, Point3D position, Color color, Vector3D direction, float spotFactor, float constantAttenuation, float linearAttenuation, float quadraticAttenuation)
@@ -134,5 +136,15 @@ public class Light
     public void setOn(boolean on)
     {
         this.on = on;
+    }
+
+    public boolean isSpotlight()
+    {
+        return spotlight;
+    }
+
+    public void setSpotlight(boolean spotlight)
+    {
+        this.spotlight = spotlight;
     }
 }

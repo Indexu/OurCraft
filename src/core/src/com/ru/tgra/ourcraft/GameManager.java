@@ -109,23 +109,7 @@ public class GameManager
 
         setWorldBlocksBlock(pos, type);
 
-        Block block;
-
-        if (type == Block.BlockType.TORCH)
-        {
-            block = new Torch(
-                MathUtils.cartesianHash(x, y, z),
-                pos,
-                Settings.torchSize,
-                Settings.grassMaterial,
-                Settings.wallMinimapMaterial,
-                chunkX,
-                chunkY
-            );
-        }
-        else
-        {
-            block = new Block(
+        Block block  = new Block(
                 MathUtils.cartesianHash(x, y, z),
                 pos,
                 Settings.blockSize,
@@ -135,10 +119,9 @@ public class GameManager
                 type,
                 chunkX,
                 chunkY
-            );
+        );
 
-            redoMasksForAdjacentBlocks(block);
-        }
+        redoMasksForAdjacentBlocks(block);
 
         chunks[block.getChunkX()][block.getChunkY()].addBlock(block);
     }
@@ -159,6 +142,16 @@ public class GameManager
         }
 
         blocksToRemove.clear();
+    }
+
+    public static Block getBlock(int x, int y, int z)
+    {
+        int chunkX = MathUtils.getChunkX(x, Settings.chunkWidth);
+        int chunkY = MathUtils.getChunkY(z, Settings.chunkHeight);
+
+        int ID = MathUtils.cartesianHash(x, y, z);
+
+        return chunks[chunkX][chunkY].getBlock(ID);
     }
 
     private static void assertRemoveTorch(Point3D lowerPos, int chunkX, int chunkY)

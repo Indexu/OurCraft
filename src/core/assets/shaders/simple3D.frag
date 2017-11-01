@@ -3,7 +3,7 @@
 precision mediump float;
 #endif
 
-const int numberOfLights = 6;
+const int numberOfLights = 3;
 
 struct light
 {
@@ -13,6 +13,7 @@ struct light
     float constantAttenuation;
     float linearAttenuation;
     float quadraticAttenuation;
+    float spotlight;
     float on;
 };
 
@@ -61,7 +62,7 @@ void main()
     {
         if (u_lights[i].on == 0.0)
         {
-            continue;
+            break;
         }
 
         float len_s = length(v_s[i]);
@@ -70,11 +71,19 @@ void main()
         if (u_lights[i].spotFactor != 0.0)
         {
             float spotAttenuation = dot(-v_s[i], u_lights[i].direction) / (len_s * length(u_lights[i].direction));
-            spotAttenuation = (spotAttenuation < 0.0 ? 0.0 : pow(spotAttenuation, u_lights[i].spotFactor));
 
-            if (spotAttenuation == 0.0)
+            if (u_lights[i].spotlight == 1.0)
             {
-                continue;
+                spotAttenuation = (spotAttenuation < 0.0 ? 0.0 : pow(spotAttenuation, u_lights[i].spotFactor));
+
+                if (spotAttenuation == 0.0)
+                {
+                    continue;
+                }
+            }
+            else
+            {
+                spotAttenuation = pow(spotAttenuation, u_lights[i].spotFactor);
             }
 
             float distanceAttenuation = 1.0 / (u_lights[i].constantAttenuation + len_s * u_lights[i].linearAttenuation + len_s * len_s * u_lights[i].quadraticAttenuation);

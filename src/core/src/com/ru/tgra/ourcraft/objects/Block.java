@@ -10,6 +10,10 @@ import com.ru.tgra.ourcraft.shapes.BoxGraphic;
 import com.ru.tgra.ourcraft.utilities.BlockUtils;
 import com.ru.tgra.ourcraft.utilities.CollisionsUtil;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Block extends GameObject
 {
     public enum BlockType
