@@ -20,11 +20,11 @@ public class Chunk
         this.chunkY = chunkY;
     }
 
-    public void drawBlocks(int viewportID)
+    public void drawBlocks()
     {
         for (Block block : blockMap.values())
         {
-            block.draw(viewportID);
+            block.draw();
         }
     }
 

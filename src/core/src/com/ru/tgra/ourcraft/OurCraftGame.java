@@ -109,7 +109,7 @@ public class OurCraftGame extends ApplicationAdapter
 			GameManager.player.moveBack();
 		}
 
-        if(Gdx.input.isKeyPressed(Input.Keys.SPACE))
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
         {
             GameManager.player.jump();
         }
@@ -171,38 +171,14 @@ public class OurCraftGame extends ApplicationAdapter
 			return;
 		}
 
-		for (int viewNum = 0; viewNum < 2; viewNum++)
+		for (int viewNum = 0; viewNum < 1; viewNum++)
 		{
-			if (viewNum == Settings.viewportIDPerspective)
-			{
-                GraphicsEnvironment.setPerspectiveCamera();
-			}
-			else
-			{
-				GraphicsEnvironment.setMinimapCamera();
-			}
+            GraphicsEnvironment.setPerspectiveCamera();
 
 			shader.setGlobalAmbience(LightManager.globalAmbiance);
 			shader.setFogColor(LightManager.fogColor);
 
-			if (viewNum == Settings.viewportIDPerspective)
-			{
-			    GameManager.skybox.draw(viewNum);
-//				GameManager.headLight.setPosition(GameManager.player.getPosition(), true);
-//				GameManager.headLight.setDirection(new Vector3D(-GameManager.player.getCamera().n.x, -GameManager.player.getCamera().n.y, -GameManager.player.getCamera().n.z));
-			}
-			else
-			{
-//				GameManager.headLight.getPosition().y = 3f;
-//				GameManager.headLight.getDirection().add(new Vector3D(0f, -1f, 0f));
-
-//                ModelMatrix.main.loadIdentityMatrix();
-//                ModelMatrix.main.addScale(1f, 4f, 1f);
-//
-//                GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
-//
-//                RectangleGraphic.drawSolid();
-			}
+            GameManager.skybox.draw();
 
             GraphicsEnvironment.shader.setLight(LightManager.sun);
             GraphicsEnvironment.shader.setLight(LightManager.moon);
@@ -245,17 +221,14 @@ public class OurCraftGame extends ApplicationAdapter
 
             GameManager.drawCount = 0;
 
-			GameManager.drawWorld(viewNum);
+			GameManager.drawWorld();
 
 			for (GameObject gameObject : GameManager.gameObjects)
 			{
-				gameObject.draw(viewNum);
+				gameObject.draw();
 			}
 
-            if (viewNum == Settings.viewportIDPerspective)
-            {
-                ui();
-            }
+            ui();
 
 			//System.out.print(" | Draw Count: " + GameManager.drawCount);
 		}
@@ -337,6 +310,8 @@ public class OurCraftGame extends ApplicationAdapter
         float h = (float) Settings.virtualHeight * scale;
 
         GraphicsEnvironment.setViewport(cropX, cropY, w, h);
+
+        GameManager.player.getCamera().setPerspectiveProjection(Settings.playerFOV, GraphicsEnvironment.viewport.width / GraphicsEnvironment.viewport.height, Settings.nearPlane, Settings.farPlane);
 
         setPoints();
 	}

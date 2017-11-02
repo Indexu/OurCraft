@@ -23,13 +23,8 @@ public class Skybox extends GameObject
         mask = new CubeMask();
     }
 
-    public void draw(int viewportID)
+    public void draw()
     {
-        if (viewportID == Settings.viewportIDMinimap)
-        {
-            return;
-        }
-
         ModelMatrix.main.loadIdentityMatrix();
         ModelMatrix.main.addTranslation(position);
         ModelMatrix.main.addScale(scale);

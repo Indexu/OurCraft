@@ -37,7 +37,7 @@ public abstract class GameObject
         this.material = material;
     }
 
-    public abstract void draw(int viewportID);
+    public abstract void draw();
 
     public abstract void update(float deltaTime);
 

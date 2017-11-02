@@ -104,7 +104,7 @@ public class Player extends GameObject
 
     }
 
-    public void draw(int viewportID)
+    public void draw()
     {
 //        if (viewportID == Settings.viewportIDPerspective)
 //        {

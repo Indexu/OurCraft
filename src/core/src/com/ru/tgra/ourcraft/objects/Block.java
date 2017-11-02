@@ -83,7 +83,7 @@ public class Block extends GameObject
         targetFace = null;
     }
 
-    public void draw(int viewportID)
+    public void draw()
     {
         if (!checkDraw())
         {
@@ -100,23 +100,13 @@ public class Block extends GameObject
 
         GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
-        if (viewportID == Settings.viewportIDMinimap)
-        {
-            GraphicsEnvironment.shader.setMaterial(minimapMaterial);
-            //BoxGraphic.drawSolidCube(minimapMask);
-        }
-        else
-        {
-            GraphicsEnvironment.shader.setMaterial(material);
-
-            BoxGraphic.drawSolidCube(
-                GraphicsEnvironment.shader,
-                TextureManager.getBlockTexture(blockType),
-                TextureManager.getBlockUVBuffer(blockType),
-                renderMask,
-                false
-            );
-        }
+        BoxGraphic.drawSolidCube(
+            GraphicsEnvironment.shader,
+            TextureManager.getBlockTexture(blockType),
+            TextureManager.getBlockUVBuffer(blockType),
+            renderMask,
+            false
+        );
     }
 
     public void update(float deltaTime)

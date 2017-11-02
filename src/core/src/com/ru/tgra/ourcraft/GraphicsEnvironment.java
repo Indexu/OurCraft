@@ -19,12 +19,6 @@ public class GraphicsEnvironment
     public static Shader2D shader2D;
     public static Rectangle viewport;
 
-    private static SpriteBatch batch;
-    private static BitmapFont fontNormal;
-    private static BitmapFont fontLarge;
-    private static BitmapFont fontExtraLarge;
-    private static GlyphLayout layout;
-
     public static void init()
     {
         shader = new Shader();
@@ -33,7 +27,7 @@ public class GraphicsEnvironment
         shader2D = new Shader2D();
 
         initFonts();
-        Gdx.gl.glClearColor(0.3f, 0.3f, 0.8f, 1.0f);
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1.0f);
         enableBlending();
         //setFullscreen();
 
@@ -58,33 +52,14 @@ public class GraphicsEnvironment
                 (int) viewport.height
         );
 
-        GameManager.player.getCamera().setPerspectiveProjection(Settings.playerFOV, viewport.width / viewport.height, Settings.nearPlane, Settings.farPlane);
         shader.setViewMatrix(GameManager.player.getCamera().getViewMatrix());
         shader.setProjectionMatrix(GameManager.player.getCamera().getProjectionMatrix());
         shader.setEyePosition(GameManager.player.getCamera().eye);
     }
 
-    public static void setMinimapCamera()
-    {
-        Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
-
-        Gdx.gl.glViewport
-        (
-            (int) (viewport.width * 0.75f),
-            (int) (viewport.height * 0.61f),
-            (int) (viewport.width / 4.5f),
-            (int) (viewport.height / 2.5f)
-        );
-
-        GameManager.minimapCamera.look(new Point3D(GameManager.player.getCamera().eye.x, 30.0f, GameManager.player.getCamera().eye.z), GameManager.player.getPosition(), new Vector3D(0, 0, 1));
-        shader.setViewMatrix(GameManager.minimapCamera.getViewMatrix());
-        shader.setProjectionMatrix(GameManager.minimapCamera.getProjectionMatrix());
-    }
-
     private static void setFullscreen()
     {
-        Graphics.DisplayMode disp = Gdx.graphics.getDisplayMode();
-        Gdx.graphics.setFullscreenMode(disp);
+        Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
     }
 
     private static void enableBlending()

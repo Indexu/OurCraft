@@ -22,7 +22,7 @@ public class Torch extends GameObject
         torchLight = LightManager.createTorchLight(new Point3D(position.x, position.y + 1, position.z));
     }
 
-    public void draw(int viewportID)
+    public void draw()
     {
         GameManager.drawCount++;
 
@@ -33,20 +33,13 @@ public class Torch extends GameObject
         GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
         GraphicsEnvironment.shader.setLight(torchLight);
 
-        if (viewportID == Settings.viewportIDMinimap)
-        {
-            //BoxGraphic.drawSolidCube(minimapMask);
-        }
-        else
-        {
-            BoxGraphic.drawSolidCube(
-                    GraphicsEnvironment.shader,
-                    TextureManager.getTorchTexture(),
-                    TextureManager.getTorchUVBuffer(),
-                    mask,
-                    false
-            );
-        }
+        BoxGraphic.drawSolidCube(
+            GraphicsEnvironment.shader,
+            TextureManager.getTorchTexture(),
+            TextureManager.getTorchUVBuffer(),
+            mask,
+            false
+        );
     }
 
     @Override

@@ -129,7 +129,7 @@ public class CollisionsUtil
             }
         }
 
-        while (0 < y && y < maxY && GameManager.worldBlocks[x][y][z] != Block.BlockType.EMPTY)
+        while (0 < y && y < maxY && GameManager.worldBlocks[x][y-1][z] != Block.BlockType.EMPTY)
         {
             position.y++;
             y++;

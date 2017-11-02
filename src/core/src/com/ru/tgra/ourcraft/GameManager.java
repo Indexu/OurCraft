@@ -22,7 +22,6 @@ public class GameManager
     public static int drawCount;
 
     public static Light headLight;
-    public static Camera minimapCamera;
     public static Player player;
     public static Skybox skybox;
     public static boolean noclip;
@@ -36,8 +35,6 @@ public class GameManager
         worldCenter = new Point3D(Settings.worldWidth / 2, Settings.worldScale, Settings.worldHeight / 2);
         noclip = false;
         won = false;
-
-        createMinimap();
     }
 
     public static void createWorld()
@@ -55,7 +52,7 @@ public class GameManager
         System.out.println("GameObjects: " + gameObjects.size());
     }
 
-    public static void drawWorld(int viewportID)
+    public static void drawWorld()
     {
         int chunkX = (int) player.getPosition().x / Settings.chunkWidth;
         int chunkY = (int) player.getPosition().z / Settings.chunkHeight;
@@ -82,7 +79,7 @@ public class GameManager
             for (int y = startY; y <= endY; y++)
             {
                 chunkDraw++;
-                chunks[x][y].drawBlocks(viewportID);
+                chunks[x][y].drawBlocks();
             }
         }
 
@@ -174,12 +171,6 @@ public class GameManager
     {
         Torch torch = new Torch();
         gameObjects.add(torch);
-    }
-
-    private static void createMinimap()
-    {
-        minimapCamera = new Camera();
-        minimapCamera.setOrthographicProjection(-5, 5, -5, 5, 3f, 100);
     }
 
     private static void createPlayer()

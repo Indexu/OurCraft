@@ -1,15 +1,12 @@
 package com.ru.tgra.ourcraft;
 
 import com.ru.tgra.ourcraft.models.Color;
+import com.ru.tgra.ourcraft.models.CubeMask;
 import com.ru.tgra.ourcraft.models.Material;
 import com.ru.tgra.ourcraft.models.Vector3D;
 
 public class Settings
 {
-    /* === Viewport IDs === */
-    public static final int viewportIDPerspective = 0;
-    public static final int viewportIDMinimap = 1;
-
     /* === Aspect ratio === */
     public static final int virtualWidth = 1920;
     public static final int virtualHeight = 1080;
