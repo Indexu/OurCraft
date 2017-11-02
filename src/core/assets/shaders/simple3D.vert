@@ -19,6 +19,7 @@ varying vec2 v_uv;
 varying vec4 v_n;
 varying vec4 v_s[numberOfLights];
 varying vec4 v_h[numberOfLights];
+varying float v_len_v;
 
 void main()
 {
@@ -31,7 +32,10 @@ void main()
 	// Global coordinates
 
 	v_n = normal;
-	vec4 v = normalize(u_eyePosition - position);
+
+	vec4 v = u_eyePosition - position;
+	v_len_v = length(v);
+	v = normalize(v);
 
 	for (int i = 0; i < numberOfLights; i++)
 	{

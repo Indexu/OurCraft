@@ -128,6 +128,12 @@ public class CollisionsUtil
                 }
             }
         }
+
+        while (0 < y && y < maxY && GameManager.worldBlocks[x][y][z] != Block.BlockType.EMPTY)
+        {
+            position.y++;
+            y++;
+        }
     }
 
     // Raycast source: https://gamedev.stackexchange.com/questions/18436/most-efficient-aabb-vs-ray-collision-algorithms

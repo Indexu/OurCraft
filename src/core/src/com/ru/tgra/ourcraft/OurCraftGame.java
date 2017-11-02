@@ -183,6 +183,7 @@ public class OurCraftGame extends ApplicationAdapter
 			}
 
 			shader.setGlobalAmbience(LightManager.globalAmbiance);
+			shader.setFogColor(LightManager.fogColor);
 
 			if (viewNum == Settings.viewportIDPerspective)
 			{

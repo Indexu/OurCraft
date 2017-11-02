@@ -23,15 +23,23 @@ public class Settings
     public static final int worldSmoothness = 4;
     public static final int chunkWidth = 16;
     public static final int chunkHeight = 16;
-    public static final int chunkDrawRadius = 2;
-    public static final float torchLightMaxDistance = 6f;
     public static final Vector3D blockSize = new Vector3D(1f, 1f, 1f);
     public static final Vector3D torchSize = new Vector3D(0.15f, 0.66f, 0.15f);
-    public static final float dotProductCutoff = -0.1f;
-    public static final float drawDistance = 30f;
-    public static final float proximityDistance = 2f;
-    public static final float dayNightCycleSpeed = 0.01f;
+    public static final float dayNightCycleSpeed = 0.1f;
     public static final float fullCircle = 2 * (float) Math.PI;
+
+    /* === Render settings === */
+    public static final float nearPlane = 0.1f;
+    public static final float farPlane = 40f;
+    public static final int chunkDrawRadius = 2;
+    public static final float dotProductCutoff = -0.1f;
+    public static final float drawDistance = 40f;
+    public static final float proximityDistance = 2f;
+    public static final float torchLightMaxDistance = 6f;
+    public static final float fogStart = 10f;
+    public static final float fogEnd = 30f;
+    public static final Color fogColorDay = new Color(0.7f, 0.7f, 0.7f, 1.0f);
+    public static final Color fogColorNight = new Color(0.1f, 0.1f, 0.1f, 1.0f);
 
     /* === Player settings === */
     public static final float playerFOV = 80f;
@@ -95,10 +103,12 @@ public class Settings
 
     /* === Lights === */
     public static final int numberOfLights = 3; // !!!MUST MATCH IN THE SHADER!!!
-    public static final Color globalAmbience = new Color(0.1f, 0.1f, 0.1f, 1.0f);
+
+    public static final Color globalAmbianceDay = new Color(0.35f, 0.35f, 0.35f, 1.0f);
+    public static final Color globalAmbianceNight = new Color(0.1f, 0.1f, 0.1f, 1.0f);
 
     // Sun light
-    public static final Color sunLightColor = new Color(0.35f, 0.35f, 0.25f, 1.0f);
+    public static final Color sunLightColor = new Color(0.45f, 0.45f, 0.35f, 1.0f);
 
     // Moon light
     public static final Color moonLightColor = new Color(0.1f, 0.2f, 0.3f, 1.0f);

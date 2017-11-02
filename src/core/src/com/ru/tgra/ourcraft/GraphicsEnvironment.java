@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.ru.tgra.ourcraft.models.Color;
 import com.ru.tgra.ourcraft.models.Point3D;
 import com.ru.tgra.ourcraft.models.Rectangle;
@@ -37,6 +38,9 @@ public class GraphicsEnvironment
         //setFullscreen();
 
         shader.useShader();
+
+        shader.setFogStart(Settings.fogStart);
+        shader.setFogEnd(Settings.fogEnd);
     }
 
     public static void setViewport(float x, float y, float width, float height)
@@ -54,7 +58,7 @@ public class GraphicsEnvironment
                 (int) viewport.height
         );
 
-        GameManager.player.getCamera().setPerspectiveProjection(Settings.playerFOV, viewport.width / viewport.height, 0.1f, 5000.0f);
+        GameManager.player.getCamera().setPerspectiveProjection(Settings.playerFOV, viewport.width / viewport.height, Settings.nearPlane, Settings.farPlane);
         shader.setViewMatrix(GameManager.player.getCamera().getViewMatrix());
         shader.setProjectionMatrix(GameManager.player.getCamera().getProjectionMatrix());
         shader.setEyePosition(GameManager.player.getCamera().eye);

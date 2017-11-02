@@ -42,6 +42,10 @@ public class Shader
 
     private int brightnessLoc;
 
+    private int fogStartLoc;
+    private int fogEndLoc;
+    private int fogColorLoc;
+
     private int modelMatrixLoc;
     private int viewMatrixLoc;
     private int projectionMatrixLoc;
@@ -157,6 +161,21 @@ public class Shader
     public void setBrightness(float f)
     {
         Gdx.gl.glUniform1f(brightnessLoc, f);
+    }
+
+    public void setFogStart(float f)
+    {
+        Gdx.gl.glUniform1f(fogStartLoc, f);
+    }
+
+    public void setFogEnd(float f)
+    {
+        Gdx.gl.glUniform1f(fogEndLoc, f);
+    }
+
+    public void setFogColor(Color color)
+    {
+        Gdx.gl.glUniform4f(fogColorLoc, color.r, color.g, color.b, color.a);
     }
 
     public void setLightPosition(int lightID, Point3D position)
@@ -282,6 +301,10 @@ public class Shader
         eyePosLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_eyePosition");
 
         brightnessLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_brightness");
+
+        fogStartLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_fogStart");
+        fogEndLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_fogEnd");
+        fogColorLoc = Gdx.gl.glGetUniformLocation(renderingProgramID, "u_fogColor");
 
         lightPosLoc = new int[Settings.numberOfLights];
         lightColorLoc = new int[Settings.numberOfLights];

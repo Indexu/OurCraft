@@ -10,13 +10,15 @@ public class LightManager
     public static Light sun;
     public static Light moon;
     public static Color globalAmbiance;
+    public static Color fogColor;
     public static float sunAngle;
 
     private static float radius;
 
     public static void init()
     {
-        globalAmbiance = Settings.globalAmbience;
+        globalAmbiance = new Color(Settings.globalAmbianceDay);
+        fogColor = new Color(Settings.fogColorDay);
         sunAngle = (float) Math.PI/2;
         radius = Settings.worldWidth * 2f;
 
@@ -43,11 +45,10 @@ public class LightManager
 
         setSunMoonColors(s, c);
 
-        System.out.print(" | Sun pos: " + sun.getPosition());
-        System.out.print(" | Moon pos: " + moon.getPosition());
-        System.out.print(" | Sun on: " + sun.isOn());
-        System.out.print(" | Moon on: " + moon.isOn());
-        System.out.print(" | Moon color: " + moon.getColor());
+//        System.out.print(" | Sun pos: " + sun.getPosition());
+//        System.out.print(" | Moon pos: " + moon.getPosition());
+//        System.out.print(" | Sun on: " + sun.isOn());
+//        System.out.print(" | Moon on: " + moon.isOn());
     }
 
     public static void createSun()
@@ -102,6 +103,14 @@ public class LightManager
             moonColor.g = MathUtils.lerp(Settings.moonLightColor.g, Settings.sunLightColor.g, t);
             moonColor.b = MathUtils.lerp(Settings.moonLightColor.b, Settings.sunLightColor.b, t);
 
+            globalAmbiance.r = MathUtils.lerp(Settings.globalAmbianceNight.r, Settings.globalAmbianceDay.r, t);
+            globalAmbiance.g = MathUtils.lerp(Settings.globalAmbianceNight.g, Settings.globalAmbianceDay.g, t);
+            globalAmbiance.b = MathUtils.lerp(Settings.globalAmbianceNight.b, Settings.globalAmbianceDay.b, t);
+
+            fogColor.r = MathUtils.lerp(Settings.fogColorNight.r, Settings.fogColorDay.r, t);
+            fogColor.g = MathUtils.lerp(Settings.fogColorNight.g, Settings.fogColorDay.g, t);
+            fogColor.b = MathUtils.lerp(Settings.fogColorNight.b, Settings.fogColorDay.b, t);
+
             sunColor.scale(t);
             moonColor.scale(1-t);
 
@@ -120,6 +129,14 @@ public class LightManager
             sunColor.r = MathUtils.lerp(Settings.sunLightColor.r, Settings.moonLightColor.r, t);
             sunColor.g = MathUtils.lerp(Settings.sunLightColor.g, Settings.moonLightColor.g, t);
             sunColor.b = MathUtils.lerp(Settings.sunLightColor.b, Settings.moonLightColor.b, t);
+
+            globalAmbiance.r = MathUtils.lerp(Settings.globalAmbianceDay.r, Settings.globalAmbianceNight.r, t);
+            globalAmbiance.g = MathUtils.lerp(Settings.globalAmbianceDay.g, Settings.globalAmbianceNight.g, t);
+            globalAmbiance.b = MathUtils.lerp(Settings.globalAmbianceDay.b, Settings.globalAmbianceNight.b, t);
+
+            fogColor.r = MathUtils.lerp(Settings.fogColorDay.r, Settings.fogColorNight.r, t);
+            fogColor.g = MathUtils.lerp(Settings.fogColorDay.g, Settings.fogColorNight.g, t);
+            fogColor.b = MathUtils.lerp(Settings.fogColorDay.b, Settings.fogColorNight.b, t);
 
             moonColor.scale(t);
             sunColor.scale(1-t);
