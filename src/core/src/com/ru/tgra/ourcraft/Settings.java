@@ -38,6 +38,7 @@ public class Settings
     public static final float fogEnd = 30f;
     public static final Color fogColorDay = new Color(0.7f, 0.7f, 0.7f, 1.0f);
     public static final Color fogColorNight = new Color(0.1f, 0.1f, 0.1f, 1.0f);
+    public static final CubeMask fullMask = new CubeMask();
 
     /* === Player settings === */
     public static final float playerFOV = 80f;

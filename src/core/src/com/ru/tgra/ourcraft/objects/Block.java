@@ -118,7 +118,7 @@ public class Block extends GameObject
         GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
         GraphicsEnvironment.shader.setMaterial(Settings.targetedBlockMaterial);
 
-        BoxGraphic.drawOutlineCube(GraphicsEnvironment.shader, renderMask);
+        BoxGraphic.drawOutlineCube(GraphicsEnvironment.shader, Settings.fullMask);
     }
 
     public void update(float deltaTime)

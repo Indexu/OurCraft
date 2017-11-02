@@ -42,14 +42,14 @@ public class GameManager
     {
         gameObjects.clear();
 
-        //worldGenerator.generateWorld();
-
         worldBlocks = worldGenerator.getWorldBlocks();
         chunks = worldGenerator.getChunks();
 
         createPlayer();
         createTorch();
         createSkybox();
+
+        AudioManager.playPianoMusic();
 
         System.out.println("GameObjects: " + gameObjects.size());
     }
@@ -124,10 +124,17 @@ public class GameManager
         redoMasksForAdjacentBlocks(block);
 
         chunks[block.getChunkX()][block.getChunkY()].addBlock(block);
+
+        AudioManager.playPlaceBlock();
     }
 
     public static void removeBlocks()
     {
+        if (0 < blocksToRemove.size())
+        {
+            AudioManager.playDestroyBlock();
+        }
+
         for (Block block : blocksToRemove)
         {
             setWorldBlocksBlock(block.getPosition(), Block.BlockType.EMPTY);
