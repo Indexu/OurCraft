@@ -102,37 +102,37 @@ public class TextureManager
     private static void initUVAllBuffer()
     {
         float[] uvArray =
-                {
-                        0.0f, 0.0f,
-                        1.0f, 0.0f,
-                        1.0f, 1.0f,
-                        0.0f, 1.0f,
+        {
+            0.0f, 1.0f,
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
 
-                        0.0f, 0.0f,
-                        1.0f, 0.0f,
-                        1.0f, 1.0f,
-                        0.0f, 1.0f,
+            0.0f, 1.0f,
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
 
-                        0.0f, 0.0f,
-                        1.0f, 0.0f,
-                        1.0f, 1.0f,
-                        0.0f, 1.0f,
+            0.0f, 1.0f,
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
 
-                        0.0f, 0.0f,
-                        1.0f, 0.0f,
-                        1.0f, 1.0f,
-                        0.0f, 1.0f,
+            0.0f, 1.0f,
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
 
-                        0.0f, 0.0f,
-                        1.0f, 0.0f,
-                        1.0f, 1.0f,
-                        0.0f, 1.0f,
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            0.0f, 1.0f,
 
-                        0.0f, 0.0f,
-                        1.0f, 0.0f,
-                        1.0f, 1.0f,
-                        0.0f, 1.0f,
-                };
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            0.0f, 1.0f,
+        };
 
         UVAllBuffer = BufferUtils.newFloatBuffer(48);
         BufferUtils.copy(uvArray, 0, UVAllBuffer, 48);

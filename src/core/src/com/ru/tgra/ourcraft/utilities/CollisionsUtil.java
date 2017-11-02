@@ -1,5 +1,6 @@
 package com.ru.tgra.ourcraft.utilities;
 
+import com.badlogic.gdx.Game;
 import com.ru.tgra.ourcraft.GameManager;
 import com.ru.tgra.ourcraft.Settings;
 import com.ru.tgra.ourcraft.models.Point3D;
@@ -129,11 +130,16 @@ public class CollisionsUtil
             }
         }
 
-        while (0 < y && y < maxY && GameManager.worldBlocks[x][y-1][z] != Block.BlockType.EMPTY)
+        if (0 < x && 0 < z && x < GameManager.worldGenerator.getMaxX() && z < GameManager.worldGenerator.getMaxZ())
         {
-            position.y++;
-            y++;
+            while (0 < y && y < maxY && GameManager.worldBlocks[x][y-1][z] != Block.BlockType.EMPTY)
+            {
+                position.y += 0.1f;
+                y = player.getWorldY();
+            }
         }
+
+        forceWithinBounds(player);
     }
 
     // Raycast source: https://gamedev.stackexchange.com/questions/18436/most-efficient-aabb-vs-ray-collision-algorithms
@@ -207,6 +213,41 @@ public class CollisionsUtil
             cornerVector.scale(radius - distance);
 
             position.add(cornerVector);
+        }
+    }
+
+    private static void forceWithinBounds(Player player)
+    {
+        float pushIncrement = 0.1f;
+
+        while (player.getWorldX() <= 2)
+        {
+            player.getPosition().x += pushIncrement;
+        }
+
+        while (GameManager.worldGenerator.getMaxX() - 2 < player.getWorldX())
+        {
+            player.getPosition().x -= pushIncrement;
+        }
+
+        while (player.getWorldY() <= 0)
+        {
+            player.getPosition().y += pushIncrement;
+        }
+
+        while (GameManager.worldGenerator.getMaxY() < player.getWorldY())
+        {
+            player.getPosition().y -= pushIncrement;
+        }
+
+        while (player.getWorldZ() <= 2)
+        {
+            player.getPosition().z += pushIncrement;
+        }
+
+        while (GameManager.worldGenerator.getMaxZ() - 2 < player.getWorldZ())
+        {
+            player.getPosition().z -= pushIncrement;
         }
     }
 }

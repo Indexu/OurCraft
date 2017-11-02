@@ -132,7 +132,12 @@ public class OurCraftGame extends ApplicationAdapter
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1))
         {
-            GameManager.player.placeBlock();
+            GameManager.player.selectBlock(1);
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2))
+        {
+            GameManager.player.selectBlock(2);
         }
 	}
 
@@ -340,14 +345,7 @@ public class OurCraftGame extends ApplicationAdapter
 
         GameManager.player.getCamera().setPerspectiveProjection(Settings.playerFOV, GraphicsEnvironment.viewport.width / GraphicsEnvironment.viewport.height, Settings.nearPlane, Settings.farPlane);
         GraphicsEnvironment.UICamera.setPerspectiveProjection(Settings.playerFOV, GraphicsEnvironment.viewport.width / GraphicsEnvironment.viewport.height, 0.01f, 1f);
-
-        setPoints();
 	}
-
-	private void setPoints()
-    {
-        center.setPoint(GraphicsEnvironment.viewport.width / 2, GraphicsEnvironment.viewport.height / 2);
-    }
 
 	private void init()
 	{
@@ -381,7 +379,7 @@ public class OurCraftGame extends ApplicationAdapter
 
 		float offset = Gdx.graphics.getHeight() / 8;
 
-        center = new Point2D();
+        center = new Point2D(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 
 		mainMenuTitlePosition = new Point3D(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0f);
 		mainMenuTitlePosition.y += offset * 2.5f;
@@ -415,6 +413,11 @@ public class OurCraftGame extends ApplicationAdapter
                         GameManager.player.getTargetBlock().destroy();
                     }
 				}
+
+                if (button == Input.Buttons.RIGHT)
+                {
+                    GameManager.player.placeBlock();
+                }
 
 				return false;
 			}

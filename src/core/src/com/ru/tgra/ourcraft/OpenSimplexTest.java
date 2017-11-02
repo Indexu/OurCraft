@@ -12,7 +12,7 @@ public class OpenSimplexTest
 {
     private static final int WIDTH = 512;
     private static final int HEIGHT = 512;
-    private static final double FEATURE_SIZE = 12;
+    private static final double FEATURE_SIZE = 64;
 
     public static void main(String[] args)
             throws IOException {

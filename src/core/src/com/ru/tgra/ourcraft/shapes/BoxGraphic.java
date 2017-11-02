@@ -190,4 +190,49 @@ public class BoxGraphic {
         }
     }
 
+	public static void drawOutlineCube(Shader shader, CubeMask mask)
+    {
+
+		Gdx.gl.glVertexAttribPointer(shader.getVertexPointer(), 3, GL20.GL_FLOAT, false, 0, vertexBuffer);
+		Gdx.gl.glVertexAttribPointer(shader.getNormalPointer(), 3, GL20.GL_FLOAT, false, 0, normalBuffer);
+
+		Gdx.gl.glLineWidth(4);
+
+        // North
+        if (mask.isWest())
+        {
+            Gdx.gl.glDrawArrays(GL20.GL_LINE_LOOP, 0, 4);
+        }
+
+        // South
+        if (mask.isEast())
+        {
+            Gdx.gl.glDrawArrays(GL20.GL_LINE_LOOP, 4, 4);
+        }
+
+        // Bottom
+        if (mask.isBottom())
+        {
+            Gdx.gl.glDrawArrays(GL20.GL_LINE_LOOP, 8, 4);
+        }
+
+        // Top
+        if (mask.isTop())
+        {
+            Gdx.gl.glDrawArrays(GL20.GL_LINE_LOOP, 12, 4);
+        }
+
+        // West
+        if (mask.isSouth())
+        {
+            Gdx.gl.glDrawArrays(GL20.GL_LINE_LOOP, 16, 4);
+        }
+
+        // East
+        if (mask.isNorth())
+        {
+            Gdx.gl.glDrawArrays(GL20.GL_LINE_LOOP, 20, 4);
+        }
+	}
+
 }

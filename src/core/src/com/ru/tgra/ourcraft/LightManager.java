@@ -22,7 +22,7 @@ public class LightManager
         fogColor = new Color(Settings.fogColorDay);
         torchLightColor = new Color(Settings.torchLightColorDay);
         sunAngle = (float) Math.PI/2;
-        radius = Settings.worldWidth * 2f;
+        radius = Settings.worldX * 2f;
 
         createSun();
         createMoon();
@@ -42,8 +42,8 @@ public class LightManager
         moon.getPosition().x = GameManager.worldCenter.x - (c * radius);
         moon.getPosition().y = GameManager.worldCenter.y - (s * radius);
 
-//        sun.setOn(Settings.worldScale < sun.getPosition().y);
-//        moon.setOn(Settings.worldScale < moon.getPosition().y);
+//        sun.setOn(Settings.worldY < sun.getPosition().y);
+//        moon.setOn(Settings.worldY < moon.getPosition().y);
 
         setSunMoonColors(s, c);
 

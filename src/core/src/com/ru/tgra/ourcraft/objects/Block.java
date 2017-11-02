@@ -18,11 +18,11 @@ public class Block extends GameObject
 {
     public enum BlockType
     {
-        EMPTY,
+        DIRT,
         BEDROCK,
         GRASS,
         STONE,
-        DIRT,
+        EMPTY,
         TORCH
     }
 
@@ -109,6 +109,18 @@ public class Block extends GameObject
         );
     }
 
+    public void drawOutline()
+    {
+        ModelMatrix.main.loadIdentityMatrix();
+        ModelMatrix.main.addTranslation(position);
+        ModelMatrix.main.addScale(scale);
+
+        GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
+        GraphicsEnvironment.shader.setMaterial(Settings.targetedBlockMaterial);
+
+        BoxGraphic.drawOutlineCube(GraphicsEnvironment.shader, renderMask);
+    }
+
     public void update(float deltaTime)
     {
         // Do nothing
@@ -116,7 +128,10 @@ public class Block extends GameObject
 
     public void destroy()
     {
-        GameManager.blocksToRemove.add(this);
+        if (blockType != BlockType.BEDROCK)
+        {
+            GameManager.blocksToRemove.add(this);
+        }
     }
 
     public CubeMask getMask()

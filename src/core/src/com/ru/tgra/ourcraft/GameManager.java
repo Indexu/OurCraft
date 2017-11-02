@@ -33,7 +33,7 @@ public class GameManager
         gameObjects = new ArrayList<>();
         blocksToRemove = new ArrayList<>();
         worldGenerator = new WorldGenerator();
-        worldCenter = new Point3D(Settings.worldWidth / 2, Settings.worldScale, Settings.worldHeight / 2);
+        worldCenter = new Point3D(Settings.worldX / 2, Settings.worldY / 2, Settings.worldZ / 2);
         noclip = false;
         won = false;
     }
@@ -130,13 +130,7 @@ public class GameManager
         for (Block block : blocksToRemove)
         {
             setWorldBlocksBlock(block.getPosition(), Block.BlockType.EMPTY);
-
-            if (block.getBlockType() != Block.BlockType.TORCH)
-            {
-                redoMasksForAdjacentBlocks(block);
-                assertRemoveTorch(block.getPosition(), block.getChunkX(), block.getChunkY());
-            }
-
+            redoMasksForAdjacentBlocks(block);
             chunks[block.getChunkX()][block.getChunkY()].removeBlock(block.getID());
         }
 
@@ -153,21 +147,6 @@ public class GameManager
         return chunks[chunkX][chunkY].getBlock(ID);
     }
 
-    private static void assertRemoveTorch(Point3D lowerPos, int chunkX, int chunkY)
-    {
-        int x = (int) lowerPos.x;
-        int y = (int) lowerPos.y + 1;
-        int z = (int) lowerPos.z;
-
-        if (y < worldGenerator.getMaxY() && worldBlocks[x][y][z] == Block.BlockType.TORCH)
-        {
-            worldBlocks[x][y][z] = Block.BlockType.EMPTY;
-
-            int ID = MathUtils.cartesianHash(x, y, z);
-            chunks[chunkX][chunkY].removeBlock(ID);
-        }
-    }
-
     private static void createTorch()
     {
         torch = new Torch();
@@ -175,16 +154,15 @@ public class GameManager
 
     private static void createPlayer()
     {
-        int x = Settings.worldWidth / 2;
+        int x = Settings.worldX / 2;
         int y;
-        int z = Settings.worldHeight / 2;
+        int z = Settings.worldZ / 2;
 
         for (y = worldGenerator.getMaxY() - 1; 0 <= y; y--)
         {
-            System.out.println(y);
             if (worldBlocks[x][y][z] != Block.BlockType.EMPTY)
             {
-                y = + 5;
+                y += 5;
                 break;
             }
         }

@@ -28,6 +28,7 @@ public class Player extends GameObject
     private float accumulatedGravity;
     private boolean sprinting;
     private boolean holdingTorch;
+    private Block.BlockType selectedBlock;
 
     public Player(int ID, Point3D position, Vector3D scale, float speed, Material material)
     {
@@ -55,6 +56,7 @@ public class Player extends GameObject
 
         targetBlock = null;
         holdingTorch = false;
+        selectedBlock = Block.BlockType.DIRT;
     }
 
     public void update(float deltaTime)
@@ -90,6 +92,8 @@ public class Player extends GameObject
         targetBlock = null;
         sprinting = false;
 
+        System.out.format(" | Player Pos: (%d, %d, %d)", getWorldX(), getWorldY(), getWorldZ());
+
 //        int x = (int) position.x;
 //        int y = (int) position.y;
 //        int z = (int) position.z;
@@ -108,19 +112,10 @@ public class Player extends GameObject
 
     public void draw()
     {
-//        if (viewportID == Settings.viewportIDPerspective)
-//        {
-//            return;
-//        }
-//
-//        ModelMatrix.main.loadIdentityMatrix();
-//        ModelMatrix.main.addTranslation(position);
-//        ModelMatrix.main.addScale(scale);
-//
-//        GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
-//        GraphicsEnvironment.shader.setMaterial(material);
-//
-//        SphereGraphic.drawSolidPolySphere();
+        if (targetBlock != null)
+        {
+            targetBlock.drawOutline();
+        }
     }
 
     public void moveLeft()
@@ -235,7 +230,7 @@ public class Player extends GameObject
 
         Point3D pos = BlockUtils.getTargetArea(targetBlock);
 
-        GameManager.addBlock(pos, Block.BlockType.DIRT);
+        GameManager.addBlock(pos, selectedBlock);
     }
 
     public void toggleTorch()
@@ -246,5 +241,22 @@ public class Player extends GameObject
     public boolean isHoldingTorch()
     {
         return holdingTorch;
+    }
+
+    public void selectBlock(int num)
+    {
+        switch (num)
+        {
+            case 1:
+                selectedBlock = Block.BlockType.DIRT;
+                break;
+
+            case 2:
+                selectedBlock = Block.BlockType.STONE;
+                break;
+
+            default:
+                break;
+        }
     }
 }
