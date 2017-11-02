@@ -11,6 +11,7 @@ public class LightManager
     public static Light moon;
     public static Color globalAmbiance;
     public static Color fogColor;
+    public static Color torchLightColor;
     public static float sunAngle;
 
     private static float radius;
@@ -19,6 +20,7 @@ public class LightManager
     {
         globalAmbiance = new Color(Settings.globalAmbianceDay);
         fogColor = new Color(Settings.fogColorDay);
+        torchLightColor = new Color(Settings.torchLightColorDay);
         sunAngle = (float) Math.PI/2;
         radius = Settings.worldWidth * 2f;
 
@@ -55,7 +57,7 @@ public class LightManager
     {
         sun = new Light();
         sun.setID(0);
-        sun.setColor(Settings.sunLightColor);
+        sun.setColor(Settings.sunLightColor, true);
         sun.setSpotFactor(0);
         sun.setPosition(new Point3D(), false);
     }
@@ -64,7 +66,7 @@ public class LightManager
     {
         moon = new Light();
         moon.setID(1);
-        moon.setColor(Settings.moonLightColor);
+        moon.setColor(Settings.moonLightColor, true);
         moon.setSpotFactor(0);
         moon.setPosition(new Point3D(), false);
     }
@@ -75,7 +77,7 @@ public class LightManager
         torchLight.setID(2);
         torchLight.setPosition(position, false);
         torchLight.setDirection(Settings.torchLightDirection);
-        torchLight.setColor(Settings.torchLightColor);
+        torchLight.setColor(torchLightColor, false);
         torchLight.setSpotFactor(Settings.torchLightSpotFactor);
         torchLight.setConstantAttenuation(Settings.torchLightConstantAttenuation);
         torchLight.setLinearAttenuation(Settings.torchLightLinearAttenuation);
@@ -111,6 +113,10 @@ public class LightManager
             fogColor.g = MathUtils.lerp(Settings.fogColorNight.g, Settings.fogColorDay.g, t);
             fogColor.b = MathUtils.lerp(Settings.fogColorNight.b, Settings.fogColorDay.b, t);
 
+            torchLightColor.r = MathUtils.lerp(Settings.torchLightColorNight.r, Settings.torchLightColorDay.r, t);
+            torchLightColor.g = MathUtils.lerp(Settings.torchLightColorNight.g, Settings.torchLightColorDay.g, t);
+            torchLightColor.b = MathUtils.lerp(Settings.torchLightColorNight.b, Settings.torchLightColorDay.b, t);
+
             sunColor.scale(t);
             moonColor.scale(1-t);
 
@@ -138,11 +144,22 @@ public class LightManager
             fogColor.g = MathUtils.lerp(Settings.fogColorDay.g, Settings.fogColorNight.g, t);
             fogColor.b = MathUtils.lerp(Settings.fogColorDay.b, Settings.fogColorNight.b, t);
 
+            torchLightColor.r = MathUtils.lerp(Settings.torchLightColorDay.r, Settings.torchLightColorNight.r, t);
+            torchLightColor.g = MathUtils.lerp(Settings.torchLightColorDay.g, Settings.torchLightColorNight.g, t);
+            torchLightColor.b = MathUtils.lerp(Settings.torchLightColorDay.b, Settings.torchLightColorNight.b, t);
+
             moonColor.scale(t);
             sunColor.scale(1-t);
 
             moonColor.a = t;
             sunColor.a = 1-t;
         }
+
+//        sun.setColor(Settings.moonLightColor);
+//        moon.setColor(Settings.moonLightColor);
+//        fogColor.set(Settings.fogColorNight);
+//        globalAmbiance.set(Settings.globalAmbianceNight);
+
+        System.out.print(" | Torchlight color: " + torchLightColor);
     }
 }

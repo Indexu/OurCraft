@@ -18,6 +18,7 @@ public class GameManager
     public static boolean mainMenu;
 
     public static Point3D worldCenter;
+    public static Torch torch;
 
     public static int drawCount;
 
@@ -42,12 +43,12 @@ public class GameManager
         gameObjects.clear();
 
         worldGenerator.generateWorld();
-        //createTorch();
-        createPlayer();
-        createSkybox();
-
         worldBlocks = worldGenerator.getWorldBlocks();
         chunks = worldGenerator.getChunks();
+
+        createPlayer();
+        createTorch();
+        createSkybox();
 
         System.out.println("GameObjects: " + gameObjects.size());
     }
@@ -169,13 +170,26 @@ public class GameManager
 
     private static void createTorch()
     {
-        Torch torch = new Torch();
-        gameObjects.add(torch);
+        torch = new Torch();
     }
 
     private static void createPlayer()
     {
-        player = new Player(1, new Point3D(Settings.worldWidth / 2, Settings.worldScale * 2.0f, Settings.worldHeight / 2), new Vector3D(0.25f, 0.25f, 0.25f), Settings.playerSpeed, Settings.playerMinimapMaterial);
+        int x = Settings.worldWidth / 2;
+        int y;
+        int z = Settings.worldHeight / 2;
+
+        for (y = worldGenerator.getMaxY() - 1; 0 <= y; y--)
+        {
+            System.out.println(y);
+            if (worldBlocks[x][y][z] != Block.BlockType.EMPTY)
+            {
+                y = + 5;
+                break;
+            }
+        }
+
+        player = new Player(1, new Point3D(x, y, z), new Vector3D(0.25f, 0.25f, 0.25f), Settings.playerSpeed, Settings.playerMinimapMaterial);
         gameObjects.add(player);
     }
 

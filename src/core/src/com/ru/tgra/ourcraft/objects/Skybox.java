@@ -32,6 +32,7 @@ public class Skybox extends GameObject
         GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
         GraphicsEnvironment.shader.setMaterial(Settings.skyboxMaterial);
+        GraphicsEnvironment.shader.setOn(GameManager.torch.getLight().getID(), false);
 
         Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 

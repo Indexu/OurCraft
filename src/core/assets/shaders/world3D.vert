@@ -35,11 +35,14 @@ void main()
 
 	vec4 v = u_eyePosition - position;
 	v_len_v = length(v);
-	v = normalize(v);
+
+//	v.x = v.x / v_len_v;
+//	v.y = v.y / v_len_v;
+//	v.z = v.z / v_len_v;
 
 	for (int i = 0; i < numberOfLights; i++)
 	{
-	    v_s[i] = normalize(u_lightPosition[i] - position);
+	    v_s[i] = u_lightPosition[i] - position;
 	    v_h[i] = v_s[i] + v;
 	}
 

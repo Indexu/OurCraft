@@ -17,7 +17,9 @@ public class GraphicsEnvironment
 {
     public static Shader shader;
     public static Shader2D shader2D;
+    public static ShaderHUD shaderHUD;
     public static Rectangle viewport;
+    public static Camera UICamera;
 
     public static void init()
     {
@@ -25,6 +27,12 @@ public class GraphicsEnvironment
         shader.setBrightness(1.0f);
 
         shader2D = new Shader2D();
+        shaderHUD = new ShaderHUD();
+
+        shaderHUD.setGlobalAmbience(Settings.globalAmbianceHUD);
+
+        UICamera = new Camera();
+        UICamera.look(new Point3D(0, 0, 0), new Point3D(0, 0, -1), new Vector3D(0,1,0));
 
         initFonts();
         Gdx.gl.glClearColor(0f, 0f, 0f, 1.0f);
@@ -55,6 +63,23 @@ public class GraphicsEnvironment
         shader.setViewMatrix(GameManager.player.getCamera().getViewMatrix());
         shader.setProjectionMatrix(GameManager.player.getCamera().getProjectionMatrix());
         shader.setEyePosition(GameManager.player.getCamera().eye);
+    }
+
+    public static void setUICamera()
+    {
+        Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
+
+        Gdx.gl.glViewport
+        (
+            (int) viewport.x,
+            (int) viewport.y,
+            (int) viewport.width,
+            (int) viewport.height
+        );
+
+        shaderHUD.setViewMatrix(UICamera.getViewMatrix());
+        shaderHUD.setProjectionMatrix(UICamera.getProjectionMatrix());
+        shaderHUD.setGlobalAmbience(Settings.globalAmbianceHUD);
     }
 
     private static void setFullscreen()

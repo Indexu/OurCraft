@@ -3,52 +3,60 @@ package com.ru.tgra.ourcraft.objects;
 import com.ru.tgra.ourcraft.*;
 import com.ru.tgra.ourcraft.models.*;
 import com.ru.tgra.ourcraft.shapes.BoxGraphic;
+import com.ru.tgra.ourcraft.shapes.BoxHUDGraphic;
 
 public class Torch extends GameObject
 {
-    private Light torchLight;
+    private Light light;
     private CubeMask mask;
 
     public Torch()
     {
         super();
 
-        this.ID = ID;
         this.position = new Point3D();
         this.scale = Settings.torchSize;
 
-        mask = new CubeMask();
+        mask = new CubeMask(false, true, true, false, false, false);
 
-        torchLight = LightManager.createTorchLight(new Point3D(position.x, position.y + 1, position.z));
+        light = LightManager.createTorchLight(GameManager.player.position);
     }
 
     public void draw()
     {
-        GameManager.drawCount++;
+        GraphicsEnvironment.shaderHUD.useShader();
+
+        GraphicsEnvironment.setUICamera();
 
         ModelMatrix.main.loadIdentityMatrix();
-        ModelMatrix.main.addTranslation(position);
+        ModelMatrix.main.addTranslation(0.6f, -0.25f, -0.5f);
         ModelMatrix.main.addScale(scale);
+        ModelMatrix.main.addRotationX(-3);
+        ModelMatrix.main.addRotationY(5);
+        ModelMatrix.main.addRotationZ(-3);
 
-        GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
-        GraphicsEnvironment.shader.setLight(torchLight);
+        GraphicsEnvironment.shaderHUD.setModelMatrix(ModelMatrix.main.getMatrix());
 
-        BoxGraphic.drawSolidCube(
-            GraphicsEnvironment.shader,
+        BoxHUDGraphic.drawSolidCube(
+            GraphicsEnvironment.shaderHUD,
             TextureManager.getTorchTexture(),
             TextureManager.getTorchUVBuffer(),
-            mask,
-            false
+            mask
         );
     }
 
-    @Override
     public void update(float deltaTime)
     {
-        float x = GameManager.player.getCamera().forward.x + GameManager.player.getPosition().x;
-        float y = GameManager.player.getPosition().y;
-        float z = GameManager.player.getCamera().forward.z + GameManager.player.getPosition().z;
+//        float x = GameManager.player.getCamera().forward.x + GameManager.player.getPosition().x;
+//        float y = GameManager.player.getPosition().y;
+//        float z = GameManager.player.getCamera().forward.z + GameManager.player.getPosition().z;
+//
+//        position.set(x, y, z);
+        //light.setDirection(GameManager.player.getCamera().forward);
+    }
 
-        position.set(x, y, z);
+    public Light getLight()
+    {
+        return light;
     }
 }

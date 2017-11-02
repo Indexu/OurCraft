@@ -77,7 +77,7 @@ void main()
             }
 
             float len_s = length(v_s[i]);
-            float attinuation = 1.0;
+            float attenuation = 1.0;
 
             if (u_lights[i].spotFactor != 0.0)
             {
@@ -97,9 +97,9 @@ void main()
                     spotAttenuation = pow(spotAttenuation, u_lights[i].spotFactor);
                 }
 
-                float distanceAttenuation = 1.0 / (u_lights[i].constantAttenuation + len_s * u_lights[i].linearAttenuation + len_s * len_s * u_lights[i].quadraticAttenuation);
+                float distanceAttenuation = 1.0 / (u_lights[i].constantAttenuation + (len_s * u_lights[i].linearAttenuation) + (len_s * len_s * u_lights[i].quadraticAttenuation));
 
-                attinuation = distanceAttenuation * spotAttenuation;
+                attenuation = distanceAttenuation * spotAttenuation;
             }
 
             vec4 lightColor;
@@ -114,7 +114,7 @@ void main()
             lightColor += u_lights[i].color * materialDiffuse * lampert;
             lightColor += u_lights[i].color * u_materialSpecular * phong;
 
-            lightColor *= attinuation;
+            lightColor *= attenuation;
 
             color += lightColor;
         }

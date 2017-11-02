@@ -73,9 +73,16 @@ public class Light
         return color;
     }
 
-    public void setColor(Color color)
+    public void setColor(Color color, boolean copy)
     {
-        this.color = new Color(color);
+        if (copy)
+        {
+            this.color = new Color(color);
+        }
+        else
+        {
+            this.color = color;
+        }
     }
 
     public Vector3D getDirection()

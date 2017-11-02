@@ -27,6 +27,7 @@ public class Player extends GameObject
     private float pitch;
     private float accumulatedGravity;
     private boolean sprinting;
+    private boolean holdingTorch;
 
     public Player(int ID, Point3D position, Vector3D scale, float speed, Material material)
     {
@@ -53,6 +54,7 @@ public class Player extends GameObject
         sprinting = false;
 
         targetBlock = null;
+        holdingTorch = false;
     }
 
     public void update(float deltaTime)
@@ -234,5 +236,15 @@ public class Player extends GameObject
         Point3D pos = BlockUtils.getTargetArea(targetBlock);
 
         GameManager.addBlock(pos, Block.BlockType.DIRT);
+    }
+
+    public void toggleTorch()
+    {
+        holdingTorch = !holdingTorch;
+    }
+
+    public boolean isHoldingTorch()
+    {
+        return holdingTorch;
     }
 }

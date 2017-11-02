@@ -125,6 +125,11 @@ public class OurCraftGame extends ApplicationAdapter
             GameManager.player.resetGravity();
         }
 
+        if(Gdx.input.isKeyJustPressed(Input.Keys.T))
+        {
+            GameManager.player.toggleTorch();
+        }
+
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1))
         {
             GameManager.player.placeBlock();
@@ -147,6 +152,11 @@ public class OurCraftGame extends ApplicationAdapter
 			gameObject.update(deltaTime);
 		}
 
+		if (GameManager.player.isHoldingTorch())
+		{
+			GameManager.torch.update(deltaTime);
+		}
+
         //GameManager.gameObjects.removeIf(GameObject::isDestroyed);
 
 		if (!GameManager.noclip)
@@ -160,6 +170,7 @@ public class OurCraftGame extends ApplicationAdapter
 	private void display()
 	{
 	    GraphicsEnvironment.shader.useShader();
+
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		Gdx.graphics.setTitle("OurCraft | FPS: " + Gdx.graphics.getFramesPerSecond());
@@ -182,6 +193,17 @@ public class OurCraftGame extends ApplicationAdapter
 
             GraphicsEnvironment.shader.setLight(LightManager.sun);
             GraphicsEnvironment.shader.setLight(LightManager.moon);
+
+            if (GameManager.player.isHoldingTorch())
+            {
+                GameManager.torch.getLight().setOn(true);
+                GraphicsEnvironment.shader.setLight(GameManager.torch.getLight());
+            }
+            else
+            {
+                GameManager.torch.getLight().setOn(false);
+                GraphicsEnvironment.shader.setLight(GameManager.torch.getLight());
+            }
 
 //			GraphicsEnvironment.shader.setLight(LightManager.sun);
 //
@@ -227,6 +249,11 @@ public class OurCraftGame extends ApplicationAdapter
 			{
 				gameObject.draw();
 			}
+
+			if (GameManager.player.isHoldingTorch())
+            {
+                GameManager.torch.draw();
+            }
 
             ui();
 
@@ -312,6 +339,7 @@ public class OurCraftGame extends ApplicationAdapter
         GraphicsEnvironment.setViewport(cropX, cropY, w, h);
 
         GameManager.player.getCamera().setPerspectiveProjection(Settings.playerFOV, GraphicsEnvironment.viewport.width / GraphicsEnvironment.viewport.height, Settings.nearPlane, Settings.farPlane);
+        GraphicsEnvironment.UICamera.setPerspectiveProjection(Settings.playerFOV, GraphicsEnvironment.viewport.width / GraphicsEnvironment.viewport.height, 0.01f, 1f);
 
         setPoints();
 	}
@@ -333,6 +361,7 @@ public class OurCraftGame extends ApplicationAdapter
 		shader = GraphicsEnvironment.shader;
 
 		BoxGraphic.create();
+		BoxHUDGraphic.create();
 		SphereGraphic.create();
 		SincGraphic.create(shader.getVertexPointer());
 		CoordFrameGraphic.create(shader.getVertexPointer());

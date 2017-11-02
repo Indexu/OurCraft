@@ -11,6 +11,8 @@ public class TextureManager
 {
     private static Texture grassTexture;
     private static Texture dirtTexture;
+    private static Texture stoneTexture;
+    private static Texture bedrockTexture;
     private static Texture torchTexture;
     private static Texture skyboxTexture;
 
@@ -39,6 +41,12 @@ public class TextureManager
             case DIRT:
                 return dirtTexture;
 
+            case STONE:
+                return stoneTexture;
+
+            case BEDROCK:
+                return bedrockTexture;
+
             default:
                 return null;
         }
@@ -51,6 +59,8 @@ public class TextureManager
             case GRASS:
                 return UVTopBottomSideBuffer;
 
+            case STONE:
+            case BEDROCK:
             case DIRT:
                 return UVAllBuffer;
 
@@ -83,6 +93,8 @@ public class TextureManager
     {
         grassTexture = new Texture(Gdx.files.internal("textures/blocks/grass.png"));
         dirtTexture = new Texture(Gdx.files.internal("textures/blocks/dirt.png"));
+        stoneTexture = new Texture(Gdx.files.internal("textures/blocks/stone.png"));
+        bedrockTexture = new Texture(Gdx.files.internal("textures/blocks/bedrock.png"));
         torchTexture = new Texture(Gdx.files.internal("textures/blocks/torch_on.png"));
         skyboxTexture = new Texture(Gdx.files.internal("textures/skybox/sky_photo3.jpg"));
     }

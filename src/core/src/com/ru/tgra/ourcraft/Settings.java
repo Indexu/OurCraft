@@ -21,8 +21,8 @@ public class Settings
     public static final int chunkWidth = 16;
     public static final int chunkHeight = 16;
     public static final Vector3D blockSize = new Vector3D(1f, 1f, 1f);
-    public static final Vector3D torchSize = new Vector3D(0.15f, 0.66f, 0.15f);
-    public static final float dayNightCycleSpeed = 0.1f;
+    public static final Vector3D torchSize = new Vector3D(0.1f, 0.5f, 0.1f);
+    public static final float dayNightCycleSpeed = 0.01f;
     public static final float fullCircle = 2 * (float) Math.PI;
 
     /* === Render settings === */
@@ -102,19 +102,22 @@ public class Settings
     public static final int numberOfLights = 3; // !!!MUST MATCH IN THE SHADER!!!
 
     public static final Color globalAmbianceDay = new Color(0.35f, 0.35f, 0.35f, 1.0f);
-    public static final Color globalAmbianceNight = new Color(0.1f, 0.1f, 0.1f, 1.0f);
+    public static final Color globalAmbianceNight = new Color(0.05f, 0.05f, 0.05f, 1.0f);
+
+    public static final Color globalAmbianceHUD = new Color(0.6f, 0.6f, 0.6f, 1.0f);
 
     // Sun light
     public static final Color sunLightColor = new Color(0.45f, 0.45f, 0.35f, 1.0f);
 
     // Moon light
-    public static final Color moonLightColor = new Color(0.1f, 0.2f, 0.3f, 1.0f);
+    public static final Color moonLightColor = new Color(0.025f, 0.10f, 0.2f, 1.0f);
 
     // Torch light
-    public static final Color torchLightColor = new Color(0.3f, 0.15f, 0.0f, 1.0f);
+    public static final Color torchLightColorDay = new Color(0.01f, 0.01f, 0.007f, 1.0f);
+    public static final Color torchLightColorNight = new Color(1f, 1f, 0.7f, 1.0f);
     public static final Vector3D torchLightDirection = new Vector3D(0f, 1f, 0f);
     public static final float torchLightSpotFactor = 0.01f;
-    public static final float torchLightConstantAttenuation = 0.8f;
-    public static final float torchLightLinearAttenuation = 0.02f;
-    public static final float torchLightQuadraticAttenuation = 0.04f;
+    public static final float torchLightConstantAttenuation = 1f;
+    public static final float torchLightLinearAttenuation = 0.5f;
+    public static final float torchLightQuadraticAttenuation = 0.2f;
 }
