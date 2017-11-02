@@ -20,7 +20,6 @@ public class Player extends GameObject
     private Block targetBlock;
 
     private float radius;
-    private float offset = 0.5f;
 
     private Vector3D movementVector;
     private float yaw;
@@ -29,8 +28,9 @@ public class Player extends GameObject
     private boolean sprinting;
     private boolean holdingTorch;
     private Block.BlockType selectedBlock;
+    private int selectedBlockNum;
 
-    public Player(int ID, Point3D position, Vector3D scale, float speed, Material material)
+    public Player(int ID, Point3D position, Vector3D scale, float speed)
     {
         super();
 
@@ -38,7 +38,6 @@ public class Player extends GameObject
         this.position = position;
         this.scale = scale;
         this.speed = speed;
-        this.material = material;
 
         radius = 0.25f;
 
@@ -92,22 +91,6 @@ public class Player extends GameObject
         pitch = 0;
         targetBlock = null;
         sprinting = false;
-
-        System.out.format(" | Player Pos: (%d, %d, %d)", getWorldX(), getWorldY(), getWorldZ());
-
-//        int x = (int) position.x;
-//        int y = (int) position.y;
-//        int z = (int) position.z;
-//
-//        try
-//        {
-//            boolean inside = GameManager.worldBlocks[x][y][z];
-//            System.out.print("x: " + x + ", y:" + y + ", z:" + z + " | In block: " + inside + " | Gravity: " + accumulatedGravity);
-//        }
-//        catch (Exception ex)
-//        {
-//            System.out.print("Out of bounds");
-//        }
 
     }
 
@@ -256,13 +239,63 @@ public class Player extends GameObject
                 selectedBlock = Block.BlockType.STONE;
                 break;
 
-            default:
+            case 3:
+                selectedBlock = Block.BlockType.COBBLESTONE;
                 break;
+
+            case 4:
+                selectedBlock = Block.BlockType.STONE_BRICK;
+                break;
+
+            case 5:
+                selectedBlock = Block.BlockType.BRICK;
+                break;
+
+            case 6:
+                selectedBlock = Block.BlockType.OAK_LOG;
+                break;
+
+            case 7:
+                selectedBlock = Block.BlockType.OAK_PLANK;
+                break;
+
+            case 8:
+                selectedBlock = Block.BlockType.GRAVEL;
+                break;
+
+            case 9:
+                selectedBlock = Block.BlockType.SAND;
+                break;
+
+            case 0:
+                selectedBlock = Block.BlockType.DIAMOND;
+                break;
+
+            default:
+                return;
         }
+
+        selectedBlockNum = num;
     }
 
     public Block.BlockType getSelectedBlock()
     {
         return selectedBlock;
+    }
+
+    public void scrollUpSelectedBlock()
+    {
+        selectedBlockNum++;
+        selectedBlockNum = selectedBlockNum % 10;
+
+        selectBlock(selectedBlockNum);
+    }
+
+    public void scrollDownSelectedBlock()
+    {
+        selectedBlockNum--;
+        selectedBlockNum = (selectedBlockNum < 0 ? 9 : selectedBlockNum);
+
+        selectBlock(selectedBlockNum);
     }
 }

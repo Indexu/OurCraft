@@ -13,10 +13,19 @@ public class TextureManager
     private static Texture dirtTexture;
     private static Texture stoneTexture;
     private static Texture bedrockTexture;
+    private static Texture brickTexture;
+    private static Texture cobblestoneTexture;
+    private static Texture gravelTexture;
+    private static Texture oakLogTexture;
+    private static Texture oakPlankTexture;
+    private static Texture stonebrickTexture;
+    private static Texture sandTexture;
+    private static Texture diamondTexture;
     private static Texture torchTexture;
     private static Texture skyboxTexture;
 
-    private static FloatBuffer UVTopBottomSideBuffer;
+    private static FloatBuffer UVGrassBuffer;
+    private static FloatBuffer UVLogBuffer;
     private static FloatBuffer UVAllBuffer;
     private static FloatBuffer UVTorchBuffer;
     private static FloatBuffer UVCubeMapBuffer;
@@ -26,13 +35,15 @@ public class TextureManager
         initTextures();
 
         initUVAllBuffer();
-        initUVTopBottomSideBuffer();
+        initUVGrassBuffer();
         initUVCubeMapBuffer();
         initUVTorchBuffer();
+        initUVLogBuffer();
     }
 
     public static Texture getBlockTexture(Block.BlockType type)
     {
+
         switch (type)
         {
             case GRASS:
@@ -47,6 +58,30 @@ public class TextureManager
             case BEDROCK:
                 return bedrockTexture;
 
+            case COBBLESTONE:
+                return cobblestoneTexture;
+
+            case GRAVEL:
+                return gravelTexture;
+
+            case SAND:
+                return sandTexture;
+
+            case OAK_PLANK:
+                return oakPlankTexture;
+
+            case OAK_LOG:
+                return oakLogTexture;
+
+            case STONE_BRICK:
+                return stonebrickTexture;
+
+            case BRICK:
+                return brickTexture;
+
+            case DIAMOND:
+                return diamondTexture;
+
             default:
                 return null;
         }
@@ -57,8 +92,18 @@ public class TextureManager
         switch (type)
         {
             case GRASS:
-                return UVTopBottomSideBuffer;
+                return UVGrassBuffer;
 
+            case OAK_LOG:
+                return UVLogBuffer;
+
+            case DIAMOND:
+            case BRICK:
+            case STONE_BRICK:
+            case OAK_PLANK:
+            case SAND:
+            case GRAVEL:
+            case COBBLESTONE:
             case STONE:
             case BEDROCK:
             case DIRT:
@@ -95,6 +140,15 @@ public class TextureManager
         dirtTexture = new Texture(Gdx.files.internal("textures/blocks/dirt.png"));
         stoneTexture = new Texture(Gdx.files.internal("textures/blocks/stone.png"));
         bedrockTexture = new Texture(Gdx.files.internal("textures/blocks/bedrock.png"));
+        brickTexture = new Texture(Gdx.files.internal("textures/blocks/brick.png"));
+        cobblestoneTexture = new Texture(Gdx.files.internal("textures/blocks/cobblestone.png"));
+        gravelTexture = new Texture(Gdx.files.internal("textures/blocks/gravel.png"));
+        oakLogTexture = new Texture(Gdx.files.internal("textures/blocks/log_oak.png"));
+        oakPlankTexture = new Texture(Gdx.files.internal("textures/blocks/planks_oak.png"));
+        stonebrickTexture = new Texture(Gdx.files.internal("textures/blocks/stonebrick.png"));
+        sandTexture = new Texture(Gdx.files.internal("textures/blocks/sand.png"));
+        diamondTexture = new Texture(Gdx.files.internal("textures/blocks/diamond_block.png"));
+
         torchTexture = new Texture(Gdx.files.internal("textures/blocks/torch_on.png"));
         skyboxTexture = new Texture(Gdx.files.internal("textures/skybox/sky_photo3.jpg"));
     }
@@ -139,7 +193,7 @@ public class TextureManager
         UVAllBuffer.rewind();
     }
 
-    private static void initUVTopBottomSideBuffer()
+    private static void initUVGrassBuffer()
     {
         float[] uvArray =
                 {
@@ -176,9 +230,51 @@ public class TextureManager
                         0.5f, 0.5f,
                 };
 
-        UVTopBottomSideBuffer = BufferUtils.newFloatBuffer(48);
-        BufferUtils.copy(uvArray, 0, UVTopBottomSideBuffer, 48);
-        UVTopBottomSideBuffer.rewind();
+        UVGrassBuffer = BufferUtils.newFloatBuffer(48);
+        BufferUtils.copy(uvArray, 0, UVGrassBuffer, 48);
+        UVGrassBuffer.rewind();
+    }
+
+    private static void initUVLogBuffer()
+    {
+        float[] uvArray =
+        {
+            0.0f, 1.0f,
+            0.0f, 0.0f,
+            0.5f, 0.0f,
+            0.5f, 1.0f,
+
+            0.0f, 1.0f,
+            0.0f, 0.0f,
+            0.5f, 0.0f,
+            0.5f, 1.0f,
+
+            // Bottom
+            0.5f, 0.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            0.5f, 1.0f,
+
+            // Top
+            0.5f, 0.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            0.5f, 1.0f,
+
+            0.0f, 0.0f,
+            0.5f, 0.0f,
+            0.5f, 1.0f,
+            0.0f, 1.0f,
+
+            0.0f, 0.0f,
+            0.5f, 0.0f,
+            0.5f, 1.0f,
+            0.0f, 1.0f,
+        };
+
+        UVLogBuffer = BufferUtils.newFloatBuffer(48);
+        BufferUtils.copy(uvArray, 0, UVLogBuffer, 48);
+        UVLogBuffer.rewind();
     }
 
     private static void initUVTorchBuffer()

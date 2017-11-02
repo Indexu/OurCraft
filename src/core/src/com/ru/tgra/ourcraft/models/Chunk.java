@@ -64,8 +64,6 @@ public class Chunk
                 ID,
                 position,
                 Settings.blockSize,
-                Settings.grassMaterial,
-                Settings.wallMinimapMaterial,
                 new CubeMask(),
                 type,
                 chunkX,

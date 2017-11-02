@@ -278,8 +278,6 @@ public class WorldGenerator
                                 ID,
                                 position,
                                 Settings.blockSize,
-                                Settings.grassMaterial,
-                                Settings.wallMinimapMaterial,
                                 mask,
                                 worldBlocks[x][y][z],
                                 chunkX,

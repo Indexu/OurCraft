@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 public class GameManager
 {
-    public static ArrayList<GameObject> gameObjects;
     public static ArrayList<Block> blocksToRemove;
 
     public static WorldGenerator worldGenerator;
@@ -21,15 +20,12 @@ public class GameManager
     public static Point3D worldCenter;
     public static Torch torch;
 
-    public static int drawCount;
-
     public static Player player;
     public static Skybox skybox;
     public static boolean noclip;
 
     public static void init()
     {
-        gameObjects = new ArrayList<>();
         blocksToRemove = new ArrayList<>();
         worldGenerator = new WorldGenerator();
         worldCenter = new Point3D(Settings.worldX / 2, Settings.worldY / 2, Settings.worldZ / 2);
@@ -40,8 +36,6 @@ public class GameManager
 
     public static void createWorld()
     {
-        gameObjects.clear();
-
         worldBlocks = worldGenerator.getWorldBlocks();
         chunks = worldGenerator.getChunks();
 
@@ -50,8 +44,6 @@ public class GameManager
         createSkybox();
 
         AudioManager.playPianoMusic();
-
-        System.out.println("GameObjects: " + gameObjects.size());
     }
 
     public static void drawWorld()
@@ -71,21 +63,13 @@ public class GameManager
         int endY = chunkY + Settings.chunkDrawRadius;
         endY = (chunks[0].length-1 < endY ? chunks[0].length-1 : endY);
 
-        //System.out.format(" | chunkX: %d | chunkY: %d", chunkX, chunkY);
-        //System.out.format(" | startX: %d | endX: %d | startY: %d | endY: %d", startX, endX, startY, endY);
-
-        int chunkDraw = 0;
-
         for (int x = startX; x <= endX; x++)
         {
             for (int y = startY; y <= endY; y++)
             {
-                chunkDraw++;
                 chunks[x][y].drawBlocks();
             }
         }
-
-        //System.out.format(" | Chunks drawn: %d", chunkDraw);
     }
 
     public static void addBlock(Point3D pos, Block.BlockType type)
@@ -113,8 +97,6 @@ public class GameManager
                 MathUtils.cartesianHash(x, y, z),
                 pos,
                 Settings.blockSize,
-                Settings.grassMaterial,
-                Settings.wallMinimapMaterial,
                 BlockUtils.createBlockMask(x, y, z, worldBlocks),
                 type,
                 chunkX,
@@ -175,8 +157,7 @@ public class GameManager
             }
         }
 
-        player = new Player(1, new Point3D(x, y, z), new Vector3D(0.25f, 0.25f, 0.25f), Settings.playerSpeed, Settings.playerMinimapMaterial);
-        gameObjects.add(player);
+        player = new Player(1, new Point3D(x, y, z), new Vector3D(0.25f, 0.25f, 0.25f), Settings.playerSpeed);
     }
 
     private static void createSkybox()

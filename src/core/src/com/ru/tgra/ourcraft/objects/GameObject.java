@@ -12,8 +12,6 @@ public abstract class GameObject
     protected float speed;
     protected Vector3D rotation;
     protected Vector3D scale;
-    protected Material material;
-    protected Material minimapMaterial;
 
     public GameObject()
     {
@@ -23,8 +21,6 @@ public abstract class GameObject
         speed = 0;
         rotation = new Vector3D();
         scale = new Vector3D();
-        material = new Material();
-        minimapMaterial = new Material();
     }
 
     public GameObject(Point3D position, Vector3D direction, float speed, Vector3D rotation, Vector3D scale, Material material)
@@ -34,7 +30,6 @@ public abstract class GameObject
         this.speed = speed;
         this.rotation = rotation;
         this.scale = scale;
-        this.material = material;
     }
 
     public abstract void draw();
@@ -89,26 +84,6 @@ public abstract class GameObject
     public void setScale(Vector3D scale)
     {
         this.scale = scale;
-    }
-
-    public Material getMaterial()
-    {
-        return material;
-    }
-
-    public void setMaterial(Material material)
-    {
-        this.material = material;
-    }
-
-    public Material getMinimapMaterial()
-    {
-        return minimapMaterial;
-    }
-
-    public void setMinimapMaterial(Material minimapMaterial)
-    {
-        this.minimapMaterial = minimapMaterial;
     }
 
     public int getID()

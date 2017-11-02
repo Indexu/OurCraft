@@ -26,6 +26,7 @@ public class Settings
     public static final Vector3D torchSize = new Vector3D(0.1f, 0.5f, 0.1f);
     public static final float dayNightCycleSpeed = 0.01f;
     public static final float fullCircle = 2 * (float) Math.PI;
+    public static final float dirtToGrassTimer = 15f;
 
     /* === Render settings === */
     public static final float nearPlane = 0.1f;
@@ -43,12 +44,12 @@ public class Settings
     /* === Player settings === */
     public static final float playerFOV = 80f;
     public static final float playerSpeed = 3f;
-    public static final float playerSprintMultiplier = 32f;
+    public static final float playerSprintMultiplier = 2f;
     public static final float playerButtonLookSensitivity = 100f;
     public static final float playerMouseLookSensitivity = 30f;
     public static final float gravity = 0.2f;
     public static final float jumpStrength = 5f;
-    public static final float reach = 3f;
+    public static final float reach = 4f;
     public static final int playerHeight = 2;
 
     /* === Skybox settings === */
@@ -68,45 +69,12 @@ public class Settings
     public static final Color textColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
     /* === Materials === */
-
-    // Grass
-    public static final Material grassMaterial = new Material
-    (
-            new Color(1.0f, 1.0f, 1.0f, 1.0f), // Ambience
-            new Color(0.408f, 0.624f, 0.22f, 1.0f), // Diffuse
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Specular
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Emission
-            128f,
-            1f
-    );
-
     public static final Material targetedBlockMaterial = new Material
     (
             new Color(1.0f, 1.0f, 1.0f, 1.0f), // Ambience
             new Color(1.0f, 1.0f, 1.0f, 1.0f), // Diffuse
             new Color(0.0f, 0.0f, 0.0f, 0.0f), // Specular
             new Color(1.0f, 1.0f, 1.0f, 1.0f), // Emission
-            128f,
-            1f
-    );
-
-    public static final Material wallMinimapMaterial = new Material
-    (
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
-            new Color(1.0f, 1.0f, 1.0f, 1.0f), // Diffuse
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Specular
-            new Color(0.0f, 0.0f, 0.0f, 1.0f), // Emission
-            128f,
-            1f
-    );
-
-    // Player
-    public static final Material playerMinimapMaterial = new Material
-    (
-            new Color(0.0f, 0.0f, 0.0f, 0.0f), // Ambience
-            new Color(1.0f, 1.0f, 0.0f, 1.0f), // Diffuse
-            new Color(1.0f, 1.0f, 1.0f, 1.0f), // Specular
-            new Color(1.0f, 1.0f, 0.0f, 0.0f), // Emission
             128f,
             1f
     );

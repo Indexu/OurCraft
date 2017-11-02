@@ -87,7 +87,7 @@ public class OurCraftGame extends ApplicationAdapter
 
             case 7:
                 GameManager.worldGenerator.generateChunks();
-                waitText = "Loading done";
+                waitText = "Ready!";
                 progressText = "Press ENTER to start";
                 GameManager.loaded = true;
                 break;
@@ -219,6 +219,46 @@ public class OurCraftGame extends ApplicationAdapter
         {
             GameManager.player.selectBlock(2);
         }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_3) || Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_3))
+        {
+            GameManager.player.selectBlock(3);
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_4) || Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_4))
+        {
+            GameManager.player.selectBlock(4);
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_5) || Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_5))
+        {
+            GameManager.player.selectBlock(5);
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_6) || Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_6))
+        {
+            GameManager.player.selectBlock(6);
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_7) || Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_7))
+        {
+            GameManager.player.selectBlock(7);
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_8) || Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_8))
+        {
+            GameManager.player.selectBlock(8);
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_9) || Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_9))
+        {
+            GameManager.player.selectBlock(9);
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_0) || Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_0))
+        {
+            GameManager.player.selectBlock(0);
+        }
 	}
 
 	private void update()
@@ -232,17 +272,12 @@ public class OurCraftGame extends ApplicationAdapter
 
 		LightManager.updateSunAngle(deltaTime);
 
-		for (GameObject gameObject : GameManager.gameObjects)
-		{
-			gameObject.update(deltaTime);
-		}
+		GameManager.player.update(deltaTime);
 
 		if (GameManager.player.isHoldingTorch())
 		{
 			GameManager.torch.update(deltaTime);
 		}
-
-        //GameManager.gameObjects.removeIf(GameObject::isDestroyed);
 
 		if (!GameManager.noclip)
         {
@@ -273,83 +308,37 @@ public class OurCraftGame extends ApplicationAdapter
 			return;
 		}
 
-		for (int viewNum = 0; viewNum < 1; viewNum++)
-		{
-            GraphicsEnvironment.setPerspectiveCamera();
+        GraphicsEnvironment.setPerspectiveCamera();
 
-            GraphicsEnvironment.shader.setGlobalAmbience(LightManager.globalAmbiance);
-            GraphicsEnvironment.shader.setFogColor(LightManager.fogColor);
+        GraphicsEnvironment.shader.setGlobalAmbience(LightManager.globalAmbiance);
+        GraphicsEnvironment.shader.setFogColor(LightManager.fogColor);
 
-            GameManager.skybox.draw();
+        GameManager.skybox.draw();
 
-            GraphicsEnvironment.shader.setLight(LightManager.sun);
-            GraphicsEnvironment.shader.setLight(LightManager.moon);
+        GraphicsEnvironment.shader.setLight(LightManager.sun);
+        GraphicsEnvironment.shader.setLight(LightManager.moon);
 
-            if (GameManager.player.isHoldingTorch())
-            {
-                GameManager.torch.getLight().setOn(true);
-                GraphicsEnvironment.shader.setLight(GameManager.torch.getLight());
-            }
-            else
-            {
-                GameManager.torch.getLight().setOn(false);
-                GraphicsEnvironment.shader.setLight(GameManager.torch.getLight());
-            }
+        if (GameManager.player.isHoldingTorch())
+        {
+            GameManager.torch.getLight().setOn(true);
+            GraphicsEnvironment.shader.setLight(GameManager.torch.getLight());
+        }
+        else
+        {
+            GameManager.torch.getLight().setOn(false);
+            GraphicsEnvironment.shader.setLight(GameManager.torch.getLight());
+        }
 
-//			GraphicsEnvironment.shader.setLight(LightManager.sun);
-//
-//            ModelMatrix.main.loadIdentityMatrix();
-//            ModelMatrix.main.addTranslation(LightManager.sun.getPosition());
-//            ModelMatrix.main.addScale(new Vector3D(5f, 5f, 5f));
-//
-//            GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
-//
-//            GraphicsEnvironment.shader.setMaterial(Settings.floorMaterial);
-//
-//            BoxGraphic.drawSolidCube(
-//                    GraphicsEnvironment.shader,
-//                    null,
-//                    TextureManager.getCubeMapUVBuffer(),
-//                    new CubeMask(),
-//                    false
-//            );
-//
-//            GraphicsEnvironment.shader.setLight(LightManager.moon);
-//
-//            ModelMatrix.main.loadIdentityMatrix();
-//            ModelMatrix.main.addTranslation(LightManager.moon.getPosition());
-//            ModelMatrix.main.addScale(new Vector3D(5f, 5f, 5f));
-//
-//            GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
-//
-//            GraphicsEnvironment.shader.setMaterial(Settings.spearMaterial);
-//
-//            BoxGraphic.drawSolidCube(
-//                    GraphicsEnvironment.shader,
-//                    null,
-//                    TextureManager.getCubeMapUVBuffer(),
-//                    new CubeMask(),
-//                    false
-//            );
+        GameManager.drawWorld();
 
-            GameManager.drawCount = 0;
+        GameManager.player.draw();
 
-			GameManager.drawWorld();
+        if (GameManager.player.isHoldingTorch())
+        {
+            GameManager.torch.draw();
+        }
 
-			for (GameObject gameObject : GameManager.gameObjects)
-			{
-				gameObject.draw();
-			}
-
-			if (GameManager.player.isHoldingTorch())
-            {
-                GameManager.torch.draw();
-            }
-
-            ui();
-
-			//System.out.print(" | Draw Count: " + GameManager.drawCount);
-		}
+        ui();
 
 	}
 
@@ -410,7 +399,7 @@ public class OurCraftGame extends ApplicationAdapter
 
         GraphicsEnvironment.shader2D.drawText(
             mainMenuMovePosition,
-            "Use WASD to move",
+            "Use WASD to move. SHIFT to sprint",
             Settings.textColor,
             Enums.Fonts.ROBOTO,
             Enums.Size.LARGE
@@ -418,7 +407,7 @@ public class OurCraftGame extends ApplicationAdapter
 
         GraphicsEnvironment.shader2D.drawText(
             mainMenuMousePosition,
-            "Use the mouse to look around",
+            "Use the mouse/arrow keys to look around. T to equip torch",
             Settings.textColor,
             Enums.Fonts.ROBOTO,
             Enums.Size.LARGE
@@ -442,7 +431,7 @@ public class OurCraftGame extends ApplicationAdapter
 
         GraphicsEnvironment.shader2D.drawText(
             mainMenuSelectPosition,
-            "Number keys to select which block type to place",
+            "Number/Numpad/Scroll to select which block type to place",
             Settings.textColor,
             Enums.Fonts.ROBOTO,
             Enums.Size.LARGE
@@ -572,6 +561,22 @@ public class OurCraftGame extends ApplicationAdapter
 
 				return false;
 			}
+
+			@Override public boolean scrolled(int amount)
+            {
+                if (amount == -1)
+                {
+                    GameManager.player.scrollDownSelectedBlock();
+                    return true;
+                }
+                else if (amount == 1)
+                {
+                    GameManager.player.scrollUpSelectedBlock();
+                    return true;
+                }
+
+                return false;
+            }
         });
 	}
 

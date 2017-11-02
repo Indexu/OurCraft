@@ -42,15 +42,7 @@ public class LightManager
         moon.getPosition().x = GameManager.worldCenter.x - (c * radius);
         moon.getPosition().y = GameManager.worldCenter.y - (s * radius);
 
-//        sun.setOn(Settings.worldY < sun.getPosition().y);
-//        moon.setOn(Settings.worldY < moon.getPosition().y);
-
         setSunMoonColors(s, c);
-
-//        System.out.print(" | Sun pos: " + sun.getPosition());
-//        System.out.print(" | Moon pos: " + moon.getPosition());
-//        System.out.print(" | Sun on: " + sun.isOn());
-//        System.out.print(" | Moon on: " + moon.isOn());
     }
 
     public static void createSun()
@@ -154,12 +146,5 @@ public class LightManager
             moonColor.a = t;
             sunColor.a = 1-t;
         }
-
-//        sun.setColor(Settings.moonLightColor);
-//        moon.setColor(Settings.moonLightColor);
-//        fogColor.set(Settings.fogColorNight);
-//        globalAmbiance.set(Settings.globalAmbianceNight);
-
-        System.out.print(" | Torchlight color: " + torchLightColor);
     }
 }

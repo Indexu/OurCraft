@@ -1,5 +1,6 @@
 package com.ru.tgra.ourcraft.objects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.ru.tgra.ourcraft.GameManager;
 import com.ru.tgra.ourcraft.GraphicsEnvironment;
@@ -23,7 +24,15 @@ public class Block extends GameObject
         GRASS,
         STONE,
         EMPTY,
-        TORCH
+        TORCH,
+        COBBLESTONE,
+        GRAVEL,
+        SAND,
+        OAK_PLANK,
+        OAK_LOG,
+        STONE_BRICK,
+        BRICK,
+        DIAMOND
     }
 
     public enum TargetFace
@@ -50,15 +59,15 @@ public class Block extends GameObject
     protected Point3D leftBottom;
     protected Point3D rightTop;
 
-    public Block(int ID, Point3D position, Vector3D scale, Material material, Material minimapMaterial, CubeMask mask, BlockType type, int chunkX, int chunkY)
+    private float grassTimer;
+
+    public Block(int ID, Point3D position, Vector3D scale, CubeMask mask, BlockType type, int chunkX, int chunkY)
     {
         super();
 
         this.ID = ID;
         this.position = position;
         this.scale = scale;
-        this.material = material;
-        this.minimapMaterial = minimapMaterial;
         this.mask = mask;
         blockType = type;
         this.chunkX = chunkX;
@@ -81,6 +90,8 @@ public class Block extends GameObject
         rightTop.z += (scale.z * 0.5f);
 
         targetFace = null;
+
+        grassTimer = 0f;
     }
 
     public void draw()
@@ -90,9 +101,17 @@ public class Block extends GameObject
             return;
         }
 
-        checkTargetedBlock();
+        if (blockType == BlockType.DIRT && mask.isTop())
+        {
+            grassTimer += Gdx.graphics.getDeltaTime();
 
-        GameManager.drawCount++;
+            if (Settings.dirtToGrassTimer < grassTimer)
+            {
+                blockType = BlockType.GRASS;
+            }
+        }
+
+        checkTargetedBlock();
 
         ModelMatrix.main.loadIdentityMatrix();
         ModelMatrix.main.addTranslation(position);
