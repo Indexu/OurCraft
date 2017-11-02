@@ -34,6 +34,7 @@ public class Shader2D
     private BitmapFont robotoLarge;
     private BitmapFont robotoExtraLarge;
     private BitmapFont arialNormal;
+    private BitmapFont minecrafterExtraLarge;
 
     public Shader2D()
     {
@@ -62,26 +63,6 @@ public class Shader2D
         Gdx.gl.glUniformMatrix4fv(projectionMatrixLoc, 1, false, projectionMatrix);
     }
 
-    public int getVertexPointer()
-    {
-        return vertexPointer;
-    }
-
-    public void setColor(Color color)
-    {
-        Gdx.gl.glUniform4f(colorLoc, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-    }
-
-    public void setClearColor(Color color)
-    {
-        Gdx.gl.glClearColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-    }
-
-    public void clear()
-    {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    }
-
     public void drawText(Point2D position, String text, Color color, Enums.Fonts font, Enums.Size size)
     {
         BitmapFont fontToUse = robotoNormal;
@@ -89,6 +70,10 @@ public class Shader2D
         if (font == Enums.Fonts.ARIAL)
         {
             fontToUse = arialNormal;
+        }
+        else if (font == Enums.Fonts.MINECRAFTER)
+        {
+            fontToUse = minecrafterExtraLarge;
         }
         else if (font == Enums.Fonts.ROBOTO)
         {
@@ -123,20 +108,11 @@ public class Shader2D
         fontToUse.draw(batch, text, fontX, fontY);
 
         batch.end();
-
-//        Gdx.gl.glUseProgram(renderingProgramID);
-//        Gdx.gl.glEnableVertexAttribArray(vertexPointer);
     }
 
     public void useShader()
     {
-        //Gdx.gl.glLinkProgram(renderingProgramID);
         Gdx.gl.glUseProgram(renderingProgramID);
-    }
-
-    public void setModelMatrix(FloatBuffer matrix)
-    {
-        Gdx.gl.glUniformMatrix4fv(modelMatrixLoc, 1, false, matrix);
     }
 
     /*
@@ -223,17 +199,21 @@ public class Shader2D
     {
         batch = new SpriteBatch();
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/RobotoMono-Regular.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-        parameter.size = 18;
-        robotoNormal = generator.generateFont(parameter);
+        FreeTypeFontGenerator robotoGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/RobotoMono-Regular.ttf"));
 
-        parameter.size = 32;
-        robotoLarge = generator.generateFont(parameter);
+        parameter.mono = true;
+        parameter.size = 18;
+        robotoNormal = robotoGenerator.generateFont(parameter);
+
+        parameter.size = 28;
+        robotoLarge = robotoGenerator.generateFont(parameter);
 
         parameter.size = 46;
-        robotoExtraLarge = generator.generateFont(parameter);
+        robotoExtraLarge = robotoGenerator.generateFont(parameter);
+
+        robotoGenerator.dispose();
 
         FreeTypeFontGenerator arialGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Arial.ttf"));
 
@@ -242,7 +222,13 @@ public class Shader2D
         arialNormal = arialGenerator.generateFont(parameter);
 
         arialGenerator.dispose();
-        generator.dispose();
+
+        FreeTypeFontGenerator minecrafterGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Minecrafter.Reg.ttf"));
+
+        parameter.size = 64;
+        minecrafterExtraLarge = minecrafterGenerator.generateFont(parameter);
+
+        minecrafterGenerator.dispose();
     }
 
     private void initShapes()

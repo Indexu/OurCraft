@@ -16,17 +16,16 @@ public class GameManager
     public static Chunk[][] chunks;
 
     public static boolean mainMenu;
+    public static boolean loaded;
 
     public static Point3D worldCenter;
     public static Torch torch;
 
     public static int drawCount;
 
-    public static Light headLight;
     public static Player player;
     public static Skybox skybox;
     public static boolean noclip;
-    public static boolean won;
 
     public static void init()
     {
@@ -35,14 +34,16 @@ public class GameManager
         worldGenerator = new WorldGenerator();
         worldCenter = new Point3D(Settings.worldX / 2, Settings.worldY / 2, Settings.worldZ / 2);
         noclip = false;
-        won = false;
+        loaded = false;
+        mainMenu = true;
     }
 
     public static void createWorld()
     {
         gameObjects.clear();
 
-        worldGenerator.generateWorld();
+        //worldGenerator.generateWorld();
+
         worldBlocks = worldGenerator.getWorldBlocks();
         chunks = worldGenerator.getChunks();
 

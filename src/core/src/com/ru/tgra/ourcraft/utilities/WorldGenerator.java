@@ -21,6 +21,8 @@ public class WorldGenerator
     private int maxZ;
     private int lowestY;
     private int highestY;
+    private long totalTime = 0;
+    private long million = 1000000;
 
     public WorldGenerator()
     {
@@ -34,69 +36,6 @@ public class WorldGenerator
 
     public void generateWorld()
     {
-        long totalTime = 0;
-        long startTime;
-        long endTime;
-        long million = 1000000;
-
-        startTime = System.nanoTime();
-        generateHeightMap(overworldHeightMap);
-        endTime = System.nanoTime() - startTime;
-        totalTime += endTime;
-
-        System.out.println("Generated heightmap in " + endTime / million + "ms");
-
-        startTime = System.nanoTime();
-        smoothenHeightMap(overworldHeightMap);
-        endTime = System.nanoTime() - startTime;
-        totalTime += endTime;
-
-        System.out.println("Smoothened heightmap in " + endTime / million + "ms");
-
-        startTime = System.nanoTime();
-        createWorldBlockArray();
-        endTime = System.nanoTime() - startTime;
-        totalTime += endTime;
-
-        System.out.println("Created world block array in " + endTime / million + "ms");
-
-        startTime = System.nanoTime();
-        offsetOverWorld();
-        endTime = System.nanoTime() - startTime;
-        totalTime += endTime;
-
-        System.out.println("Offset the overworld in " + endTime / million + "ms");
-
-        startTime = System.nanoTime();
-        createStone();
-        endTime = System.nanoTime() - startTime;
-        totalTime += endTime;
-
-        System.out.println("Created stones in " + endTime / million + "ms");
-
-        startTime = System.nanoTime();
-        createCaverns();
-        endTime = System.nanoTime() - startTime;
-        totalTime += endTime;
-
-        System.out.println("Created caves in " + endTime / million + "ms");
-
-        startTime = System.nanoTime();
-        createBedrock();
-        endTime = System.nanoTime() - startTime;
-        totalTime += endTime;
-
-        System.out.println("Created bedrock in " + endTime / million + "ms");
-
-        startTime = System.nanoTime();
-        generateChunks();
-        endTime = System.nanoTime() - startTime;
-        totalTime += endTime;
-
-        System.out.println("Generated chunks in " + endTime / million + "ms");
-
-        System.out.println("\nWorld generated in " + totalTime / million + "ms\n");
-
         System.out.println("Lowest Y: " + lowestY);
         System.out.println("Highest Y: " + highestY);
         System.out.println("Chunks X: " + chunks.length);
@@ -129,6 +68,26 @@ public class WorldGenerator
         return maxZ;
     }
 
+    public void generateOverworldHeightMap()
+    {
+        long startTime = System.nanoTime();
+        generateHeightMap(overworldHeightMap);
+        long endTime = System.nanoTime() - startTime;
+        totalTime += endTime;
+
+        System.out.println("Generated heightmap in " + endTime / million + "ms");
+    }
+
+    public void smoothenOverworldHeightMap()
+    {
+        long startTime = System.nanoTime();
+        smoothenHeightMap(overworldHeightMap);
+        long endTime = System.nanoTime() - startTime;
+        totalTime += endTime;
+
+        System.out.println("Smoothened heightmap in " + endTime / million + "ms");
+    }
+
     private void generateHeightMap(int[][] heightmap)
     {
         float scalar = Settings.worldY / 2;
@@ -150,7 +109,7 @@ public class WorldGenerator
         }
     }
 
-    private void smoothenHeightMap(int[][] heightMap)
+    public void smoothenHeightMap(int[][] heightMap)
     {
         lowestY = Integer.MAX_VALUE;
         highestY = Integer.MIN_VALUE;
@@ -239,8 +198,10 @@ public class WorldGenerator
         }
     }
 
-    private void createWorldBlockArray()
+    public void createWorldBlockArray()
     {
+        long startTime = System.nanoTime();
+
         for (int x = 0; x < maxX; x++)
         {
             for (int z = 0; z < maxZ; z++)
@@ -258,10 +219,17 @@ public class WorldGenerator
                 }
             }
         }
+
+        long endTime = System.nanoTime() - startTime;
+        totalTime += endTime;
+
+        System.out.println("Created world block array in " + endTime / million + "ms");
     }
 
-    private void generateChunks()
+    public void generateChunks()
     {
+        long startTime = System.nanoTime();
+
         int chunkX = Settings.worldX / Settings.chunkWidth;
         int chunkY = Settings.worldZ / Settings.chunkHeight;
 
@@ -274,6 +242,13 @@ public class WorldGenerator
                 createChunk(x, y);
             }
         }
+
+        long endTime = System.nanoTime() - startTime;
+        totalTime += endTime;
+
+        System.out.println("Generated chunks in " + endTime / million + "ms");
+
+        System.out.println("\nWorld generated in " + totalTime / million + "ms\n");
     }
 
     private void createChunk(int startX, int startZ)
@@ -324,8 +299,10 @@ public class WorldGenerator
         chunks[chunkX][chunkY] = new Chunk(blockMap, chunkX, chunkY);
     }
 
-    private void createStone()
+    public void createStone()
     {
+        long startTime = System.nanoTime();
+
         for (int x = 0; x < maxX; x++)
         {
             for (int z = 0; z < maxZ; z++)
@@ -336,10 +313,17 @@ public class WorldGenerator
                 }
             }
         }
+
+        long endTime = System.nanoTime() - startTime;
+        totalTime += endTime;
+
+        System.out.println("Created stone blocks in " + endTime / million + "ms");
     }
 
-    private void createBedrock()
+    public void createBedrock()
     {
+        long startTime = System.nanoTime();
+
         for (int x = 0; x < maxX; x++)
         {
             for (int z = 0; z < maxZ; z++)
@@ -347,10 +331,17 @@ public class WorldGenerator
                 worldBlocks[x][0][z] = Block.BlockType.BEDROCK;
             }
         }
+
+        long endTime = System.nanoTime() - startTime;
+        totalTime += endTime;
+
+        System.out.println("Created bedrock blocks in " + endTime / million + "ms");
     }
 
-    private void offsetOverWorld()
+    public void offsetOverWorld()
     {
+        long startTime = System.nanoTime();
+
         int offsetAmount = maxY - highestY - 1;
         lowestY = Integer.MAX_VALUE;
 
@@ -390,10 +381,17 @@ public class WorldGenerator
                 }
             }
         }
+
+        long endTime = System.nanoTime() - startTime;
+        totalTime += endTime;
+
+        System.out.println("Offset overworld in " + endTime / million + "ms");
     }
 
-    private void createCaverns()
+    public void createCaverns()
     {
+        long startTime = System.nanoTime();
+
         int currentY = highestY - lowestY + lowestY;
 
         double[][] cavernHeightMap = new double[Settings.worldX][Settings.worldZ];
@@ -498,6 +496,11 @@ public class WorldGenerator
                 }
             }
         }
+
+        long endTime = System.nanoTime() - startTime;
+        totalTime += endTime;
+
+        System.out.println("Created caverns in " + endTime / million + "ms");
     }
 
     private void changeSurroundingType(int x, int y, int z, Block.BlockType blockType)

@@ -1,49 +1,128 @@
 package com.ru.tgra.ourcraft;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.ru.tgra.ourcraft.models.*;
-import com.ru.tgra.ourcraft.objects.Block;
 import com.ru.tgra.ourcraft.objects.GameObject;
-import com.ru.tgra.ourcraft.objects.Player;
 import com.ru.tgra.ourcraft.shapes.*;
 import com.ru.tgra.ourcraft.utilities.CollisionsUtil;
 
 public class OurCraftGame extends ApplicationAdapter
 {
-	private Shader shader;
-
-	private Point3D mainMenuTitlePosition;
-	private Point3D mainMenuMovePosition;
-	private Point3D mainMenuMousePosition;
-	private Point3D mainMenuOrbPosition;
-	private Point3D mainMenuPlayPosition;
-	private Point3D mainMenuMessagePosition;
 	private float oldMouseX;
 	private float oldMouseY;
-	private float textTimer;
 
 	private Point2D center;
+	private Point2D blockSelected;
+
+    private Point2D mainMenuTitlePosition;
+    private Point2D mainMenuMovePosition;
+    private Point2D mainMenuMousePosition;
+    private Point2D mainMenuLeftClickPosition;
+    private Point2D mainMenuRightClickPosition;
+    private Point2D mainMenuSelectPosition;
+    private Point2D mainMenuWaitPosition;
+    private Point2D mainMenuProgressBarPosition;
+    private Point2D mainMenuProgressTextPosition;
+
+    private String waitText;
+    private String progressBar;
+    private String progressText;
+
+    private int step;
 
 	@Override
 	public void create ()
 	{
 		init();
-
-		GameManager.mainMenu = false;
-		GameManager.createWorld();
 	}
 
 	private void mainMenuInput()
 	{
-		if(Gdx.input.isKeyPressed(Input.Keys.ENTER))
+		if(Gdx.input.isKeyPressed(Input.Keys.ENTER) && GameManager.loaded)
 		{
 			GameManager.mainMenu = false;
-			GameManager.createWorld();
+            GameManager.createWorld();
 		}
 	}
+
+	private void mainMenuCreateWorld()
+    {
+        switch (step)
+        {
+            case 0:
+                GameManager.worldGenerator.generateOverworldHeightMap();
+                progressText = "Smoothening heightmap";
+                break;
+
+            case 1:
+                GameManager.worldGenerator.smoothenOverworldHeightMap();
+                progressText = "Creating world block 3D array";
+                break;
+
+            case 2:
+                GameManager.worldGenerator.createWorldBlockArray();
+                progressText = "Offsetting overworld";
+                break;
+
+            case 3:
+                GameManager.worldGenerator.offsetOverWorld();
+                progressText = "Creating stone blocks";
+                break;
+
+            case 4:
+                GameManager.worldGenerator.createStone();
+                progressText = "Creating caverns";
+                break;
+
+            case 5:
+                GameManager.worldGenerator.createCaverns();
+                progressText = "Creating bedrock blocks";
+                break;
+
+            case 6:
+                GameManager.worldGenerator.createBedrock();
+                progressText = "Generating chunks";
+                break;
+
+            case 7:
+                GameManager.worldGenerator.generateChunks();
+                waitText = "Loading done";
+                progressText = "Press ENTER to start";
+                GameManager.loaded = true;
+                break;
+
+            default:
+                return;
+        }
+
+        step++;
+
+        updateProgressBar();
+    }
+
+    private void updateProgressBar()
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("[");
+
+        int i;
+
+        for (i = 0; i < step*2; i++)
+        {
+            stringBuilder.append("#");
+        }
+
+        for (; i < 16; i++)
+        {
+            stringBuilder.append(" ");
+        }
+
+        stringBuilder.append("]");
+
+        progressBar = stringBuilder.toString();
+    }
 
 	private void input()
 	{
@@ -53,6 +132,7 @@ public class OurCraftGame extends ApplicationAdapter
 		if (GameManager.mainMenu)
 		{
 			mainMenuInput();
+            mainMenuCreateWorld();
 
 			return;
 		}
@@ -130,12 +210,12 @@ public class OurCraftGame extends ApplicationAdapter
             GameManager.player.toggleTorch();
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1))
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1) || Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_1))
         {
             GameManager.player.selectBlock(1);
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2))
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2) || Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_2))
         {
             GameManager.player.selectBlock(2);
         }
@@ -174,9 +254,15 @@ public class OurCraftGame extends ApplicationAdapter
 
 	private void display()
 	{
-	    GraphicsEnvironment.shader.useShader();
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+	    if (GameManager.mainMenu)
+        {
+            drawMainMenu();
+            return;
+        }
+
+	    GraphicsEnvironment.shader.useShader();
 
 		Gdx.graphics.setTitle("OurCraft | FPS: " + Gdx.graphics.getFramesPerSecond());
 
@@ -191,8 +277,8 @@ public class OurCraftGame extends ApplicationAdapter
 		{
             GraphicsEnvironment.setPerspectiveCamera();
 
-			shader.setGlobalAmbience(LightManager.globalAmbiance);
-			shader.setFogColor(LightManager.fogColor);
+            GraphicsEnvironment.shader.setGlobalAmbience(LightManager.globalAmbiance);
+            GraphicsEnvironment.shader.setFogColor(LightManager.fogColor);
 
             GameManager.skybox.draw();
 
@@ -267,16 +353,6 @@ public class OurCraftGame extends ApplicationAdapter
 
 	}
 
-	private void drawMainMenu()
-	{
-//		GraphicsEnvironment.drawText(mainMenuTitlePosition, "Labyrinth", new Color(0.8f, 0.0f, 0.0f, 1.0f), 3);
-//		GraphicsEnvironment.drawText(mainMenuMovePosition, "Use WASD to move", new Color(1.0f, 1.0f, 1.0f, 1.0f), 2);
-//		GraphicsEnvironment.drawText(mainMenuMousePosition, "Mouse or arrow keys to look around", new Color(1.0f, 1.0f, 1.0f, 1.0f), 2);
-//		GraphicsEnvironment.drawText(mainMenuOrbPosition, "Find the red orb", new Color(1.0f, 1.0f, 1.0f, 1.0f), 2);
-//		GraphicsEnvironment.drawText(mainMenuPlayPosition, "Press ENTER to play", new Color(1.0f, 1.0f, 1.0f, 1.0f), 2);
-//		GraphicsEnvironment.drawText(mainMenuMessagePosition, "Good luck and beware the above...", new Color(1.0f, 1.0f, 1.0f, 1.0f), 2);
-	}
-
 	private void ui()
     {
         GraphicsEnvironment.shader2D.useShader();
@@ -301,6 +377,98 @@ public class OurCraftGame extends ApplicationAdapter
             "---",
             Settings.crosshairColor,
             Enums.Fonts.ARIAL,
+            Enums.Size.NORMAL
+        );
+
+        GraphicsEnvironment.shader2D.drawText(
+            blockSelected,
+            "Block: " + GameManager.player.getSelectedBlock().toString(),
+            Settings.textColor,
+            Enums.Fonts.ROBOTO,
+            Enums.Size.NORMAL
+        );
+    }
+
+    private void drawMainMenu()
+    {
+        GraphicsEnvironment.shader2D.useShader();
+
+        GraphicsEnvironment.shader2D.OrthographicProjection2D(
+                (int) GraphicsEnvironment.viewport.x,
+                (int) GraphicsEnvironment.viewport.y,
+                (int) GraphicsEnvironment.viewport.width,
+                (int) GraphicsEnvironment.viewport.height
+        );
+
+        GraphicsEnvironment.shader2D.drawText(
+                mainMenuTitlePosition,
+                "OurCraft",
+                Settings.textColor,
+                Enums.Fonts.MINECRAFTER,
+                Enums.Size.EXTRA_LARGE
+        );
+
+        GraphicsEnvironment.shader2D.drawText(
+            mainMenuMovePosition,
+            "Use WASD to move",
+            Settings.textColor,
+            Enums.Fonts.ROBOTO,
+            Enums.Size.LARGE
+        );
+
+        GraphicsEnvironment.shader2D.drawText(
+            mainMenuMousePosition,
+            "Use the mouse to look around",
+            Settings.textColor,
+            Enums.Fonts.ROBOTO,
+            Enums.Size.LARGE
+        );
+
+        GraphicsEnvironment.shader2D.drawText(
+                mainMenuLeftClickPosition,
+            "Left click to destroy a block",
+            Settings.textColor,
+            Enums.Fonts.ROBOTO,
+            Enums.Size.LARGE
+        );
+
+        GraphicsEnvironment.shader2D.drawText(
+            mainMenuRightClickPosition,
+            "Right click to place a block",
+            Settings.textColor,
+            Enums.Fonts.ROBOTO,
+            Enums.Size.LARGE
+        );
+
+        GraphicsEnvironment.shader2D.drawText(
+            mainMenuSelectPosition,
+            "Number keys to select which block type to place",
+            Settings.textColor,
+            Enums.Fonts.ROBOTO,
+            Enums.Size.LARGE
+        );
+
+        GraphicsEnvironment.shader2D.drawText(
+            mainMenuWaitPosition,
+            waitText,
+            Settings.textColor,
+            Enums.Fonts.ROBOTO,
+            Enums.Size.NORMAL
+        );
+
+        GraphicsEnvironment.shader2D.drawText(
+            mainMenuProgressBarPosition,
+            progressBar,
+            Settings.textColor,
+            Enums.Fonts.ROBOTO,
+            Enums.Size.LARGE
+        );
+
+        GraphicsEnvironment.shader2D.drawText(
+            mainMenuProgressTextPosition,
+            progressText,
+            Settings.textColor,
+            Enums.Fonts.ROBOTO,
             Enums.Size.NORMAL
         );
     }
@@ -343,8 +511,15 @@ public class OurCraftGame extends ApplicationAdapter
 
         GraphicsEnvironment.setViewport(cropX, cropY, w, h);
 
-        GameManager.player.getCamera().setPerspectiveProjection(Settings.playerFOV, GraphicsEnvironment.viewport.width / GraphicsEnvironment.viewport.height, Settings.nearPlane, Settings.farPlane);
-        GraphicsEnvironment.UICamera.setPerspectiveProjection(Settings.playerFOV, GraphicsEnvironment.viewport.width / GraphicsEnvironment.viewport.height, 0.01f, 1f);
+        if (GameManager.player != null)
+        {
+            GameManager.player.getCamera().setPerspectiveProjection(Settings.playerFOV, GraphicsEnvironment.viewport.width / GraphicsEnvironment.viewport.height, Settings.nearPlane, Settings.farPlane);
+        }
+
+        if (GraphicsEnvironment.UICamera != null)
+        {
+            GraphicsEnvironment.UICamera.setPerspectiveProjection(Settings.playerFOV, GraphicsEnvironment.viewport.width / GraphicsEnvironment.viewport.height, 0.01f, 1f);
+        }
 	}
 
 	private void init()
@@ -355,49 +530,25 @@ public class OurCraftGame extends ApplicationAdapter
 		TextureManager.init();
 		LightManager.init();
         initInput();
-
-		shader = GraphicsEnvironment.shader;
+        initPoints();
 
 		BoxGraphic.create();
 		BoxHUDGraphic.create();
 		SphereGraphic.create();
-		SincGraphic.create(shader.getVertexPointer());
-		CoordFrameGraphic.create(shader.getVertexPointer());
 
 		ModelMatrix.main = new ModelMatrix();
 		ModelMatrix.main.loadIdentityMatrix();
-		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-
-//        crosshair = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("crosshairs/crosshair.png")), 32, 32);
-//        Gdx.graphics.setCursor(crosshair);
-        Gdx.input.setCursorCatched(true);
-        Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        GraphicsEnvironment.shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
 		oldMouseX = Gdx.input.getX();
 		oldMouseY = Gdx.input.getY() - Gdx.graphics.getHeight();
-		textTimer = 0f;
 
-		float offset = Gdx.graphics.getHeight() / 8;
+		waitText = "Please wait while the game loads";
+		progressText = "Generating heightmap";
 
-        center = new Point2D(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        step = 0;
 
-		mainMenuTitlePosition = new Point3D(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0f);
-		mainMenuTitlePosition.y += offset * 2.5f;
-
-		mainMenuMovePosition = new Point3D(mainMenuTitlePosition);
-		mainMenuMovePosition.y -= offset;
-
-		mainMenuMousePosition = new Point3D(mainMenuMovePosition);
-		mainMenuMousePosition.y -= offset;
-
-		mainMenuOrbPosition = new Point3D(mainMenuMousePosition);
-		mainMenuOrbPosition.y -= offset;
-
-		mainMenuPlayPosition = new Point3D(mainMenuOrbPosition);
-		mainMenuPlayPosition.y -= offset;
-
-		mainMenuMessagePosition = new Point3D(mainMenuPlayPosition);
-		mainMenuMessagePosition.y -= offset;
+        updateProgressBar();
 	}
 
 	private void initInput()
@@ -423,4 +574,40 @@ public class OurCraftGame extends ApplicationAdapter
 			}
         });
 	}
+
+	private void initPoints()
+    {
+        float offsetSmall = Gdx.graphics.getHeight() / 12;
+        float offsetLarge = Gdx.graphics.getHeight() / 8;
+
+        center = new Point2D(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        blockSelected = new Point2D(Gdx.graphics.getWidth() / 12, Gdx.graphics.getHeight() / 16);
+
+        mainMenuTitlePosition = new Point2D(center);
+        mainMenuTitlePosition.y += offsetLarge * 3f;
+
+        mainMenuMovePosition = new Point2D(mainMenuTitlePosition);
+        mainMenuMovePosition.y -= offsetLarge;
+
+        mainMenuMousePosition = new Point2D(mainMenuMovePosition);
+        mainMenuMousePosition.y -= offsetSmall;
+
+        mainMenuLeftClickPosition = new Point2D(mainMenuMousePosition);
+        mainMenuLeftClickPosition.y -= offsetSmall;
+
+        mainMenuRightClickPosition = new Point2D(mainMenuLeftClickPosition);
+        mainMenuRightClickPosition.y -= offsetSmall;
+
+        mainMenuSelectPosition = new Point2D(mainMenuRightClickPosition);
+        mainMenuSelectPosition.y -= offsetSmall;
+
+        mainMenuWaitPosition = new Point2D(mainMenuSelectPosition);
+        mainMenuWaitPosition.y -= offsetLarge;
+
+        mainMenuProgressBarPosition = new Point2D(mainMenuWaitPosition);
+        mainMenuProgressBarPosition.y -= offsetSmall;
+
+        mainMenuProgressTextPosition = new Point2D(mainMenuProgressBarPosition);
+        mainMenuProgressTextPosition.y -= offsetSmall;
+    }
 }

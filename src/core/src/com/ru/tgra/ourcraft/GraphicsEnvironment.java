@@ -34,7 +34,6 @@ public class GraphicsEnvironment
         UICamera = new Camera();
         UICamera.look(new Point3D(0, 0, 0), new Point3D(0, 0, -1), new Vector3D(0,1,0));
 
-        initFonts();
         Gdx.gl.glClearColor(0f, 0f, 0f, 1.0f);
         enableBlending();
         //setFullscreen();
@@ -43,6 +42,9 @@ public class GraphicsEnvironment
 
         shader.setFogStart(Settings.fogStart);
         shader.setFogEnd(Settings.fogEnd);
+
+        Gdx.input.setCursorCatched(true);
+        Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
     }
 
     public static void setViewport(float x, float y, float width, float height)
@@ -92,23 +94,5 @@ public class GraphicsEnvironment
         Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-    }
-
-    private static void initFonts()
-    {
-//        batch = new SpriteBatch();
-//        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/October Crow.ttf"));
-//        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-//
-//        parameter.size = 18;
-//        fontNormal = generator.generateFont(parameter);
-//
-//        parameter.size = 32;
-//        fontLarge = generator.generateFont(parameter);
-//
-//        parameter.size = 46;
-//        fontExtraLarge = generator.generateFont(parameter);
-//
-//        generator.dispose();
     }
 }

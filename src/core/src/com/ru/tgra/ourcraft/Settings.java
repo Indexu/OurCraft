@@ -64,6 +64,7 @@ public class Settings
 
     /* === UI settings === */
     public static final Color crosshairColor = new Color(1.0f, 1.0f, 1.0f, 0.8f);
+    public static final Color textColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
     /* === Materials === */
 

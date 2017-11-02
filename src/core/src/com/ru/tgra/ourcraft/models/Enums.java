@@ -5,7 +5,8 @@ public class Enums
     public enum Fonts
     {
         ARIAL,
-        ROBOTO
+        ROBOTO,
+        MINECRAFTER
     }
 
     public enum Size

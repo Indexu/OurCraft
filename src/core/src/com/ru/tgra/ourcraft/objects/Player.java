@@ -47,6 +47,7 @@ public class Player extends GameObject
 
         camera = new Camera();
         camera.look(position, center, new Vector3D(0,1,0));
+        camera.setPerspectiveProjection(Settings.playerFOV, GraphicsEnvironment.viewport.width / GraphicsEnvironment.viewport.height, Settings.nearPlane, Settings.farPlane);
 
         movementVector = new Vector3D();
         yaw = 0;
@@ -258,5 +259,10 @@ public class Player extends GameObject
             default:
                 break;
         }
+    }
+
+    public Block.BlockType getSelectedBlock()
+    {
+        return selectedBlock;
     }
 }
