@@ -66,7 +66,11 @@ The game uses OpenGL and we use LibGDX in order to access OpenGL functionality.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+This license only applies to code written by us.
+
+The license does NOT apply to any of our assets sourced below, they each have their own license.
 
 ## Acknowledgments
 
