@@ -28,7 +28,6 @@ public class TextureManager
     private static FloatBuffer UVLogBuffer;
     private static FloatBuffer UVAllBuffer;
     private static FloatBuffer UVTorchBuffer;
-    private static FloatBuffer UVCubeMapBuffer;
 
     public static void init()
     {
@@ -36,7 +35,6 @@ public class TextureManager
 
         initUVAllBuffer();
         initUVGrassBuffer();
-        initUVCubeMapBuffer();
         initUVTorchBuffer();
         initUVLogBuffer();
     }
@@ -122,11 +120,6 @@ public class TextureManager
     public static Texture getTorchTexture()
     {
         return torchTexture;
-    }
-
-    public static FloatBuffer getCubeMapUVBuffer()
-    {
-        return UVCubeMapBuffer;
     }
 
     public static FloatBuffer getTorchUVBuffer()
@@ -317,51 +310,5 @@ public class TextureManager
         UVTorchBuffer = BufferUtils.newFloatBuffer(48);
         BufferUtils.copy(uvArray, 0, UVTorchBuffer, 48);
         UVTorchBuffer.rewind();
-    }
-
-    private static void initUVCubeMapBuffer()
-    {
-        float[] uvArray =
-        {
-            // Top
-            0.25f, 0.0f,
-            0.5f, 0.0f,
-            0.5f, 0.3333f,
-            0.25f, 0.3333f,
-
-            // Front
-            0.0f, 0.3333f,
-            0.25f, 0.3333f,
-            0.25f, 0.6666f,
-            0.0f, 0.6666f,
-
-            // Back
-            0.5f, 0.3333f,
-            0.75f, 0.3333f,
-            0.75f, 0.6666f,
-            0.25f, 0.6666f,
-
-            // Bottom
-            0.25f, 0.6666f,
-            0.5f, 0.6666f,
-            0.5f, 1.0f,
-            0.25f, 1.0f,
-
-            // Left
-            0.25f, 0.3333f,
-            0.5f, 0.3333f,
-            0.5f, 0.6666f,
-            0.25f, 0.6666f,
-
-            // Right
-            0.75f, 0.3333f,
-            1.0f, 0.3333f,
-            1.0f, 0.6666f,
-            0.75f, 0.6666f,
-        };
-
-        UVCubeMapBuffer = BufferUtils.newFloatBuffer(48);
-        BufferUtils.copy(uvArray, 0, UVCubeMapBuffer, 48);
-        UVCubeMapBuffer.rewind();
     }
 }

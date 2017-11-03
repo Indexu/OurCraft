@@ -79,7 +79,7 @@ public class Player extends GameObject
         }
         else
         {
-            accumulatedGravity += Settings.gravity;
+            accumulatedGravity += Settings.gravity * deltaTime;
 
             position.y -= accumulatedGravity * deltaTime;
 

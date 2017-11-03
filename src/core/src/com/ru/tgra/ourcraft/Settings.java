@@ -42,12 +42,12 @@ public class Settings
     public static final CubeMask fullMask = new CubeMask();
 
     /* === Player settings === */
-    public static final float playerFOV = 80f;
+    public static final float playerFOV = 70f;
     public static final float playerSpeed = 3f;
     public static final float playerSprintMultiplier = 2f;
     public static final float playerButtonLookSensitivity = 100f;
     public static final float playerMouseLookSensitivity = 30f;
-    public static final float gravity = 0.2f;
+    public static final float gravity = 11.5f;
     public static final float jumpStrength = 5f;
     public static final float reach = 4f;
     public static final int playerHeight = 2;

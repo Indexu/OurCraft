@@ -10,7 +10,6 @@ import com.badlogic.gdx.utils.BufferUtils;
 import com.ru.tgra.ourcraft.models.Color;
 import com.ru.tgra.ourcraft.models.Enums;
 import com.ru.tgra.ourcraft.models.Point2D;
-import com.ru.tgra.ourcraft.shapes.RectangleGraphic;
 
 import java.nio.FloatBuffer;
 
@@ -44,7 +43,6 @@ public class Shader2D
         initVertexBuffer();
         initColor();
         initFonts();
-        initShapes();
     }
 
     public void OrthographicProjection2D(float left, float right, float bottom, float top)
@@ -229,11 +227,6 @@ public class Shader2D
         minecrafterExtraLarge = minecrafterGenerator.generateFont(parameter);
 
         minecrafterGenerator.dispose();
-    }
-
-    private void initShapes()
-    {
-        RectangleGraphic.create(vertexPointer);
     }
 
     public int getModelMatrixLoc()
