@@ -39,12 +39,17 @@ public class OurCraftGame extends ApplicationAdapter
 
 	private void mainMenuInput()
 	{
-		if(Gdx.input.isKeyPressed(Input.Keys.ENTER) && GameManager.loaded)
+		if((Gdx.input.isKeyPressed(Input.Keys.ENTER) || Gdx.input.isKeyPressed(Input.Keys.SPACE) ) && GameManager.loaded)
 		{
-			GameManager.mainMenu = false;
-            GameManager.createWorld();
+            startGame();
 		}
 	}
+
+	private void startGame()
+    {
+        GameManager.mainMenu = false;
+        GameManager.createWorld();
+    }
 
 	private void mainMenuCreateWorld()
     {
@@ -465,7 +470,6 @@ public class OurCraftGame extends ApplicationAdapter
 	@Override
 	public void render ()
 	{
-        System.out.print("\r                                                                                            \r");
 		input();
 		update();
 		display();
@@ -546,17 +550,26 @@ public class OurCraftGame extends ApplicationAdapter
 			@Override
 			public boolean touchDown(int x, int y, int pointer, int button)
             {
-				if (button == Input.Buttons.LEFT)
+                if (GameManager.mainMenu)
+                {
+                    if (GameManager.loaded)
+                    {
+                        startGame();
+                        return true;
+                    }
+                }
+				else if (button == Input.Buttons.LEFT)
 				{
                     if (GameManager.player.getTargetBlock() != null)
                     {
                         GameManager.player.getTargetBlock().destroy();
+                        return true;
                     }
 				}
-
-                if (button == Input.Buttons.RIGHT)
+                else if (button == Input.Buttons.RIGHT)
                 {
                     GameManager.player.placeBlock();
+                    return true;
                 }
 
 				return false;
@@ -564,6 +577,11 @@ public class OurCraftGame extends ApplicationAdapter
 
 			@Override public boolean scrolled(int amount)
             {
+                if (GameManager.mainMenu)
+                {
+                    return false;
+                }
+
                 if (amount == -1)
                 {
                     GameManager.player.scrollDownSelectedBlock();
