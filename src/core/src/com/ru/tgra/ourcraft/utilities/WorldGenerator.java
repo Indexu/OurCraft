@@ -13,7 +13,7 @@ import java.util.Map;
 public class WorldGenerator
 {
     private Block.BlockType[][][] worldBlocks;
-    private Chunk[][] chunks;
+    private Chunk[][][] chunks;
     private OpenSimplexNoise noise;
     private int[][] overworldHeightMap;
     private int maxX;
@@ -34,21 +34,12 @@ public class WorldGenerator
         maxZ = Settings.worldZ;
     }
 
-    public void generateWorld()
-    {
-        System.out.println("Lowest Y: " + lowestY);
-        System.out.println("Highest Y: " + highestY);
-        System.out.println("Chunks X: " + chunks.length);
-        System.out.println("Chunks Y: " + chunks[0].length);
-        System.out.println("Chunks: " + (chunks.length * chunks[0].length));
-    }
-
     public Block.BlockType[][][] getWorldBlocks()
     {
         return worldBlocks;
     }
 
-    public Chunk[][] getChunks()
+    public Chunk[][][] getChunks()
     {
         return chunks;
     }
@@ -90,7 +81,7 @@ public class WorldGenerator
 
     private void generateHeightMap(int[][] heightmap)
     {
-        float scalar = Settings.worldY / 2;
+        float scalar = Settings.worldScale / 2;
 
         noise = new OpenSimplexNoise(new Date().getTime());
 
@@ -230,16 +221,20 @@ public class WorldGenerator
     {
         long startTime = System.nanoTime();
 
-        int chunkX = Settings.worldX / Settings.chunkWidth;
-        int chunkY = Settings.worldZ / Settings.chunkHeight;
+        int chunkX = Settings.worldX / Settings.chunkX;
+        int chunkY = Settings.worldY / Settings.chunkY;
+        int chunkZ = Settings.worldZ / Settings.chunkZ;
 
-        chunks = new Chunk[chunkX][chunkY];
+        chunks = new Chunk[chunkX][chunkY][chunkZ];
 
-        for (int x = 0; x < Settings.worldX; x += Settings.chunkWidth)
+        for (int x = 0; x < Settings.worldX; x += Settings.chunkX)
         {
-            for (int y = 0; y < Settings.worldZ; y += Settings.chunkHeight)
+            for (int y = 0; y < Settings.worldY; y += Settings.chunkY)
             {
-                createChunk(x, y);
+                for (int z = 0; z < Settings.worldZ; z += Settings.chunkZ)
+                {
+                    createChunk(x, y, z);
+                }
             }
         }
 
@@ -251,15 +246,15 @@ public class WorldGenerator
         System.out.println("\nWorld generated in " + totalTime / million + "ms\n");
     }
 
-    private void createChunk(int startX, int startZ)
+    private void createChunk(int startX, int startY, int startZ)
     {
         Map<Integer, Block> blockMap = new HashMap<>();
 
-        for (int x = startX; x < (startX + Settings.chunkWidth); x++)
+        for (int x = startX; x < (startX + Settings.chunkX); x++)
         {
-            for (int y = 0; y < maxY; y++)
+            for (int y = startY; y < (startY + Settings.chunkY); y++)
             {
-                for (int z = startZ; z < (startZ + Settings.chunkHeight); z++)
+                for (int z = startZ; z < (startZ + Settings.chunkZ); z++)
                 {
                     if (worldBlocks[x][y][z] != Block.BlockType.EMPTY && worldBlocks[x][y][z] != null)
                     {
@@ -270,8 +265,9 @@ public class WorldGenerator
                             Point3D position = new Point3D(x, y, z);
                             int ID = MathUtils.cartesianHash(x, y, z);
 
-                            int chunkX = MathUtils.getChunkX(x, Settings.chunkWidth);
-                            int chunkY = MathUtils.getChunkY(z, Settings.chunkHeight);
+                            int chunkX = MathUtils.getChunkX(x, Settings.chunkX);
+                            int chunkY = MathUtils.getChunkY(y, Settings.chunkY);
+                            int chunkZ = MathUtils.getChunkZ(z, Settings.chunkZ);
 
                             Block block = new Block
                             (
@@ -281,7 +277,8 @@ public class WorldGenerator
                                 mask,
                                 worldBlocks[x][y][z],
                                 chunkX,
-                                chunkY
+                                chunkY,
+                                chunkZ
                             );
 
                             blockMap.put(ID, block);
@@ -291,10 +288,11 @@ public class WorldGenerator
             }
         }
 
-        int chunkX = startX / Settings.chunkWidth;
-        int chunkY = startZ / Settings.chunkHeight;
+        int chunkX = startX / Settings.chunkX;
+        int chunkY = startY / Settings.chunkY;
+        int chunkZ = startZ / Settings.chunkZ;
 
-        chunks[chunkX][chunkY] = new Chunk(blockMap, chunkX, chunkY);
+        chunks[chunkX][chunkY][chunkZ] = new Chunk(blockMap, chunkX, chunkY, chunkZ);
     }
 
     public void createStone()

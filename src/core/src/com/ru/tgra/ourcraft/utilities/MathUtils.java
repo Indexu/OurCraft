@@ -38,14 +38,19 @@ public class MathUtils
         return x + (y << 10) + (z << 20);
     }
 
-    public static int getChunkX(int x, int chunkWidth)
+    public static int getChunkX(int x, int chunkX)
     {
-        return (x / chunkWidth);
+        return (x / chunkX);
     }
 
-    public static int getChunkY(int y, int chunkHeight)
+    public static int getChunkY(int y, int chunkY)
     {
-        return (y / chunkHeight);
+        return (y / chunkY);
+    }
+
+    public static int getChunkZ(int z, int chunkZ)
+    {
+        return (z / chunkZ);
     }
 
     public static float lerp(float a, float b, float t)

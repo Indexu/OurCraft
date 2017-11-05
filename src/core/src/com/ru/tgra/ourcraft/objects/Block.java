@@ -54,6 +54,7 @@ public class Block extends GameObject
     protected float distanceFromPlayer;
     protected int chunkX;
     protected int chunkY;
+    protected int chunkZ;
     protected TargetFace targetFace;
 
     protected Point3D leftBottom;
@@ -61,7 +62,7 @@ public class Block extends GameObject
 
     private float grassTimer;
 
-    public Block(int ID, Point3D position, Vector3D scale, CubeMask mask, BlockType type, int chunkX, int chunkY)
+    public Block(int ID, Point3D position, Vector3D scale, CubeMask mask, BlockType type, int chunkX, int chunkY, int chunkZ)
     {
         super();
 
@@ -72,6 +73,7 @@ public class Block extends GameObject
         blockType = type;
         this.chunkX = chunkX;
         this.chunkY = chunkY;
+        this.chunkZ = chunkZ;
 
         renderMask = new CubeMask(mask);
         minimapMask = new CubeMask(false, false, false, false, true, false);
@@ -242,6 +244,11 @@ public class Block extends GameObject
     public int getChunkY()
     {
         return chunkY;
+    }
+
+    public int getChunkZ()
+    {
+        return chunkZ;
     }
 
     public TargetFace getTargetFace()

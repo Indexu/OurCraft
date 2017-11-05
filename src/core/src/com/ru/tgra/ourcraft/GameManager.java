@@ -12,7 +12,7 @@ public class GameManager
 
     public static WorldGenerator worldGenerator;
     public static Block.BlockType[][][] worldBlocks;
-    public static Chunk[][] chunks;
+    public static Chunk[][][] chunks;
 
     public static boolean mainMenu;
     public static boolean loaded;
@@ -48,8 +48,9 @@ public class GameManager
 
     public static void drawWorld()
     {
-        int chunkX = (int) player.getPosition().x / Settings.chunkWidth;
-        int chunkY = (int) player.getPosition().z / Settings.chunkHeight;
+        int chunkX = MathUtils.getChunkX((int) player.getPosition().x, Settings.chunkX);
+        int chunkY = MathUtils.getChunkX((int) player.getPosition().y, Settings.chunkY);
+        int chunkZ = MathUtils.getChunkX((int) player.getPosition().z, Settings.chunkZ);
 
         int startX = chunkX - Settings.chunkDrawRadius;
         startX = (startX < 0 ? 0 : startX);
@@ -63,11 +64,20 @@ public class GameManager
         int endY = chunkY + Settings.chunkDrawRadius;
         endY = (chunks[0].length-1 < endY ? chunks[0].length-1 : endY);
 
+        int startZ = chunkZ - Settings.chunkDrawRadius;
+        startZ = (startZ < 0 ? 0 : startZ);
+
+        int endZ = chunkZ + Settings.chunkDrawRadius;
+        endZ = (chunks[0][0].length-1 < endZ ? chunks[0][0].length-1 : endZ);
+
         for (int x = startX; x <= endX; x++)
         {
             for (int y = startY; y <= endY; y++)
             {
-                chunks[x][y].drawBlocks();
+                for (int z = startZ; z <= endZ; z++)
+                {
+                    chunks[x][y][z].drawBlocks();
+                }
             }
         }
     }
@@ -88,8 +98,9 @@ public class GameManager
             return;
         }
 
-        int chunkX = MathUtils.getChunkX(x, Settings.chunkWidth);
-        int chunkY = MathUtils.getChunkY(z, Settings.chunkHeight);
+        int chunkX = MathUtils.getChunkX(x, Settings.chunkX);
+        int chunkY = MathUtils.getChunkY(y, Settings.chunkY);
+        int chunkZ = MathUtils.getChunkZ(z, Settings.chunkZ);
 
         setWorldBlocksBlock(pos, type);
 
@@ -100,12 +111,13 @@ public class GameManager
                 BlockUtils.createBlockMask(x, y, z, worldBlocks),
                 type,
                 chunkX,
-                chunkY
+                chunkY,
+                chunkZ
         );
 
         redoMasksForAdjacentBlocks(block);
 
-        chunks[block.getChunkX()][block.getChunkY()].addBlock(block);
+        chunks[block.getChunkX()][block.getChunkY()][block.getChunkZ()].addBlock(block);
 
         AudioManager.playPlaceBlock();
     }
@@ -121,20 +133,10 @@ public class GameManager
         {
             setWorldBlocksBlock(block.getPosition(), Block.BlockType.EMPTY);
             redoMasksForAdjacentBlocks(block);
-            chunks[block.getChunkX()][block.getChunkY()].removeBlock(block.getID());
+            chunks[block.getChunkX()][block.getChunkY()][block.getChunkZ()].removeBlock(block.getID());
         }
 
         blocksToRemove.clear();
-    }
-
-    public static Block getBlock(int x, int y, int z)
-    {
-        int chunkX = MathUtils.getChunkX(x, Settings.chunkWidth);
-        int chunkY = MathUtils.getChunkY(z, Settings.chunkHeight);
-
-        int ID = MathUtils.cartesianHash(x, y, z);
-
-        return chunks[chunkX][chunkY].getBlock(ID);
     }
 
     private static void createTorch()
@@ -226,19 +228,20 @@ public class GameManager
 
         CubeMask mask = BlockUtils.createBlockMask(x, y, z, worldBlocks);
 
-        int chunkX = MathUtils.getChunkX(x, Settings.chunkWidth);
-        int chunkY = MathUtils.getChunkY(z, Settings.chunkHeight);
+        int chunkX = MathUtils.getChunkX(x, Settings.chunkX);
+        int chunkY = MathUtils.getChunkY(y, Settings.chunkY);
+        int chunkZ = MathUtils.getChunkZ(z, Settings.chunkZ);
 
         int ID = MathUtils.cartesianHash(x, y, z);
 
         if (mask.isInvisible())
         {
-            chunks[chunkX][chunkY].removeBlock(ID);
+            chunks[chunkX][chunkY][chunkZ].removeBlock(ID);
         }
         else
         {
-            chunks[chunkX][chunkY].assertBlock(ID, x, y, z, worldBlocks[x][y][z]);
-            chunks[chunkX][chunkY].setBlockMask(ID, mask);
+            chunks[chunkX][chunkY][chunkZ].assertBlock(ID, x, y, z, worldBlocks[x][y][z]);
+            chunks[chunkX][chunkY][chunkZ].setBlockMask(ID, mask);
         }
     }
 }

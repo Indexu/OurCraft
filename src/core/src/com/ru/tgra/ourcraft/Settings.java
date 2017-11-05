@@ -16,12 +16,14 @@ public class Settings
     public static final int worldX = 512;
     public static final int worldZ = 512;
     public static final int worldY = 128;
+    public static final int worldScale = 128;
     public static final int worldFeatureSize = 8;
     public static final int worldSmoothness = 16;
     public static final int cavernMinHeight = 3;
     public static final int cavernMaxHeight = 6;
-    public static final int chunkWidth = 16;
-    public static final int chunkHeight = 16;
+    public static final int chunkX = 16;
+    public static final int chunkY = 16;
+    public static final int chunkZ = 16;
     public static final Vector3D blockSize = new Vector3D(1f, 1f, 1f);
     public static final Vector3D torchSize = new Vector3D(0.1f, 0.5f, 0.1f);
     public static final float dayNightCycleSpeed = 0.01f;

@@ -1,5 +1,6 @@
 package com.ru.tgra.ourcraft.models;
 
+import com.ru.tgra.ourcraft.GameManager;
 import com.ru.tgra.ourcraft.Settings;
 import com.ru.tgra.ourcraft.objects.Block;
 import com.ru.tgra.ourcraft.objects.Torch;
@@ -12,12 +13,14 @@ public class Chunk
     private Map<Integer, Block> blockMap;
     private int chunkX;
     private int chunkY;
+    private int chunkZ;
 
-    public Chunk(Map<Integer, Block> blockMap, int chunkX, int chunkY)
+    public Chunk(Map<Integer, Block> blockMap, int chunkX, int chunkY, int chunkZ)
     {
         this.blockMap = blockMap;
         this.chunkX = chunkX;
         this.chunkY = chunkY;
+        this.chunkZ = chunkZ;
     }
 
     public void drawBlocks()
@@ -67,7 +70,8 @@ public class Chunk
                 new CubeMask(),
                 type,
                 chunkX,
-                chunkY
+                chunkY,
+                chunkZ
             );
 
             addBlock(block);
